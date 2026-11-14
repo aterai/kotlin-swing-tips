@@ -11,32 +11,28 @@ fun createUI(): Component {
   val dh = RearrangingHandler()
   box.addMouseListener(dh)
   box.addMouseMotionListener(dh)
-  val list = listOf<Component>(
+  listOf(
     JLabel("<html>1<br>11<br>111"),
     JButton("22"),
     JCheckBox("333"),
     JScrollPane(JTextArea(4, 12)),
-  )
-  for ((i, c) in list.withIndex()) {
-    box.add(createSortablePanel(i, c))
-  }
+  ).forEach { box.add(createSortablePanel(it)) }
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun createSortablePanel(
-  i: Int,
-  c: Component,
-): Component {
-  val l = JLabel(" %04d ".format(i))
+private fun createSortablePanel(c: Component): Component {
+  val l = JLabel(DragHandleIcon())
   l.isOpaque = true
-  l.background = Color.RED
+  l.background = UIManager.getColor("controlHighlight")
+  l.foreground = UIManager.getColor("controlDkShadow")
+  l.border = BorderFactory.createEmptyBorder(2, 6, 2, 6)
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(5, 5, 5, 5),
-    BorderFactory.createLineBorder(Color.BLUE, 2),
+    BorderFactory.createLineBorder(UIManager.getColor("controlShadow")),
   )
   p.add(l, BorderLayout.WEST)
   p.add(c)
@@ -44,20 +40,74 @@ private fun createSortablePanel(
   return p
 }
 
+// A grip icon made of two columns of dots
+private class DragHandleIcon : Icon {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.translate(x, y)
+    g2.paint = c.foreground
+    for (row in 0..<ROWS) {
+      for (col in 0..<COLS) {
+        g2.fillRect(col * (DOT + GAP), row * (DOT + GAP), DOT, DOT)
+      }
+    }
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = COLS * DOT + (COLS - 1) * GAP
+
+  override fun getIconHeight() = ROWS * DOT + (ROWS - 1) * GAP
+
+  companion object {
+    private const val DOT = 2
+    private const val GAP = 2
+    private const val COLS = 2
+    private const val ROWS = 3
+  }
+}
+
 private class RearrangingHandler : MouseAdapter() {
   private val prevRect = Rectangle()
-  private val gestureMotionThreshold = DragSource.getDragThreshold()
+  private val dragThreshold = DragSource.getDragThreshold()
   private val window = JWindow()
   private val startPt = Point()
   private val dragOffset = Point()
+  private var isDragging = false
   private var draggingComponent: Component? = null
   private var gap: Component? = null
-  private var index = -1
 
   override fun mousePressed(e: MouseEvent) {
-    val c = e.component as? Container ?: return
-    if (c.componentCount > 0) {
-      startPt.location = e.point
+    startPt.location = e.point
+  }
+
+  override fun mouseDragged(e: MouseEvent) {
+    val pt = e.point
+    val parent = e.component as? Container ?: return
+    if (isDragging) {
+      updateWindowLocation(pt, parent)
+      // keep the gap while the pointer stays in the half checked last time
+      if (!prevRect.contains(pt)) {
+        updateGapLocation(parent, pt)
+      }
+    } else if (startPt.distance(pt) > dragThreshold) {
+      startDragging(parent, pt)
+    }
+  }
+
+  override fun mouseReleased(e: MouseEvent) {
+    // a click without dragging does nothing
+    val parent = e.component as? Container
+    if (isDragging && parent != null) {
+      window.isVisible = false
+      // replace the temporary gap with the dragging panel
+      val idx = parent.getComponentZOrder(gap)
+      replaceComponent(parent, gap, draggingComponent, idx)
+      isDragging = false
     }
   }
 
@@ -65,113 +115,72 @@ private class RearrangingHandler : MouseAdapter() {
     parent: Container,
     pt: Point,
   ) {
-    val c = parent.getComponentAt(pt)
-    index = parent.getComponentZOrder(c)
-    if (c == null || c == parent || index < 0) {
-      return
+    // drag the panel under the pressed point, not the one under the current point
+    val c = parent.getComponentAt(startPt) ?: return
+    val index = parent.getComponentZOrder(c)
+    if (index >= 0) {
+      isDragging = true
+      draggingComponent = c
+      prevRect.setBounds(0, 0, 0, 0)
+
+      val r = c.bounds
+      dragOffset.setLocation(startPt.x - r.x, startPt.y - r.y)
+
+      gap = Box.createRigidArea(r.size)
+      replaceComponent(parent, c, gap, index)
+
+      val gc = window.graphicsConfiguration
+      if (gc?.isTranslucencyCapable == true) {
+        window.background = Color(0x0, true)
+      }
+      window.add(c)
+      window.pack()
+
+      // set the location before the window is shown
+      updateWindowLocation(pt, parent)
+      window.isVisible = true
     }
-    draggingComponent = c
-    val d = c.size
-    val dp = c.location
-    dragOffset.setLocation(pt.x - dp.x, pt.y - dp.y)
-    gap = Box.createRigidArea(d)
-    swapComponent(parent, c, gap, index)
-    window.background = Color(0x0, true)
-    window.add(draggingComponent)
-    // window.setSize(d)
-    window.pack()
-    updateWindowLocation(pt, parent)
-    window.isVisible = true
   }
 
   private fun updateWindowLocation(
     pt: Point,
     parent: Component,
   ) {
-    if (window.isVisible && draggingComponent != null) {
-      val p = Point(pt.x - dragOffset.x, pt.y - dragOffset.y)
-      SwingUtilities.convertPointToScreen(p, parent)
-      window.location = p
-    }
+    val p = Point(pt.x - dragOffset.x, pt.y - dragOffset.y)
+    SwingUtilities.convertPointToScreen(p, parent)
+    window.location = p
   }
 
-  override fun mouseDragged(e: MouseEvent) {
-    val pt = e.point
-    (e.component as? Container)?.also { p ->
-      if (draggingComponent == null) {
-        if (startPt.distance(pt) > gestureMotionThreshold) {
-          startDragging(p, pt)
-        }
-        return
-      }
-      updateWindowLocation(pt, p)
-      if (!prevRect.contains(pt)) {
-        val idx = (0..<p.componentCount)
-          .filter { i ->
-            p.getComponent(i).let {
-              it !== gap || it.bounds.contains(pt)
-            }
-          }.map {
-            getTargetIndex(p, it, pt)
-          }.firstOrNull {
-            it >= 0
-          } ?: -1
-        swapComponent(p, gap, gap, idx)
-      }
-    }
-  }
-
-  override fun mouseReleased(e: MouseEvent) {
-    dragOffset.setLocation(0, 0)
-    prevRect.setBounds(0, 0, 0, 0)
-    window.isVisible = false
-    (e.component as? Container)?.also { parent ->
-      val pt = e.point
-      val max = parent.componentCount
-      val c = draggingComponent
-      draggingComponent = null
-      val idx = (0..<max)
-        .map { getTargetIndex(parent, it, pt) }
-        .firstOrNull { it >= 0 }
-        ?: if (parent.parent.bounds.contains(pt)) max else index
-      swapComponent(parent, gap, c, idx)
-    }
-  }
-
-  private fun getTargetIndex(
+  private fun updateGapLocation(
     parent: Container,
-    i: Int,
     pt: Point,
-  ): Int {
-    val c = parent.getComponent(i)
-    val r = c.bounds
-    val ht2 = r.height / 2
-    PREV.setBounds(r.x, r.y, r.width, ht2)
-    NEXT.setBounds(r.x, r.y + ht2, r.width, ht2)
-    return when {
-      PREV.contains(pt) -> i.also { prevRect.bounds = PREV }.takeIf { it > 1 } ?: 0
-      NEXT.contains(pt) -> i.also { prevRect.bounds = NEXT }
-      else -> -1
+  ) {
+    val c = parent.getComponentAt(pt) ?: return
+    val idx = parent.getComponentZOrder(c)
+    if (idx >= 0 && c != gap) {
+      // remember the half of the panel under the pointer
+      // to avoid moving the gap back and forth after the layout changes
+      val r = c.bounds
+      val half = Math.round(r.height / 2f)
+      val y = if (pt.y < r.y + half) r.y else r.y + half
+      prevRect.setBounds(r.x, y, r.width, half)
+      // move the temporary gap to the location of the panel
+      replaceComponent(parent, gap, gap, idx)
     }
   }
 
-  private fun swapComponent(
+  private fun replaceComponent(
     parent: Container,
     remove: Component?,
-    insert: Component?,
-    idx: Int,
+    add: Component?,
+    i: Int,
   ) {
     parent.remove(remove)
-    if (idx >= 0 && insert != null) {
-      parent.add(insert, idx)
+    if (i >= 0 && add != null) {
+      parent.add(add, i)
     }
     parent.revalidate()
     parent.repaint()
-  }
-
-  companion object {
-    private val PREV = Rectangle()
-    private val NEXT = Rectangle()
   }
 }
 
