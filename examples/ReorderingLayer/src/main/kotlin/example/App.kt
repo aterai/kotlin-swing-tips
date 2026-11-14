@@ -8,18 +8,23 @@ import javax.swing.plaf.LayerUI
 import kotlin.math.roundToInt
 
 fun createUI(): Component {
-  val box = Box.createVerticalBox()
-  box.border = BorderFactory.createMatteBorder(10, 5, 5, 5, Color.GREEN)
+  val box = ScrollableBox(BoxLayout.Y_AXIS)
+  val borderColor = UIManager.getColor("controlShadow")
+  box.border = BorderFactory.createMatteBorder(10, 5, 5, 5, borderColor)
   listOf<Component>(
     JLabel("<html>000<br>00<br>00"),
     JButton("1"),
     JCheckBox("2"),
     JTextField("3"),
+    JComboBox(arrayOf("4", "44", "444")),
+    JSpinner(),
+    JSlider(),
+    JProgressBar(0, 100),
   ).forEach {
     addDraggablePanel(box, it)
   }
   return JPanel(BorderLayout()).also {
-    it.add(JLayer(box, ReorderingLayerUI<JComponent>()), BorderLayout.NORTH)
+    it.add(JScrollPane(JLayer(box, ReorderingLayerUI<JComponent>())))
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -28,13 +33,15 @@ private fun addDraggablePanel(
   parent: Container,
   c: Component,
 ) {
-  val l = JLabel(" %04d ".format(parent.componentCount))
+  val l = JLabel(DragHandleIcon())
   l.isOpaque = true
-  l.background = Color.RED
+  l.background = UIManager.getColor("controlHighlight")
+  l.foreground = UIManager.getColor("controlDkShadow")
+  l.border = BorderFactory.createEmptyBorder(2, 6, 2, 6)
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(5, 5, 5, 5),
-    BorderFactory.createLineBorder(Color.BLUE, 2),
+    BorderFactory.createLineBorder(UIManager.getColor("controlShadow")),
   )
   p.add(l, BorderLayout.WEST)
   p.add(c)
@@ -42,26 +49,91 @@ private fun addDraggablePanel(
   parent.add(p)
 }
 
+// A Box that fits the width of the JViewport
+// JLayer delegates its Scrollable methods to the view
+private class ScrollableBox(
+  axis: Int,
+) : Box(axis),
+  Scrollable {
+  override fun getPreferredScrollableViewportSize(): Dimension = preferredSize
+
+  override fun getScrollableUnitIncrement(
+    visibleRect: Rectangle,
+    orientation: Int,
+    direction: Int,
+  ) = UNIT_INCREMENT
+
+  override fun getScrollableBlockIncrement(
+    visibleRect: Rectangle,
+    orientation: Int,
+    direction: Int,
+  ) = if (orientation ==
+    SwingConstants.VERTICAL
+  ) {
+    visibleRect.height
+  } else {
+    visibleRect.width
+  }
+
+  override fun getScrollableTracksViewportWidth() = true
+
+  override fun getScrollableTracksViewportHeight() = false
+
+  companion object {
+    private const val UNIT_INCREMENT = 16
+  }
+}
+
+// A grip icon made of two columns of dots
+private class DragHandleIcon : Icon {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.translate(x, y)
+    g2.paint = c.foreground
+    for (row in 0..<ROWS) {
+      for (col in 0..<COLS) {
+        g2.fillRect(col * (DOT + GAP), row * (DOT + GAP), DOT, DOT)
+      }
+    }
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = COLS * DOT + (COLS - 1) * GAP
+
+  override fun getIconHeight() = ROWS * DOT + (ROWS - 1) * GAP
+
+  companion object {
+    private const val DOT = 2
+    private const val GAP = 2
+    private const val COLS = 2
+    private const val ROWS = 3
+  }
+}
+
 private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
+  private val innerRect = Rectangle()
+  private val prevRect = Rectangle()
+  private val draggingRect = Rectangle()
   private val startPt = Point()
   private val dragOffset = Point()
   private val canvas = JPanel()
-  private val gestureMotionThreshold = DragSource.getDragThreshold()
+  private val dragThreshold = DragSource.getDragThreshold()
+  private var isDragging = false
   private var draggingComponent: Component? = null
   private var fillerComponent: Component? = null
-  private val topHalf = Rectangle()
-  private val bottomHalf = Rectangle()
-  private val inner = Rectangle()
-  private val prev = Rectangle()
-  private val dragging = Rectangle()
 
   override fun paint(
     g: Graphics,
     c: JComponent,
   ) {
     super.paint(g, c)
-    if (c is JLayer<*> && draggingComponent != null) {
-      SwingUtilities.paintComponent(g, draggingComponent, canvas, dragging)
+    if (c is JLayer<*> && isDragging) {
+      SwingUtilities.paintComponent(g, draggingComponent, canvas, draggingRect)
     }
   }
 
@@ -81,18 +153,17 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     l: JLayer<out V>,
   ) {
     val parent = l.view
-    val c = e.component
     when (e.id) {
-      MouseEvent.MOUSE_PRESSED -> if (parent.componentCount > 0 && c is JLayer<*>) {
+      // ignore the events of the child components such as JButton
+      MouseEvent.MOUSE_PRESSED -> if (e.component is JLayer<*>) {
         startPt.location = e.point
-        l.repaint()
       }
 
-      MouseEvent.MOUSE_RELEASED -> if (draggingComponent != null) {
-        // swap the dragging panel and the temporary filler
+      MouseEvent.MOUSE_RELEASED -> if (isDragging) {
+        // replace the temporary filler with the dragging panel
         val idx = parent.getComponentZOrder(fillerComponent)
-        swapComponent(parent, fillerComponent, draggingComponent, idx)
-        draggingComponent = null
+        replaceComponent(parent, fillerComponent, draggingComponent, idx)
+        isDragging = false
       }
     }
   }
@@ -102,97 +173,91 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     l: JLayer<out V>,
   ) {
     if (e.id == MouseEvent.MOUSE_DRAGGED && e.component is JLayer<*>) {
-      val parent = l.view
-      val pt = e.point
-      if (draggingComponent == null) { // MotionThreshold
-        if (startPt.distance(pt) > gestureMotionThreshold) {
-          startDragging(parent, e)
-        }
-        return
-      }
-      if (!prev.contains(pt)) {
-        // update the filler panel location
-        updateFillerLocation(parent, fillerComponent, pt)
-      }
+      mouseDragged(l.view, e.point)
+    }
+  }
 
-      // update the dragging panel location
-      updateDraggingPanelLocation(parent, e, dragOffset)
+  private fun mouseDragged(
+    parent: JComponent,
+    pt: Point,
+  ) {
+    if (isDragging) {
+      // keep the filler while the pointer stays in the half checked last time
+      if (!prevRect.contains(pt)) {
+        updateFillerLocation(parent, pt)
+      }
+      updateDraggingPanelLocation(parent, pt)
+      // scroll the JViewport so that the dragging panel stays visible
+      parent.scrollRectToVisible(draggingRect)
       parent.repaint()
+    } else if (startPt.distance(pt) > dragThreshold) {
+      startDragging(parent, pt)
+    }
+  }
+
+  private fun startDragging(
+    parent: JComponent,
+    pt: Point,
+  ) {
+    // drag the panel under the pressed point, not the one under the current point
+    val c = parent.getComponentAt(startPt) ?: return
+    val index = parent.getComponentZOrder(c)
+    if (index >= 0) {
+      draggingComponent = c
+      isDragging = true
+
+      // The dragging panel is removed from the parent,
+      // so its size is saved here to paint it in the JLayer
+      val r = c.bounds
+      draggingRect.bounds = r
+      dragOffset.setLocation(startPt.x - r.x, startPt.y - r.y)
+      prevRect.setBounds(0, 0, 0, 0)
+
+      val filler = Box.createRigidArea(r.size)
+      fillerComponent = filler
+      replaceComponent(parent, c, filler, index)
+
+      updateDraggingPanelLocation(parent, pt)
     }
   }
 
   private fun updateDraggingPanelLocation(
     parent: JComponent,
-    e: MouseEvent,
-    dragOffset: Point,
+    pt: Point,
   ) {
-    val pt = SwingUtilities.convertPoint(e.component, e.point, parent)
-    val r = SwingUtilities.calculateInnerArea(parent, inner)
-    val y = (pt.y - dragOffset.y).coerceIn(r.y, r.y + r.height - dragging.height)
-    dragging.setLocation(r.x, y)
+    val r = SwingUtilities.calculateInnerArea(parent, innerRect)
+    val top = r.y
+    val bottom = r.y + r.height - draggingRect.height
+    draggingRect.setLocation(r.x, (pt.y - dragOffset.y).coerceIn(top, maxOf(top, bottom)))
   }
 
   private fun updateFillerLocation(
-    p: Container,
-    filler: Component?,
+    parent: Container,
     pt: Point,
   ) {
-    (0..<p.componentCount)
-      .filter { i ->
-        p.getComponent(i).let { it !== filler || !it.bounds.contains(pt) }
-      }.map {
-        getTargetIndex(p.getComponent(it), pt, it)
-      }.firstOrNull {
-        it >= 0
-      }?.also {
-        swapComponent(p, filler, filler, it)
-      }
-  }
-
-  private fun startDragging(
-    parent: JComponent,
-    e: MouseEvent,
-  ) {
-    val pt = e.point
-    val c = parent.getComponentAt(pt)
-    val index = parent.getComponentZOrder(c)
-    if (c == parent || index < 0) {
-      return
-    }
-    draggingComponent = c
-    val r = c.bounds
-    dragging.bounds = r // save draggingComponent size
-    dragOffset.setLocation(pt.x - r.x, pt.y - r.y)
-    fillerComponent = Box.createRigidArea(r.size)
-    swapComponent(parent, c, fillerComponent, index)
-    updateDraggingPanelLocation(parent, e, dragOffset)
-  }
-
-  private fun getTargetIndex(
-    c: Component,
-    pt: Point,
-    i: Int,
-  ): Int {
-    val r = c.bounds
-    val ht2 = (r.height / 2f).roundToInt()
-    topHalf.setBounds(r.x, r.y, r.width, ht2)
-    bottomHalf.setBounds(r.x, r.y + ht2, r.width, ht2)
-    return when {
-      topHalf.contains(pt) -> i.also { prev.bounds = topHalf }.takeIf { it > 1 } ?: 0
-      bottomHalf.contains(pt) -> i.also { prev.bounds = bottomHalf }
-      else -> -1
+    val c = parent.getComponentAt(pt) ?: return
+    val idx = parent.getComponentZOrder(c)
+    if (idx >= 0 && c != fillerComponent) {
+      // remember the half of the panel under the pointer
+      // to avoid moving the filler back and forth after the layout changes
+      val r = c.bounds
+      val half = (r.height / 2f).roundToInt()
+      val y = if (pt.y < r.y + half) r.y else r.y + half
+      prevRect.setBounds(r.x, y, r.width, half)
+      // move the temporary filler to the location of the panel
+      replaceComponent(parent, fillerComponent, fillerComponent, idx)
     }
   }
 
-  private fun swapComponent(
+  private fun replaceComponent(
     parent: Container,
     remove: Component?,
-    insert: Component?,
-    idx: Int,
+    add: Component?,
+    i: Int,
   ) {
     parent.remove(remove)
-    if (idx >= 0 && insert != null) {
-      parent.add(insert, idx)
+    if (i >= 0 && add != null) {
+      parent.add(add, i)
     }
     parent.revalidate()
     parent.repaint()
