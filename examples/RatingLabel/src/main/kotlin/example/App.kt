@@ -20,20 +20,20 @@ fun createUI(): Component {
   val p = JPanel(GridLayout(2, 2, 4, 4))
 
   val list1 = listOf(
-    makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, .5f)),
-    makeStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
-    makeStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f)),
+    createStarImageIcon(ip, SelectedImageFilter(1f, .5f, .5f)),
+    createStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
+    createStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
+    createStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
+    createStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f)),
   )
-  p.add(makeStarRatingPanel("gap=0", LevelBar(defaultIcon, list1, 0)))
+  p.add(createStarRatingPanel("gap=0", LevelBar(defaultIcon, list1, 0)))
 
   val list2 = listOf(
-    makeStarImageIcon(ip, SelectedImageFilter(.2f, .5f, .5f)),
-    makeStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
-    makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f)),
+    createStarImageIcon(ip, SelectedImageFilter(.2f, .5f, .5f)),
+    createStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
+    createStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
+    createStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
+    createStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f)),
   )
   val p2 = object : LevelBar(defaultIcon, list2, 1) {
     override fun repaintIcon(index: Int) {
@@ -43,20 +43,20 @@ fun createUI(): Component {
       repaint()
     }
   }
-  p.add(makeStarRatingPanel("gap=1+1", p2))
+  p.add(createStarRatingPanel("gap=1+1", p2))
 
   val list3 = listOf(
-    makeStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),
-    makeStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
-    makeStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
-    makeStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f)),
+    createStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),
+    createStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
+    createStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
+    createStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
+    createStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f)),
   )
-  p.add(makeStarRatingPanel("gap=2+2", LevelBar(defaultIcon, list3, 2)))
+  p.add(createStarRatingPanel("gap=2+2", LevelBar(defaultIcon, list3, 2)))
 
-  val star = makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f))
+  val star = createStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f))
   val list4 = listOf(star, star, star, star, star)
-  p.add(makeStarRatingPanel("gap=1+1", LevelBar(defaultIcon, list4, 1)))
+  p.add(createStarRatingPanel("gap=1+1", LevelBar(defaultIcon, list4, 1)))
 
   p.preferredSize = Dimension(320, 240)
   return p
@@ -73,18 +73,18 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private fun makeStarRatingPanel(
+private fun createStarRatingPanel(
   title: String,
-  label: LevelBar,
+  levelBar: LevelBar,
 ) = JPanel(FlowLayout(FlowLayout.LEFT)).also {
   val button = JButton("clear")
-  button.addActionListener { label.clear() }
+  button.addActionListener { levelBar.clear() }
   it.border = BorderFactory.createTitledBorder(title)
   it.add(button)
-  it.add(label)
+  it.add(levelBar)
 }
 
-private fun makeStarImageIcon(
+private fun createStarImageIcon(
   ip: ImageProducer,
   filter: ImageFilter,
 ): ImageIcon {
@@ -96,18 +96,15 @@ private open class LevelBar(
   private val defaultIcon: ImageIcon,
   protected val iconList: List<ImageIcon>,
   private val gap: Int,
-) : JPanel(GridLayout(1, 5, gap * 2, gap * 2)) {
-  protected val labelList = listOf(JLabel(), JLabel(), JLabel(), JLabel(), JLabel())
-  private var clicked = -1
+) : JPanel(GridLayout(1, 0, gap * 2, gap * 2)) {
+  // rows=1, cols=0: lay out as many labels as there are icons in a single row
+  // create one label per icon instead of a hard-coded five
+  protected val labelList = iconList.map { JLabel(defaultIcon) }
+  private var level = -1
   private var handler: MouseAdapter? = null
 
   init {
-    EventQueue.invokeLater {
-      for (l in labelList) {
-        l.icon = defaultIcon
-        add(l)
-      }
-    }
+    labelList.forEach { add(it) }
   }
 
   override fun updateUI() {
@@ -124,11 +121,11 @@ private open class LevelBar(
       }
 
       override fun mouseClicked(e: MouseEvent) {
-        clicked = getSelectedIconIndex(e.point)
+        level = getSelectedIconIndex(e.point)
       }
 
       override fun mouseExited(e: MouseEvent) {
-        repaintIcon(clicked)
+        repaintIcon(level)
       }
     }
     addMouseListener(handler)
@@ -136,8 +133,8 @@ private open class LevelBar(
   }
 
   fun clear() {
-    clicked = -1
-    repaintIcon(clicked)
+    level = -1
+    repaintIcon(level)
   }
 
   private fun getSelectedIconIndex(p: Point): Int {
