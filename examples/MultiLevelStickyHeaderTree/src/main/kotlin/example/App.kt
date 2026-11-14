@@ -5,7 +5,6 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.TreePath
-import kotlin.math.max
 
 fun createUI(): Component {
   val tree = createTree()
@@ -98,12 +97,16 @@ private fun expandAll(tree: JTree) {
 private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
   private val stickyPaths = mutableListOf<TreePath>()
   private val pushOffsets = mutableListOf<Int>()
-  private val nextSiblingPaths = mutableListOf<TreePath>()
+
+  // Y-coordinate in the viewport of the nearest "next expanded sibling" of the
+  // sticky headers, or Int.MAX_VALUE if there is none. The sticky headers
+  // are never drawn below it, so the JTree's own rows are visible from there.
+  private var pushLimit = Int.MAX_VALUE
 
   private fun updateHeader(tree: JTree) {
     stickyPaths.clear()
     pushOffsets.clear()
-    nextSiblingPaths.clear()
+    pushLimit = Int.MAX_VALUE
 
     val viewRect = tree.getVisibleRect()
     val topY = viewRect.y
@@ -133,18 +136,17 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
   }
 
   private fun calculatePushOffsets(tree: JTree, topY: Int) {
-    var inheritedOffset = 0
+    // The top of the nearest "next expanded sibling" of this header and of its
+    // ancestors: the next sibling of an ancestor also ends the subtree of this
+    // header, so it must push this header up as well.
+    var limit = Int.MAX_VALUE
     for (i in stickyPaths.indices) {
-      val sticky = stickyPaths[i]
-      val nextSibling = findNextExpandedSibling(tree, sticky)?.also {
-        nextSiblingPaths.add(it)
-      }
-      val stickyBaseY = i * HEADER_HEIGHT
-      val localOffset = computeOverlap(tree, nextSibling, topY, stickyBaseY)
-      val finalOffset = max(localOffset, inheritedOffset)
-      pushOffsets.add(finalOffset)
-      inheritedOffset = finalOffset
+      limit = minOf(limit, getNextSiblingTop(tree, stickyPaths[i], topY))
+      // The amount that the sibling encroaches on the current header area.
+      val overlap = (i + 1) * HEADER_HEIGHT - limit
+      pushOffsets.add(overlap.coerceIn(0, HEADER_HEIGHT))
     }
+    pushLimit = limit
   }
 
   override fun paint(g: Graphics, c: JComponent) {
@@ -156,56 +158,52 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
       return
     }
 
+    val scroll = (c as? JLayer<*>)?.getView() as? JScrollPane ?: return
     val g2 = g.create() as? Graphics2D ?: return
     val toolkit = Toolkit.getDefaultToolkit()
     val hints = toolkit.getDesktopProperty("awt.font.desktophints")
-    if (hints is MutableMap<*, *>) {
+    if (hints is Map<*, *>) {
       g2.addRenderingHints(hints)
     }
 
-    val scroll = (c as? JLayer<*>)?.getView() as? JScrollPane ?: return
     val viewport = scroll.getViewport().bounds
-    val r = Rectangle(viewport.x, viewport.y, viewport.width, HEADER_HEIGHT)
+    g2.clip(viewport)
     val n = stickyPaths.size
 
+    // The innermost header is always the lowest one, even while it is pushed up.
+    // The rows from the pushing sibling downwards are the JTree's own rows,
+    // so the sticky header area must end at the top of that sibling.
+    val bottom = minOf(n * HEADER_HEIGHT - pushOffsets[n - 1], pushLimit)
+
+    val g3 = g2.create() as Graphics2D
+    g3.clipRect(viewport.x, viewport.y, viewport.width, bottom)
+    val r = Rectangle(viewport.x, viewport.y, viewport.width, HEADER_HEIGHT)
+    // Draw from the bottom header up, overlaying upper headers on top (z-index)
     for (i in n - 1 downTo 0) {
       val path = stickyPaths[i]
-      val offset = pushOffsets[i]
-
-      val baseY = viewport.y + i * HEADER_HEIGHT
-      r.y = baseY - offset
-      paintStickyHeader(g2, tree, path, r, depthIndex(path))
-
-      if (offset > 0 && nextSiblingPaths.size > i) {
-        val nextSibling = nextSiblingPaths[i]
-        r.y = baseY + HEADER_HEIGHT - offset
-        paintStickyHeader(g2, tree, nextSibling, r, depthIndex(nextSibling))
-      }
+      r.y = viewport.y + i * HEADER_HEIGHT - pushOffsets[i]
+      paintStickyHeader(g3, tree, path, r, depthIndex(path))
     }
+    g3.dispose()
+
+    paintShadow(g2, viewport, viewport.y + bottom)
     g2.dispose()
   }
 
   companion object {
     const val HEADER_HEIGHT = 24
+    private const val SHADOW_HEIGHT = 6
     private const val DEPTH = 4
-    private val BORDER_COLOR = Color(0x46_00_00_00, true)
+    private val SHADOW_COLOR = Color(0x40_00_00_00, true)
+    private val TRANSPARENT = Color(0x0, true)
 
-    private fun computeOverlap(
-      tree: JTree,
-      nextSibling: TreePath?,
-      topY: Int,
-      stickyBaseY: Int,
-    ): Int {
-      if (nextSibling == null) {
-        return 0
-      }
-
-      val nextRow = tree.getRowForPath(nextSibling)
-      val nr = tree.getRowBounds(nextRow) ?: return 0
-      val nextTopInView = nr.y - topY
-      val overlap = stickyBaseY + HEADER_HEIGHT - nextTopInView
-      return overlap.coerceIn(0, HEADER_HEIGHT)
-    }
+    // Returns the Y-coordinate in the viewport of the "next expanded sibling"
+    // of the specified TreePath, or Int.MAX_VALUE if there is none.
+    private fun getNextSiblingTop(tree: JTree, path: TreePath, topY: Int) =
+      findNextExpandedSibling(tree, path)
+        ?.let { tree.getRowBounds(tree.getRowForPath(it)) }
+        ?.let { it.y - topY }
+        ?: Int.MAX_VALUE
 
     private fun findNextExpandedSibling(tree: JTree, path: TreePath): TreePath? {
       val parentPath = path.parentPath ?: return null
@@ -229,20 +227,18 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
       return null
     }
 
+    // Draw one fixed header with the same background as the JTree
     fun paintStickyHeader(
-      g2: Graphics2D,
+      g: Graphics2D,
       tree: JTree,
       path: TreePath,
       r: Rectangle,
       depthIdx: Int,
     ) {
-      val oldClip = g2.clip
-      g2.clip = r
-      g2.paint = Color.LIGHT_GRAY
+      val g2 = g.create() as Graphics2D
+      g2.clip(r)
+      g2.paint = tree.background
       g2.fill(r)
-
-      g2.color = BORDER_COLOR
-      g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
 
       val renderer = tree.getCellRenderer()
       val node = path.lastPathComponent
@@ -262,26 +258,32 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
       )
 
       if (c is JLabel) {
-        val label = cloneLabel(c)
+        val label = cloneLabel(c, tree)
         val leftChildIndent = UIManager.getInt("Tree.leftChildIndent")
         val rightChildIndent = UIManager.getInt("Tree.rightChildIndent")
         val indent = depthIdx * (leftChildIndent + rightChildIndent)
         label.setSize(r.width - indent, r.height)
         val rect = Rectangle(r.x + indent, r.y, r.width - indent, r.height)
         SwingUtilities.paintComponent(g2, label, JPanel(), rect)
-        // Lower border
-        g2.color = BORDER_COLOR
-        g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
       }
-      g2.clip = oldClip
+      g2.dispose()
     }
 
-    private fun cloneLabel(src: JLabel): JLabel {
+    // Draw a gradient shadow below the sticky headers instead of border lines.
+    private fun paintShadow(g: Graphics2D, area: Rectangle, y: Int) {
+      val y0 = y.toFloat()
+      val y1 = y0 + SHADOW_HEIGHT
+      g.paint = GradientPaint(0f, y0, SHADOW_COLOR, 0f, y1, TRANSPARENT)
+      g.fillRect(area.x, y, area.width, SHADOW_HEIGHT)
+    }
+
+    private fun cloneLabel(src: JLabel, tree: JTree): JLabel {
       val label = JLabel(src.text)
       label.setIcon(src.icon)
       label.setIconTextGap(src.iconTextGap)
       label.setOpaque(true)
-      label.setBackground(Color.LIGHT_GRAY)
+      label.setBackground(tree.background)
+      label.setForeground(tree.foreground)
       return label
     }
 
