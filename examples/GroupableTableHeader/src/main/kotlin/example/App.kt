@@ -6,6 +6,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTableHeaderUI
+import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumn
@@ -62,7 +63,11 @@ private class GroupableTableHeader(
 
   override fun updateUI() {
     super.updateUI()
+    // Replacing the UI delegate uninstalls the LookAndFeel specific header renderer
+    // (Synth: HeaderRenderer, Windows: XPDefaultRenderer), so use a renderer that
+    // paints the same cell lines on every LookAndFeel
     setUI(GroupableTableHeaderUI())
+    defaultRenderer = HeaderCellRenderer()
   }
 
   // [java] BooleanGetMethodName: Don't report bad method names on @Override #97
@@ -95,6 +100,33 @@ private class GroupableTableHeader(
   @Throws(IOException::class, ClassNotFoundException::class)
   private fun readObject(stream: ObjectInputStream) {
     stream.defaultReadObject()
+  }
+}
+
+private class HeaderCellRenderer : DefaultTableCellRenderer() {
+  override fun getTableCellRendererComponent(
+    table: JTable?,
+    value: Any?,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int,
+  ): Component {
+    super.getTableCellRendererComponent(table, value, false, false, row, column)
+    horizontalAlignment = CENTER
+    var lineColor = Color.GRAY
+    if (table != null) {
+      val header = table.tableHeader
+      foreground = header.foreground
+      background = header.background
+      font = header.font
+      lineColor = table.gridColor
+    }
+    border = BorderFactory.createCompoundBorder(
+      BorderFactory.createMatteBorder(0, 0, 1, 1, lineColor),
+      BorderFactory.createEmptyBorder(2, 4, 2, 4),
+    )
+    return this
   }
 }
 
