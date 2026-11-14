@@ -1,6 +1,7 @@
 package example
 
 import java.awt.*
+import java.awt.font.GlyphVector
 import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
 import java.math.BigDecimal
@@ -49,13 +50,14 @@ fun main() {
 private class FiveStarRatingLabel(
   rating: String,
 ) : JComponent() {
-  private val ip: Int
-  private val fp: Int
+  private val intPart: Int
+  private val fracPart: Int
 
   init {
     val bd = BigDecimal(rating)
-    ip = bd.toInt()
-    fp = bd.subtract(BigDecimal(ip)).multiply(BigDecimal.TEN).toInt()
+    intPart = bd.toInt()
+    // the first decimal place of the rating as an integer: "3.5" -> 5
+    fracPart = bd.subtract(BigDecimal(intPart)).movePointRight(1).toInt()
   }
 
   override fun paintComponent(g: Graphics) {
@@ -75,22 +77,25 @@ private class FiveStarRatingLabel(
     val cx = w / 2.0 - r.centerX
     val cy = h / 2.0 - r.centerY
     val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
-    var point = 0.0
-    for (i in 0..<gv.numGlyphs) {
-      val gm = gv.getGlyphMetrics(i)
-      if (i <= ip - 1) {
-        point += gm.advance.toDouble()
-      } else if (i <= ip) {
-        point += gm.bounds2D.width * fp / 10.0
-      }
-    }
+    val fillWidth = getFillWidth(gv)
     g2.paint = Color.GREEN
     val s = toCenterAt.createTransformedShape(gv.outline)
     g2.draw(s)
-    val clip = Rectangle2D.Double(r.x, r.y, point, r.height)
+    val clip = Rectangle2D.Double(r.x, r.y, fillWidth, r.height)
     g2.clip = toCenterAt.createTransformedShape(clip)
     g2.fill(s)
     g2.dispose()
+  }
+
+  private fun getFillWidth(gv: GlyphVector): Double {
+    // the glyph position equals the sum of the advances of the preceding glyphs,
+    // and getGlyphPosition(numGlyphs) returns the end position
+    var fillWidth = gv.getGlyphPosition(intPart).x
+    if (intPart < gv.numGlyphs) {
+      val gm = gv.getGlyphMetrics(intPart)
+      fillWidth += gm.bounds2D.width * fracPart / 10.0
+    }
+    return fillWidth
   }
 
   companion object {
