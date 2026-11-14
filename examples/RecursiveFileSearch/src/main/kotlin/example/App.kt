@@ -10,14 +10,16 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
+import java.util.concurrent.ExecutionException
 import javax.swing.*
 
+private const val MAX_HISTORY = 4
 private val dirCombo = JComboBox<String>()
 private val fileChooser = JFileChooser()
 private val textArea = JTextArea()
-private val progress = JProgressBar()
+private val progressBar = JProgressBar()
 private val statusPanel = JPanel(BorderLayout())
-private val searchButton = JButton("Run")
+private val searchButton = JButton("Search")
 private val cancelButton = JButton("Cancel")
 private val chooseButton = JButton("Choose...")
 private var worker: SwingWorker<String, Message>? = null
@@ -28,20 +30,21 @@ fun createUI(): Component {
   dirCombo.model = model
   dirCombo.isFocusable = false
   textArea.isEditable = false
-  statusPanel.add(progress)
+  statusPanel.add(progressBar)
   statusPanel.isVisible = false
+  cancelButton.isEnabled = false
 
   searchButton.addActionListener { searchActionPerformed() }
   cancelButton.addActionListener { cancelActionPerformed() }
   chooseButton.addActionListener { chooseActionPerformed() }
 
-  val box1 = JPanel(BorderLayout(5, 5)).also {
+  val dirPanel = JPanel(BorderLayout(5, 5)).also {
     it.add(JLabel("Search folder:"), BorderLayout.WEST)
     it.add(dirCombo)
     it.add(chooseButton, BorderLayout.EAST)
   }
 
-  val box2 = Box.createHorizontalBox().also {
+  val buttonBox = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.add(Box.createHorizontalGlue())
     it.add(searchButton)
@@ -50,8 +53,8 @@ fun createUI(): Component {
   }
 
   val panel = JPanel(BorderLayout()).also {
-    it.add(box1, BorderLayout.NORTH)
-    it.add(box2, BorderLayout.SOUTH)
+    it.add(dirPanel, BorderLayout.NORTH)
+    it.add(buttonBox, BorderLayout.SOUTH)
   }
 
   return JPanel(BorderLayout()).also {
@@ -63,11 +66,15 @@ fun createUI(): Component {
   }
 }
 
+private fun getSelectedDirectory() = dirCombo.selectedItem?.toString() ?: ""
+
 private fun searchActionPerformed() {
-  updateComponentStatus(true)
-  val dir = File(dirCombo.getItemAt(dirCombo.selectedIndex))
-  if (dir.exists()) {
-    executeWorker(dir)
+  val dir = File(getSelectedDirectory())
+  // Check the directory before disabling the components,
+  // otherwise they will never be re-enabled because no worker is executed
+  if (dir.isDirectory) {
+    updateComponentStatus(true)
+    executeWorker(dir.toPath())
   } else {
     textArea.text = "The directory does not exist."
   }
@@ -75,19 +82,18 @@ private fun searchActionPerformed() {
 
 private fun cancelActionPerformed() {
   worker?.takeUnless { it.isDone }?.cancel(true)
-  worker = null
 }
 
 private fun chooseActionPerformed() {
   fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-  fileChooser.selectedFile = File(dirCombo.editor.item.toString())
+  fileChooser.selectedFile = File(getSelectedDirectory())
   val c = dirCombo.rootPane
   textArea.text = when (fileChooser.showOpenDialog(c)) {
     JFileChooser.APPROVE_OPTION -> {
       fileChooser.selectedFile
         ?.takeIf { it.isDirectory }
         ?.absolutePath
-        ?.also { addItem(dirCombo, it, 4) }
+        ?.also { addItem(dirCombo, it, MAX_HISTORY) }
         ?: "Please select directory."
     }
 
@@ -103,158 +109,150 @@ private fun chooseActionPerformed() {
   }
 }
 
-private open class FileSearchTask(
-  dir: File,
-) : RecursiveFileSearchTask(dir) {
-  override fun process(chunks: List<Message>) {
-    if (statusPanel.isDisplayable && !isCancelled) {
-      chunks.forEach { processChunks(it) }
-    } else {
-      cancel(true)
-    }
-  }
-
-  override fun done() {
-    if (statusPanel.isDisplayable) {
-      updateComponentStatus(false)
-      appendLine("----------------")
-      val text = if (isCancelled) {
-        "Cancelled"
-      } else {
-        runCatching {
-          get()
-        }.onFailure {
-          if (it is InterruptedException) {
-            Thread.currentThread().interrupt()
-          }
-        }.getOrNull() ?: "Interrupted"
-      }
-      appendLine(text)
-    }
-  }
-}
-
-fun updateComponentStatus(start: Boolean) {
+private fun updateComponentStatus(start: Boolean) {
   if (start) {
-    addItem(dirCombo, dirCombo.editor.item.toString())
-    statusPanel.isVisible = true
-    dirCombo.isEnabled = false
-    chooseButton.isEnabled = false
-    searchButton.isEnabled = false
-    cancelButton.isEnabled = true
-    progress.isIndeterminate = true
+    addItem(dirCombo, getSelectedDirectory(), MAX_HISTORY)
+    progressBar.isIndeterminate = true
     textArea.text = ""
-  } else {
-    dirCombo.isEnabled = true
-    chooseButton.isEnabled = true
-    searchButton.isEnabled = true
-    cancelButton.isEnabled = false
-    statusPanel.isVisible = false
   }
-}
-
-private fun executeWorker(dir: File) {
-  worker = FileSearchTask(dir).also {
-    it.addPropertyChangeListener(ProgressListener(progress))
-    it.execute()
-  }
-}
-
-private fun processChunks(message: Message) {
-  if (message.append) {
-    appendLine(message.text)
-  } else {
-    textArea.text = "${message.text}\n"
-  }
-}
-
-private fun appendLine(str: String?) {
-  textArea.append("$str\n")
-  textArea.caretPosition = textArea.document.length
+  statusPanel.isVisible = start
+  dirCombo.isEnabled = !start
+  chooseButton.isEnabled = !start
+  searchButton.isEnabled = !start
+  cancelButton.isEnabled = start
 }
 
 private fun addItem(
-  dirCombo: JComboBox<String>,
+  combo: JComboBox<String>,
   str: String?,
-  max: Int = 4,
+  max: Int,
 ) {
-  val model = dirCombo.model as? DefaultComboBoxModel<String>
+  val model = combo.model as? DefaultComboBoxModel<String>
   if (str.isNullOrEmpty() || model == null) {
     return
   }
-  dirCombo.isVisible = false
+  combo.isVisible = false
   model.removeElement(str)
   model.insertElementAt(str, 0)
   if (model.size > max) {
     model.removeElementAt(max)
   }
-  dirCombo.selectedIndex = 0
-  dirCombo.isVisible = true
-  // statusPanel.repaint()
+  combo.selectedIndex = 0
+  combo.isVisible = true
+}
+
+private fun executeWorker(dir: Path) {
+  worker = object : RecursiveFileSearchTask(dir) {
+    override fun process(chunks: List<Message>) {
+      if (statusPanel.isDisplayable && !isCancelled) {
+        chunks.forEach { updateMessage(it) }
+      } else {
+        cancel(true)
+      }
+    }
+
+    override fun done() {
+      if (statusPanel.isDisplayable) {
+        updateComponentStatus(false)
+        appendLine("----------------")
+        appendLine(getDoneMessage())
+      }
+    }
+  }.also {
+    it.addPropertyChangeListener(ProgressListener(progressBar))
+    it.execute()
+  }
+}
+
+private fun updateMessage(msg: Message) {
+  if (msg.append) {
+    appendLine(msg.text)
+  } else {
+    textArea.text = "${msg.text}\n"
+  }
+}
+
+private fun appendLine(str: String) {
+  textArea.append("$str\n")
+  textArea.caretPosition = textArea.document.length
 }
 
 private open class RecursiveFileSearchTask(
-  private val dir: File,
+  private val dir: Path,
 ) : SwingWorker<String, Message>() {
-  protected var counter = 0
-
-  @Throws(InterruptedException::class)
-  override fun doInBackground() = runCatching {
-    counter = 0
-    val list = mutableListOf<Path>()
-    recursiveSearch(dir.toPath(), list)
-    firePropertyChange("clear-JTextArea", "", "")
+  @Throws(IOException::class, InterruptedException::class)
+  override fun doInBackground(): String {
+    val list = searchFiles(dir)
     val lengthOfTask = list.size
     publish(Message("Length Of Task: $lengthOfTask", false))
     publish(Message("----------------", true))
     var idx = 0
     while (idx < lengthOfTask && !isCancelled) {
-      doSomething(list, idx)
+      processFile(list, idx)
       idx++
     }
-    "Done"
-  }.onFailure {
-    publish(Message("The search was canceled", true))
-  }.getOrNull() ?: "Interrupted1"
+    return "Done"
+  }
 
   @Throws(InterruptedException::class)
-  protected fun doSomething(
+  protected fun processFile(
     list: List<Path>,
     idx: Int,
   ) {
-    val lengthOfTask = list.size
-    progress = 100 * idx / lengthOfTask
     Thread.sleep(10)
-    val path = list[idx]
+    val lengthOfTask = list.size
     val current = idx + 1
-    publish(Message("$current/$lengthOfTask, $path", true))
+    publish(Message("$current/$lengthOfTask, ${list[idx]}", true))
+    progress = 100 * current / lengthOfTask
   }
 
+  // Walking the File Tree (The Java™ Tutorials > Essential Classes > Basic I/O)
+  // https://docs.oracle.com/javase/tutorial/essential/io/walk.html
   @Throws(IOException::class)
-  private fun recursiveSearch(
-    dirPath: Path,
-    list: MutableList<Path>,
-  ) {
+  private fun searchFiles(start: Path): List<Path> {
+    val list = mutableListOf<Path>()
     val visitor = object : SimpleFileVisitor<Path>() {
-      @Throws(IOException::class)
       override fun visitFile(
         file: Path,
         attrs: BasicFileAttributes,
       ): FileVisitResult {
-        if (Thread.interrupted()) {
-          throw IOException("Interrupted2")
-        }
         if (attrs.isRegularFile) {
-          counter++
-          if (counter % 100 == 0) {
-            publish(Message("Results:$counter\n", false))
-          }
           list.add(file)
+          if (list.size % 100 == 0) {
+            publish(Message("Results: ${list.size}", false))
+          }
         }
-        return FileVisitResult.CONTINUE
+        return nextResult()
       }
+
+      // Skip unreadable files or directories (e.g. AccessDeniedException)
+      // instead of aborting the whole search
+      override fun visitFileFailed(
+        file: Path,
+        exc: IOException,
+      ) = nextResult()
     }
-    Files.walkFileTree(dirPath, visitor)
+    Files.walkFileTree(start, visitor)
+    return list
+  }
+
+  private fun nextResult() = if (isCancelled) {
+    FileVisitResult.TERMINATE
+  } else {
+    FileVisitResult.CONTINUE
+  }
+
+  protected fun getDoneMessage() = if (isCancelled) {
+    "Cancelled"
+  } else {
+    try {
+      get()
+    } catch (ex: InterruptedException) {
+      Thread.currentThread().interrupt()
+      "Interrupted"
+    } catch (ex: ExecutionException) {
+      "ExecutionException: ${ex.message}"
+    }
   }
 }
 
@@ -268,8 +266,7 @@ private class ProgressListener(
   override fun propertyChange(e: PropertyChangeEvent) {
     if ("progress" == e.propertyName) {
       progressBar.isIndeterminate = false
-      val progress = e.newValue as? Int ?: 0
-      progressBar.value = progress
+      progressBar.value = e.newValue as? Int ?: 0
     }
   }
 }
