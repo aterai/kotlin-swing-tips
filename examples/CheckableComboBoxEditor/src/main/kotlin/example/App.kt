@@ -6,20 +6,20 @@ import javax.swing.*
 
 fun createUI(): Component {
   val box = Box.createVerticalBox()
-  val combo0 = JComboBox(makeModel()).also {
+  val combo0 = JComboBox(createModel()).also {
     it.renderer = CheckComboBoxRenderer()
   }
   val title0 = "setEditable(false), setRenderer(...)"
-  box.add(makeTitledPanel(title0, combo0))
+  box.add(createTitledPanel(title0, combo0))
   box.add(Box.createVerticalStrut(5))
 
-  val combo1 = JComboBox(makeModel()).also {
+  val combo1 = JComboBox(createModel()).also {
     it.isEditable = true
     it.editor = CheckComboBoxEditor()
     it.renderer = CheckComboBoxRenderer()
   }
   val title1 = "setEditable(true), setRenderer(...), setEditor(...)"
-  box.add(makeTitledPanel(title1, combo1))
+  box.add(createTitledPanel(title1, combo1))
 
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   return JPanel(BorderLayout()).also {
@@ -28,14 +28,14 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel() = arrayOf(
+private fun createModel() = arrayOf(
   ComboItem(isEnabled = true, isEditable = true, text = "00000"),
   ComboItem(isEnabled = true, isEditable = false, text = "11111"),
   ComboItem(isEnabled = false, isEditable = true, text = "22222"),
   ComboItem(isEnabled = false, isEditable = false, text = "33333"),
 )
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -55,7 +55,7 @@ private class ComboItem(
 }
 
 private class CheckComboBoxRenderer : ListCellRenderer<ComboItem> {
-  private val bgc = Color(100, 200, 255)
+  private val selectionBgc = Color(0x64_C8_FF)
   private val renderer = EditorPanel(ComboItem())
 
   override fun getListCellRendererComponent(
@@ -66,53 +66,48 @@ private class CheckComboBoxRenderer : ListCellRenderer<ComboItem> {
     cellHasFocus: Boolean,
   ): Component {
     renderer.item = value
-    if (isSelected && index >= 0) {
-      renderer.isOpaque = true
-      renderer.background = bgc
-    } else {
-      renderer.isOpaque = false
-      renderer.background = Color.WHITE
-    }
+    // index == -1: the cell is painted in the combo box itself, not in the drop-down list
+    val highlight = isSelected && index >= 0
+    renderer.isOpaque = highlight
+    renderer.background = if (highlight) selectionBgc else list.background
     return renderer
   }
 }
 
 private class CheckComboBoxEditor : ComboBoxEditor {
-  private val editor = EditorPanel(ComboItem())
+  private val editorPanel = EditorPanel(ComboItem())
 
   override fun selectAll() {
-    editor.selectAll()
+    editorPanel.selectAll()
   }
 
-  override fun getItem() = editor.item
+  override fun getItem() = editorPanel.item
 
-  override fun setItem(anObject: Any) {
-    EventQueue.invokeLater {
-      val c = SwingUtilities.getAncestorOfClass(
-        JComboBox::class.java,
-        editorComponent,
-      )
-      (c as? JComboBox<*>)?.also {
-        val idx = it.selectedIndex
-        if (idx >= 0 && idx != editor.editingIndex) {
-          // println("setItem: $idx")
-          editor.editingIndex = idx
-        }
-      }
+  override fun setItem(anObject: Any?) {
+    // The selected index is checked later because the editor might not
+    // have been added to the JComboBox yet when this method is called
+    EventQueue.invokeLater { updateEditingIndex() }
+    editorPanel.item = anObject as? ComboItem ?: ComboItem()
+  }
+
+  private fun updateEditingIndex() {
+    val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, editorComponent)
+    // Keep the last valid index, since getSelectedIndex() returns -1
+    // while the text is being edited
+    val idx = (c as? JComboBox<*>)?.selectedIndex ?: -1
+    if (idx >= 0) {
+      editorPanel.editingIndex = idx
     }
-    editor.item = anObject as? ComboItem ?: ComboItem()
   }
 
-  override fun getEditorComponent() = editor
+  override fun getEditorComponent() = editorPanel
 
   override fun addActionListener(l: ActionListener) {
-    // println("addActionListener: ${l.javaClass.name}")
-    editor.addActionListener(l)
+    editorPanel.addActionListener(l)
   }
 
   override fun removeActionListener(l: ActionListener) {
-    // println("removeActionListener: ${l.javaClass.name}")
-    editor.removeActionListener(l)
+    editorPanel.removeActionListener(l)
   }
 }
 
@@ -145,38 +140,20 @@ private class EditorPanel(
   init {
     item = data
 
-    enabledCheck.addActionListener { e ->
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      val check = c as? JComboBox<*>
-      (check?.getItemAt(editingIndex) as? ComboItem)?.also {
-        it.isEnabled = (e.source as? JCheckBox)?.isSelected ?: false
-        editableCheck.isEnabled = it.isEnabled
-        textField.isEnabled = it.isEnabled
-        check.setSelectedIndex(editingIndex)
-      }
+    enabledCheck.addActionListener {
+      updateEditingItem { it.isEnabled = enabledCheck.isSelected }
     }
     enabledCheck.isOpaque = false
     enabledCheck.isFocusable = false
 
-    editableCheck.addActionListener { e ->
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      val check = c as? JComboBox<*>
-      (check?.getItemAt(editingIndex) as? ComboItem)?.also {
-        it.isEditable = (e.source as? JCheckBox)?.isSelected ?: false
-        textField.isEditable = it.isEditable
-        check.setSelectedIndex(editingIndex)
-      }
+    editableCheck.addActionListener {
+      updateEditingItem { it.isEditable = editableCheck.isSelected }
     }
     editableCheck.isOpaque = false
     editableCheck.isFocusable = false
 
-    textField.addActionListener { e ->
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      val check = c as? JComboBox<*>
-      (check?.getItemAt(editingIndex) as? ComboItem)?.also {
-        it.text = (e.source as? JTextField)?.text ?: ""
-        check.setSelectedIndex(editingIndex)
-      }
+    textField.addActionListener {
+      updateEditingItem { it.text = textField.text }
     }
     textField.border = BorderFactory.createEmptyBorder()
     textField.isOpaque = false
@@ -188,6 +165,17 @@ private class EditorPanel(
   }
 
   override fun isOpaque() = false
+
+  // Applies the change to the model item being edited and reselects it
+  private fun updateEditingItem(updater: (ComboItem) -> Unit) {
+    val combo = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this) as? JComboBox<*>
+    // getItemAt(...) returns null if the editing index is out of range
+    (combo?.getItemAt(editingIndex) as? ComboItem)?.also {
+      updater(it)
+      item = it
+      combo.setSelectedIndex(editingIndex)
+    }
+  }
 
   fun selectAll() {
     textField.requestFocusInWindow()
