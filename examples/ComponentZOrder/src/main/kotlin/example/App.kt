@@ -6,9 +6,7 @@ import javax.swing.*
 fun createUI(): Component {
   val p1 = JPanel(GridLayout(1, 0, 2, 2)).also {
     it.border = BorderFactory.createTitledBorder("GridLayout")
-    it.add(JScrollPane(JTable(6, 3)))
-    it.add(JScrollPane(JTree()))
-    it.add(JScrollPane(JTextArea("JTextArea")))
+    createComponents().forEach(it::add)
   }
 
   val p2 = JPanel(GridBagLayout()).also {
@@ -18,16 +16,16 @@ fun createUI(): Component {
     c.fill = GridBagConstraints.BOTH
     c.weightx = 1.0
     c.weighty = 1.0
-    it.add(JScrollPane(JTable(6, 3)), c)
-    it.add(JScrollPane(JTree()), c)
-    it.add(JScrollPane(JTextArea("JTextArea")), c)
+    // Keep gridx and gridy at the default GridBagConstraints.RELATIVE,
+    // otherwise changing the z-order does not change the layout position
+    createComponents().forEach { child -> it.add(child, c) }
   }
 
   val button = JButton("rotate")
   button.isFocusable = false
   button.addActionListener {
-    rotateChildComponent(p1)
-    rotateChildComponent(p2)
+    rotateChildComponents(p1)
+    rotateChildComponents(p2)
   }
 
   val p = JPanel(GridLayout(2, 1)).also {
@@ -42,10 +40,21 @@ fun createUI(): Component {
   }
 }
 
-fun rotateChildComponent(p: Container) {
-  // p.setComponentZOrder(p.getComponent(p.componentCount - 1), 0)
-  p.setComponentZOrder(p.components.last(), 0)
-  p.revalidate()
+private fun createComponents(): List<Component> = listOf(
+  JScrollPane(JTable(6, 3)),
+  JScrollPane(JTree()),
+  JScrollPane(JTextArea("JTextArea")),
+)
+
+// Moves the last child component to the front (z-order index 0),
+// which shifts the other child components back by one
+private fun rotateChildComponents(parent: Container) {
+  val count = parent.componentCount
+  if (count > 0) {
+    parent.setComponentZOrder(parent.getComponent(count - 1), 0)
+    parent.revalidate()
+    parent.repaint()
+  }
 }
 
 fun main() {
