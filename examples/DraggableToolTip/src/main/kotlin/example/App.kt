@@ -36,7 +36,7 @@ fun createUI(): Component {
   editor.editorKit = HTMLEditorKit()
   editor.text = HTML_TEXT
   editor.isEditable = false
-  editor.addHyperlinkListener { linkEvent(it, hint) }
+  editor.addHyperlinkListener { handleHyperlinkEvent(it, hint) }
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(editor))
@@ -44,7 +44,7 @@ fun createUI(): Component {
   }
 }
 
-private fun linkEvent(e: HyperlinkEvent, hint: JEditorPane) {
+private fun handleHyperlinkEvent(e: HyperlinkEvent, hint: JEditorPane) {
   val editor = e.getSource() as? JEditorPane ?: return
   when (e.eventType) {
     HyperlinkEvent.EventType.ACTIVATED -> {
@@ -59,7 +59,7 @@ private fun linkEvent(e: HyperlinkEvent, hint: JEditorPane) {
         ?.let { it.attributes.getAttribute(HTML.Tag.A) as? AttributeSet }
         ?.also {
           editor.toolTipText = ""
-          val title = it.getAttribute(HTML.Attribute.TITLE).toString()
+          val title = it.getAttribute(HTML.Attribute.TITLE)?.toString() ?: ""
           val url = e.url.toString()
           hint.text = "<html>$title: <a href='$url'>$url</a><br/>...<br/>..."
           SwingUtilities.getWindowAncestor(hint)?.pack()
@@ -117,10 +117,10 @@ private class PopupDragListener : MouseAdapter() {
 
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
+      // Keep the press point in the coordinates of the popup window moved by mouseDragged
       val c = e.component
-      val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
-      SwingUtilities.convertMouseEvent(c, e, popup)
-      startPt.location = e.getPoint()
+      val w = SwingUtilities.getWindowAncestor(c)
+      startPt.location = SwingUtilities.convertPoint(c, e.point, w)
     }
   }
 
