@@ -2,6 +2,7 @@ package example
 
 import java.awt.*
 import java.awt.geom.Point2D
+import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImageFilter
 import java.awt.image.BufferedImageOp
@@ -19,25 +20,25 @@ fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val img =
     cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val imageIcon1 = ImageIcon(img)
+  val sourceIcon = ImageIcon(img)
 
   val beforeCanvas = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      imageIcon1.paintIcon(this, g, 0, 0)
+      sourceIcon.paintIcon(this, g, 0, 0)
     }
   }
   split.leftComponent = beforeCanvas
 
   val filter = BufferedImageFilter(MosaicImageFilter(16))
   val producer = FilteredImageSource(img.source, filter)
-  val result = Toolkit.getDefaultToolkit().createImage(producer)
-  val imageIcon2 = ImageIcon(result)
+  val mosaicImage = Toolkit.getDefaultToolkit().createImage(producer)
+  val mosaicIcon = ImageIcon(mosaicImage)
   val afterCanvas = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       g.translate(-location.x + split.insets.left, 0)
-      imageIcon2.paintIcon(this, g, 0, 0)
+      mosaicIcon.paintIcon(this, g, 0, 0)
     }
   }
   split.rightComponent = afterCanvas
@@ -66,9 +67,7 @@ private class MosaicImageFilter(
   override fun filter(src: BufferedImage, dst: BufferedImage?): BufferedImage {
     val width = src.width
     val height = src.height
-    val srcRaster = src.raster
-    val img = dst ?: createCompatibleDestImage(src, null)
-    val dstRaster = img.raster
+    val dest = dst ?: createCompatibleDestImage(src, null)
     val pixels = IntArray(blockSize * blockSize)
     var y = 0
     while (y < height) {
@@ -76,22 +75,30 @@ private class MosaicImageFilter(
       while (x < width) {
         val w = minOf(blockSize, width - x)
         val h = minOf(blockSize, height - y)
-        srcRaster.getDataElements(x, y, w, h, pixels)
+        // getRGB/setRGB always use the default ARGB color model, so this works
+        // for any image type (Raster#getDataElements(...) would require an
+        // int-packed raster and could lose the alpha channel of TYPE_INT_RGB)
+        src.getRGB(x, y, w, h, pixels, 0, w)
         updatePixels(w, h, pixels)
-        dstRaster.setDataElements(x, y, w, h, pixels)
+        dest.setRGB(x, y, w, h, pixels, 0, w)
         x += blockSize
       }
       y += blockSize
     }
-    return img
+    return dest
   }
 
-  override fun getBounds2D(src: BufferedImage) = null
+  // the mosaic does not change the geometry of the image
+  override fun getBounds2D(src: BufferedImage): Rectangle2D = src.raster.bounds
 
   override fun createCompatibleDestImage(src: BufferedImage, dstCm: ColorModel?) =
     BufferedImage(src.width, src.height, BufferedImage.TYPE_INT_ARGB)
 
-  override fun getPoint2D(srcPt: Point2D, dstPt: Point2D) = null
+  override fun getPoint2D(srcPt: Point2D, dstPt: Point2D?): Point2D {
+    val pt = dstPt ?: srcPt.clone() as Point2D
+    pt.setLocation(srcPt)
+    return pt
+  }
 
   override fun getRenderingHints() = RenderingHints(
     emptyMap<RenderingHints.Key, Any>(),
@@ -102,15 +109,13 @@ private class MosaicImageFilter(
       var r = 0
       var g = 0
       var b = 0
-      for (by in 0..<h) {
-        for (bx in 0..<w) {
-          val argb = pixels[bx + by * w]
-          r += argb shr 16 and 0xFF
-          g += argb shr 8 and 0xFF
-          b += argb and 0xFF
-        }
-      }
       val size = w * h
+      for (i in 0..<size) {
+        val argb = pixels[i]
+        r += argb shr 16 and 0xFF
+        g += argb shr 8 and 0xFF
+        b += argb and 0xFF
+      }
       r = r / size shl 16
       g = g / size shl 8
       b /= size
@@ -119,18 +124,16 @@ private class MosaicImageFilter(
 
     fun updatePixels(w: Int, h: Int, pixels: IntArray) {
       val rgb = getBlockRgb(w, h, pixels)
-      for (by in 0..<h) {
-        for (bx in 0..<w) {
-          val i = bx + by * w
-          pixels[i] = pixels[i] and 0xFF_00_00_00.toInt() or rgb
-        }
+      // the block is stored contiguously (scansize == w), so a single loop is enough
+      for (i in 0..<w * h) {
+        pixels[i] = pixels[i] and 0xFF_00_00_00.toInt() or rgb
       }
     }
   }
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight
