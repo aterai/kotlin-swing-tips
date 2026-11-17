@@ -11,7 +11,7 @@ private val log = JTextArea()
 
 fun createUI(): Component {
   val button = JButton("open JWindow")
-  button.addActionListener { makeWindow(button) }
+  button.addActionListener { createWindow(button) }
   val p = JPanel()
   p.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0))
   p.add(button)
@@ -23,17 +23,21 @@ fun createUI(): Component {
   }
 }
 
-private fun makeWindow(c: JComponent) {
+private fun createWindow(c: JComponent) {
   val window = JWindow()
   val gc = window.graphicsConfiguration
   if (gc != null && gc.isTranslucencyCapable) {
     window.setBackground(Color(0x0, true))
   }
+  // Window#setOpacity(float) throws an UnsupportedOperationException
+  // if uniform translucency is not supported, so just dispose the window then
+  val translucent = gc?.device
+    ?.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT) == true
   val alpha = AtomicInteger(100)
   val animator = Timer(50, null)
   animator.addActionListener {
     val a = alpha.addAndGet(-10)
-    if (a < 0) {
+    if (a < 0 || !translucent) {
       window.dispose()
       animator.stop()
       log.append("JWindow.dispose()\n")
@@ -44,13 +48,13 @@ private fun makeWindow(c: JComponent) {
     }
   }
   val shape = RoundRectangle2D.Float(0f, 0f, 240f, 64f, 32f, 32f)
-  window.contentPane.add(makePanel(shape, animator))
+  window.contentPane.add(createPanel(shape, animator))
   window.pack()
   window.setLocationRelativeTo(c.rootPane)
   window.isVisible = true
 }
 
-private fun makePanel(shape: Shape, animator: Timer): Component {
+private fun createPanel(shape: Shape, animator: Timer): Component {
   val panel = object : JPanel(BorderLayout()) {
     override fun getPreferredSize() = shape.bounds.size
 
@@ -68,15 +72,15 @@ private fun makePanel(shape: Shape, animator: Timer): Component {
   }
   panel.setOpaque(false)
   panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8))
-  val dwl = DragWindowListener()
-  panel.addMouseListener(dwl)
-  panel.addMouseMotionListener(dwl)
-  panel.add(makeIconBox())
-  panel.add(makeCloseButton(animator), BorderLayout.EAST)
+  val listener = DragWindowListener()
+  panel.addMouseListener(listener)
+  panel.addMouseMotionListener(listener)
+  panel.add(createIconBox())
+  panel.add(createCloseButton(animator), BorderLayout.EAST)
   return panel
 }
 
-private fun makeIconBox(): Container {
+private fun createIconBox(): Container {
   val p = JPanel()
   p.setOpaque(false)
   p.add(JLabel(UIManager.getIcon("OptionPane.errorIcon")))
@@ -86,7 +90,7 @@ private fun makeIconBox(): Container {
   return p
 }
 
-private fun makeCloseButton(animator: Timer): JButton {
+private fun createCloseButton(animator: Timer): JButton {
   val close = JButton("<html><b>X")
   close.setContentAreaFilled(false)
   close.setBorder(BorderFactory.createEmptyBorder())
