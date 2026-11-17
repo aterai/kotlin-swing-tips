@@ -16,10 +16,7 @@ fun createUI(): Component {
       val g2 = g.create()
       if (!isOpaque && b is PlaqueBorder && g2 is Graphics2D) {
         g2.paint = background
-        val dw = (width - 1).toDouble()
-        val dh = (height - 1).toDouble()
-        val dr = arc8.toDouble()
-        g2.fill(b.getBorderShape(0.0, 0.0, dw, dh, dr))
+        g2.fill(b.getBorderShape(this, 0, 0, width, height))
       }
       g2.dispose()
       super.paintComponent(g)
@@ -28,7 +25,8 @@ fun createUI(): Component {
     override fun updateUI() {
       super.updateUI()
       isOpaque = false
-      background = Color.WHITE
+      // Use the LookAndFeel-dependent table background instead of a fixed white color
+      background = UIManager.getColor("Table.background")
       getViewport().background = background
       val b = object : PlaqueBorder(arc8) {
         override fun getBorderShape(
@@ -38,6 +36,8 @@ fun createUI(): Component {
           h: Double,
           r: Double,
         ): Shape {
+          // Distance of the Bezier control points from the corner to approximate a quarter circle:
+          // 4 * (sqrt(2) - 1) / 3 = 0.55228...
           val rr = r * .5522
           val path = Path2D.Double()
           path.moveTo(x, y + r)
@@ -48,7 +48,6 @@ fun createUI(): Component {
           path.curveTo(x + w - rr, y + h - r, x + w - r, y + h - rr, x + w - r, y + h)
           path.lineTo(x + r, y + h)
           path.curveTo(x + r, y + h - rr, x + rr, y + h - r, x, y + h - r)
-          // path.lineTo(x, y + r)
           path.closePath()
           return path
         }
@@ -64,10 +63,7 @@ fun createUI(): Component {
       val g2 = g.create()
       if (!isOpaque && b is PlaqueBorder && g2 is Graphics2D) {
         g2.paint = background
-        val dw = (width - 1).toDouble()
-        val dh = (height - 1).toDouble()
-        val dr = arc4.toDouble()
-        g2.fill(b.getBorderShape(0.0, 0.0, dw, dh, dr))
+        g2.fill(b.getBorderShape(this, 0, 0, width, height))
       }
       g2.dispose()
       super.paintComponent(g)
@@ -105,28 +101,40 @@ private open class PlaqueBorder(
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2.paint = Color.GRAY
-    val dx = x.toDouble()
-    val dy = y.toDouble()
-    val dw = width - 1.0
-    val dh = height - 1.0
-    val arc = getBorderInsets(c).top.toDouble()
-    g2.draw(getBorderShape(dx, dy, dw, dh, arc))
+    g2.draw(getBorderShape(c, x, y, width, height))
     g2.dispose()
   }
 
-  open fun getBorderShape(
+  /**
+   * Returns the border shape with the corner radius clamped to the component size,
+   * so that the background fill and the border outline always match.
+   */
+  fun getBorderShape(
+    c: Component,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ): Shape {
+    val i = getBorderInsets(c)
+    val arc = minOf(i.top, width / 2, height / 2)
+    return getBorderShape(x.toDouble(), y.toDouble(), width - 1.0, height - 1.0, arc.toDouble())
+  }
+
+  protected open fun getBorderShape(
     x: Double,
     y: Double,
     w: Double,
     h: Double,
     r: Double,
   ): Shape {
-    val rect = Area(Rectangle2D.Double(x, y, w, h))
-    rect.subtract(Area(Ellipse2D.Double(x - r, y - r, r + r, r + r)))
-    rect.subtract(Area(Ellipse2D.Double(x + w - r, y - r, r + r, r + r)))
-    rect.subtract(Area(Ellipse2D.Double(x - r, y + h - r, r + r, r + r)))
-    rect.subtract(Area(Ellipse2D.Double(x + w - r, y + h - r, r + r, r + r)))
-    return rect
+    val d = r + r
+    val shape = Area(Rectangle2D.Double(x, y, w, h))
+    shape.subtract(Area(Ellipse2D.Double(x - r, y - r, d, d)))
+    shape.subtract(Area(Ellipse2D.Double(x + w - r, y - r, d, d)))
+    shape.subtract(Area(Ellipse2D.Double(x - r, y + h - r, d, d)))
+    shape.subtract(Area(Ellipse2D.Double(x + w - r, y + h - r, d, d)))
+    return shape
   }
 }
 
