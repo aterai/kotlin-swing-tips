@@ -37,19 +37,19 @@ fun createUI(): Component {
 
       if (types.contains(Type.SUBTRACT)) {
         g2.color = Color.RED
-        val shape0 = createRoundedRect0(rect, aw, ah, corners)
+        val shape0 = createRoundRectBySubtraction(rect, aw, ah, corners)
         g2.draw(shape0)
       }
 
       if (types.contains(Type.PATH2D1)) {
         g2.color = Color.GREEN
-        val shape1 = createRoundedRect1(rect, aw, ah, corners)
+        val shape1 = createRoundRectWithCornerControlPoints(rect, aw, ah, corners)
         g2.draw(shape1)
       }
 
       if (types.contains(Type.PATH2D2)) {
         g2.color = Color.BLUE
-        val shape2 = createRoundedRect2(rect, aw, ah, corners)
+        val shape2 = createRoundRectWithKappa(rect, aw, ah, corners)
         g2.draw(shape2)
       }
 
@@ -69,35 +69,33 @@ private fun createPopupMenu(
   types: EnumSet<Type>,
 ): JPopupMenu {
   val popup = JPopupMenu()
-  Corner.entries.forEach {
-    val check = JCheckBoxMenuItem(it.name, true)
-    check.addActionListener { e ->
-      if ((e.source as? AbstractButton)?.isSelected == true) {
-        corners.add(it)
-      } else {
-        corners.remove(it)
-      }
-      p.repaint()
-    }
-    popup.add(check)
-  }
+  corners.forEach { popup.add(createCheckBox(p, it, corners)) }
   popup.addSeparator()
-  Type.entries.forEach {
-    val check = JCheckBoxMenuItem(it.name, true)
-    check.addActionListener { e ->
-      if ((e.source as? AbstractButton)?.isSelected == true) {
-        types.add(it)
-      } else {
-        types.remove(it)
-      }
-      p.repaint()
-    }
-    popup.add(check)
-  }
+  types.forEach { popup.add(createCheckBox(p, it, types)) }
   return popup
 }
 
-fun createRoundedRect0(
+private fun <E : Enum<E>> createCheckBox(
+  p: JPanel,
+  item: E,
+  selected: MutableSet<E>,
+): JCheckBoxMenuItem {
+  val check = JCheckBoxMenuItem(item.name, selected.contains(item))
+  check.addActionListener { e ->
+    if ((e.source as? AbstractButton)?.isSelected == true) {
+      selected.add(item)
+    } else {
+      selected.remove(item)
+    }
+    p.repaint()
+  }
+  return check
+}
+
+// Bezier control point ratio for approximating a quarter circle: 4 * (sqrt(2) - 1) / 3
+private val KAPPA = 4.0 * (sqrt(2.0) - 1.0) / 3.0 // = 0.55228...
+
+fun createRoundRectBySubtraction(
   rect: Rectangle2D,
   aw: Double,
   ah: Double,
@@ -130,11 +128,10 @@ fun createRoundedRect0(
     br.subtract(Area(Ellipse2D.Double(x + w - aw, y + h - ah, aw, ah)))
     r.subtract(br)
   }
-  // r.transform(AffineTransform.getTranslateInstance(x, y));
   return r
 }
 
-fun createRoundedRect2(
+fun createRoundRectWithKappa(
   r: Rectangle2D,
   aw: Double,
   ah: Double,
@@ -144,11 +141,10 @@ fun createRoundedRect2(
   val y = r.y
   val w = r.width
   val h = r.height
-  val arh = ah * .5
   val arw = aw * .5
-  val kappa = 4.0 * (sqrt(2.0) - 1.0) / 3.0
-  val akw = arw * kappa
-  val akh = arh * kappa
+  val arh = ah * .5
+  val akw = arw * KAPPA
+  val akh = arh * KAPPA
   val p = Path2D.Double()
   if (corners.contains(Corner.TOP_LEFT)) {
     p.moveTo(x, y + arh)
@@ -178,7 +174,7 @@ fun createRoundedRect2(
   return p
 }
 
-fun createRoundedRect1(
+fun createRoundRectWithCornerControlPoints(
   r: Rectangle2D,
   aw: Double,
   ah: Double,
@@ -191,6 +187,8 @@ fun createRoundedRect1(
   val arw = aw * .5
   val arh = ah * .5
   val path = Path2D.Double()
+  // The first control point coincides with the start point and the second one
+  // is the corner of the rectangle, so the curve does not match a quarter ellipse.
   if (corners.contains(Corner.TOP_LEFT)) {
     path.moveTo(x, y + arh)
     path.curveTo(x, y + arh, x, y, x + arw, y)
