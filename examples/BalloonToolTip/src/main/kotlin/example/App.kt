@@ -9,17 +9,33 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
 fun createUI(): Component {
-  val model = makeModel()
-  val list1 = makeList1(model)
-  val list2 = makeList2(model)
+  val model = createModel()
+  val list1 = object : JList<String>(model) {
+    override fun createToolTip(): JToolTip {
+      val tip = BalloonToolTip()
+      tip.component = this
+      return tip
+    }
+
+    override fun updateUI() {
+      super.updateUI()
+      setCellRenderer(ToolTipListCellRenderer())
+    }
+  }
+  val list2 = object : JList<String>(model) {
+    override fun updateUI() {
+      super.updateUI()
+      setCellRenderer(ToolTipListCellRenderer())
+    }
+  }
   return JPanel(GridLayout(1, 2)).also {
-    it.add(makeTitledPanel("BalloonToolTip", list1))
-    it.add(makeTitledPanel("Default JToolTip", list2))
+    it.add(createTitledPanel("BalloonToolTip", list1))
+    it.add(createTitledPanel("Default JToolTip", list2))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeModel(): DefaultListModel<String> {
+private fun createModel(): DefaultListModel<String> {
   val model = DefaultListModel<String>()
   model.addElement("ABC DEF GHI JKL MNO PQR STU VWX YZ")
   model.addElement("111")
@@ -33,71 +49,7 @@ private fun makeModel(): DefaultListModel<String> {
   return model
 }
 
-private fun makeList1(
-  model: DefaultListModel<String>,
-) = object : JList<String>(model) {
-  override fun createToolTip(): JToolTip {
-    val tip = BalloonToolTip()
-    tip.component = this
-    return tip
-  }
-
-  override fun updateUI() {
-    cellRenderer = null
-    super.updateUI()
-    val renderer = DefaultListCellRenderer()
-    setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer
-        .getListCellRendererComponent(
-          list,
-          value,
-          index,
-          isSelected,
-          cellHasFocus,
-        ).also {
-          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-          if (vp is JViewport) {
-            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
-            val fm = it.getFontMetrics(it.font)
-            val str = value ?: ""
-            val b = fm.stringWidth(str) > rect.width
-            (it as? JComponent)?.toolTipText = if (b) str else null
-          }
-        }
-    }
-  }
-}
-
-private fun makeList2(
-  model: DefaultListModel<String>,
-) = object : JList<String>(model) {
-  override fun updateUI() {
-    cellRenderer = null
-    super.updateUI()
-    val renderer = DefaultListCellRenderer()
-    setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer
-        .getListCellRendererComponent(
-          list,
-          value,
-          index,
-          isSelected,
-          cellHasFocus,
-        ).also {
-          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-          if (vp is JViewport) {
-            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
-            val fm = it.getFontMetrics(it.font)
-            val str = value ?: ""
-            val b = fm.stringWidth(str) > rect.width
-            (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
-          }
-        }
-    }
-  }
-}
-
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -107,6 +59,39 @@ private fun makeTitledPanel(
   p.border = BorderFactory.createTitledBorder(title)
   p.add(scroll)
   return p
+}
+
+private class ToolTipListCellRenderer<E> : ListCellRenderer<E> {
+  private val renderer = DefaultListCellRenderer()
+
+  override fun getListCellRendererComponent(
+    list: JList<out E>,
+    value: E?,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean,
+  ): Component {
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
+    if (c is JComponent) {
+      val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+      val rect = (vp as? JComponent)
+        ?.let { SwingUtilities.calculateInnerArea(it, null) }
+        ?: Rectangle()
+      // Show the cell text as a tooltip only if it is clipped by the viewport
+      val fm = c.getFontMetrics(c.font)
+      c.toolTipText = value
+        ?.toString()
+        ?.takeIf { fm.stringWidth(it) > rect.width }
+        ?: list.toolTipText
+    }
+    return c
+  }
 }
 
 private class BalloonToolTip : JToolTip() {
@@ -131,10 +116,13 @@ private class BalloonToolTip : JToolTip() {
     border = BorderFactory.createEmptyBorder(8, 5, 0, 5)
   }
 
-  override fun getPreferredSize() = super.getPreferredSize()?.also { it.height = 28 }
+  override fun getPreferredSize(): Dimension? = super.getPreferredSize()?.also {
+    // Keep the default height, but grow it for larger fonts
+    it.height = maxOf(it.height, 28)
+  }
 
   override fun paintComponent(g: Graphics) {
-    val s = makeBalloonShape(4.0, 6.0)
+    val s = createBalloonShape(4.0, 6.0)
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
@@ -148,15 +136,16 @@ private class BalloonToolTip : JToolTip() {
     super.paintComponent(g)
   }
 
-  fun makeBalloonShape(triHeight: Double, arc: Double): Shape {
-    val rect = SwingUtilities.calculateInnerArea(this, null)
-    val x = rect.getX()
+  private fun createBalloonShape(triHeight: Double, arc: Double): Shape {
+    // The tail (triangle) starts at the left inset and points upward
+    val x = insets.left.toDouble()
     val triangle = Path2D.Double()
     triangle.moveTo(x + triHeight, triHeight)
     triangle.lineTo(x + triHeight * 2.0, 0.0)
     triangle.lineTo(x + triHeight * 3.0, triHeight)
+    triangle.closePath()
     val w = width - 1.0
-    val h = rect.getHeight() + triHeight - 1.0
+    val h = height - triHeight - 1.0
     val area = Area(RoundRectangle2D.Double(0.0, triHeight, w, h, arc, arc))
     area.add(Area(triangle))
     return area
