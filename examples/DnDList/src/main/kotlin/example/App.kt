@@ -87,24 +87,26 @@ private class DnDList<E> :
   }
 
   private fun initTargetLine(p: Point) {
-    val rect = getCellBounds(0, 0)
-    val cellHeight = rect.height
+    var index = locationToIndex(p)
+    if (index < 0) {
+      targetIndex = -1
+      return
+    }
+    // Insert before the nearest cell if the cursor is in its upper half,
+    // otherwise insert after it (also works with variable cell heights).
+    val rect = getCellBounds(index, index)
     val lineHeight = 2
-    val modelSize = model.size
-    targetIndex = -1
-    targetLine.setSize(rect.width, lineHeight)
-    for (i in 0..<modelSize) {
-      rect.setLocation(0, cellHeight * i - cellHeight / 2)
-      if (rect.contains(p)) {
-        targetIndex = i
-        targetLine.setLocation(0, i * cellHeight)
-        break
-      }
+    var y = rect.y
+    if (p.y >= rect.centerY) {
+      index++
+      y += rect.height
     }
-    if (targetIndex < 0) {
-      targetIndex = modelSize
-      targetLine.setLocation(0, targetIndex * cellHeight - lineHeight)
+    if (index == model.size) {
+      // Keep the line inside the bottom edge of the last cell
+      y -= lineHeight
     }
+    targetIndex = index
+    targetLine.setBounds(rect.x, y, rect.width, lineHeight)
   }
 
   // Interface: DragGestureListener
@@ -124,8 +126,7 @@ private class DnDList<E> :
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) =
-    flavor.humanPresentableName == NAME
+  override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
   private inner class CDropTargetListener : DropTargetListener {
     override fun dragExit(e: DropTargetEvent) {
@@ -161,38 +162,25 @@ private class DnDList<E> :
     }
 
     override fun drop(e: DropTargetDropEvent) {
-      val model = model as? DefaultListModel<E> ?: return
-      if (isDropAcceptable(e) && targetIndex >= 0) {
-        val str = model[draggedIndex]
-        when {
-          targetIndex == draggedIndex -> setSelectedIndex(targetIndex)
-
-          targetIndex < draggedIndex -> model.also {
-            it.remove(draggedIndex)
-            it.add(targetIndex, str)
-            setSelectedIndex(targetIndex)
-          }
-
-          else -> model.also {
-            it.add(targetIndex, str)
-            it.remove(draggedIndex)
-            setSelectedIndex(targetIndex - 1)
-          }
-        }
-        e.dropComplete(true)
-      } else {
-        e.dropComplete(false)
+      val model = model as? DefaultListModel<E>
+      val acceptable = model != null &&
+        e.isDataFlavorSupported(FLAVOR) &&
+        targetIndex >= 0 &&
+        draggedIndex >= 0
+      if (acceptable) {
+        val value = model.remove(draggedIndex)
+        // The target index shifts up by one after removing an item above it
+        val index = if (targetIndex > draggedIndex) targetIndex - 1 else targetIndex
+        model.add(index, value)
+        setSelectedIndex(index)
       }
-      e.dropComplete(false)
+      e.dropComplete(acceptable)
       targetIndex = -1
       repaint()
     }
 
     private fun isDragAcceptable(e: DropTargetDragEvent) =
-      isDataFlavorSupported(e.currentDataFlavors[0])
-
-    private fun isDropAcceptable(e: DropTargetDropEvent) =
-      isDataFlavorSupported(e.transferable.transferDataFlavors[0])
+      e.isDataFlavorSupported(FLAVOR)
   }
 
   companion object {
