@@ -5,9 +5,9 @@ import java.util.EventListener
 import java.util.EventObject
 import javax.swing.*
 
-private fun makeList() = listOf(
+private fun createList() = listOf(
   object : AbstractExpansionPanel("Panel1") {
-    override fun makePanel(): Container {
+    override fun createPanel(): Container {
       val p = Box.createVerticalBox()
       p.border = BorderFactory.createEmptyBorder(5, 15, 5, 15)
       p.add(JCheckBox("11111"))
@@ -16,19 +16,19 @@ private fun makeList() = listOf(
     }
   },
   object : AbstractExpansionPanel("Panel2") {
-    override fun makePanel(): Container {
+    override fun createPanel(): Container {
       val p = Box.createVerticalBox()
       p.border = BorderFactory.createEmptyBorder(5, 15, 5, 15)
       for (i in 0..15) {
-        p.add(makeLabel(i))
+        p.add(createLabel(i))
       }
       return p
     }
 
-    private fun makeLabel(i: Int) = JLabel("%02d".format(i))
+    private fun createLabel(i: Int) = JLabel("%02d".format(i))
   },
   object : AbstractExpansionPanel("Panel3") {
-    override fun makePanel(): Container {
+    override fun createPanel(): Container {
       val p = Box.createVerticalBox()
       p.border = BorderFactory.createEmptyBorder(5, 15, 5, 15)
       val bg = ButtonGroup()
@@ -49,35 +49,7 @@ fun createUI(): Component {
   val northBox = Box.createVerticalBox()
   val centerBox = Box.createVerticalBox()
   val southBox = Box.createVerticalBox()
-  val panelList = makeList()
-  val rl = ExpansionListener { e ->
-    (e.source as? Component)?.also { s ->
-      s.isVisible = false
-      centerBox.removeAll()
-      northBox.removeAll()
-      southBox.removeAll()
-      var insertSouth = false
-      for (exp in panelList) {
-        if (s == exp && exp.isExpanded) {
-          centerBox.add(exp)
-          insertSouth = true
-          continue
-        }
-        exp.isExpanded = false
-        if (insertSouth) {
-          southBox.add(exp)
-        } else {
-          northBox.add(exp)
-        }
-      }
-      s.isVisible = true
-    }
-  }
-  panelList.forEach {
-    northBox.add(it)
-    it.addExpansionListener(rl)
-  }
-
+  val panelList = createList()
   val panel = object : JPanel(BorderLayout()) {
     override fun getMinimumSize() = super.getMinimumSize()?.also {
       it.width = 120
@@ -86,6 +58,33 @@ fun createUI(): Component {
   panel.add(northBox, BorderLayout.NORTH)
   panel.add(centerBox)
   panel.add(southBox, BorderLayout.SOUTH)
+
+  fun rearrangePanels(source: Component) {
+    listOf(northBox, centerBox, southBox).forEach { it.removeAll() }
+    var target = northBox
+    for (p in panelList) {
+      if (p == source && p.isExpanded) {
+        centerBox.add(p)
+        target = southBox
+      } else {
+        p.isExpanded = false
+        target.add(p)
+      }
+    }
+  }
+
+  val listener = ExpansionListener { e ->
+    (e.source as? Component)?.also {
+      rearrangePanels(it)
+      // Removing components does not always repaint the vacated area
+      panel.revalidate()
+      panel.repaint()
+    }
+  }
+  panelList.forEach {
+    northBox.add(it)
+    it.addExpansionListener(listener)
+  }
 
   return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel, JScrollPane(JTree())).also {
     it.preferredSize = Dimension(320, 240)
@@ -99,18 +98,18 @@ private abstract class AbstractExpansionPanel(
   private val scroll = JScrollPane()
   private val button = JButton(title)
   var isExpanded = false
-    set(openFlag) {
-      if (openFlag) {
+    set(expanded) {
+      if (expanded) {
         add(scroll)
       } else {
         remove(scroll)
       }
-      field = openFlag
+      field = expanded
     }
 
   init {
     scroll.also {
-      it.setViewportView(makePanel())
+      it.setViewportView(createPanel())
       it.verticalScrollBar.unitIncrement = 25
     }
     button.also {
@@ -122,14 +121,14 @@ private abstract class AbstractExpansionPanel(
     }
   }
 
-  abstract fun makePanel(): Container?
+  abstract fun createPanel(): Container?
 
   fun addExpansionListener(l: ExpansionListener) {
     listenerList.add(ExpansionListener::class.java, l)
   }
 
   // Notify all listeners that have registered interest for
-  // notification on this event type.The event instance
+  // notification on this event type. The event instance
   // is lazily created using the parameters passed into
   // the fire method.
   protected fun fireExpansionEvent() {
