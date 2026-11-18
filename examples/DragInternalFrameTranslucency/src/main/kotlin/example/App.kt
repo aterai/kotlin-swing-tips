@@ -32,6 +32,9 @@ fun createUI(): Component {
       draggingFrame = null
       desktop.dragMode = JDesktopPane.LIVE_DRAG_MODE
       super.endResizingFrame(f)
+      // The bounds may not change (e.g. just clicking the border), so repaint
+      // explicitly to clear the semi-transparent state
+      f.repaint()
     }
   }
 
@@ -55,6 +58,8 @@ private fun createFrame(title: String): JInternalFrame {
   val frame = object : JInternalFrame(title, true, true, true, true) {
     override fun paintComponent(g: Graphics) {
       if (draggingFrame === this && g is Graphics2D) {
+        // The same Graphics is also used to paint the border and children,
+        // so the whole frame is drawn semi-transparent
         g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)
       }
       super.paintComponent(g)
