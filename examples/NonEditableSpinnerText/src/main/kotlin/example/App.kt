@@ -6,22 +6,23 @@ import javax.swing.*
 fun createUI(): Component {
   val model = SpinnerNumberModel(10, 0, 1000, 1)
 
-  val spinner1 = JSpinner(model)
-  spinner1.isEnabled = false
-  // UIManager.put("FormattedTextField.inactiveBackground", Color.RED)
+  val disabledSpinner = JSpinner(model)
+  disabledSpinner.isEnabled = false
 
-  val spinner2 = JSpinner(model)
-  (spinner2.editor as? JSpinner.NumberEditor)?.textField?.also {
+  val readOnlySpinner = JSpinner(model)
+  (readOnlySpinner.editor as? JSpinner.DefaultEditor)?.textField?.also {
     it.isEditable = false
+    // A non-editable text field is painted with the inactive background color,
+    // so restore the normal background to look the same as the editable one
     it.background = UIManager.getColor("FormattedTextField.background")
   }
 
   val box = Box.createVerticalBox()
   box.add(makeTitledPanel("Default", JSpinner(model)))
   box.add(Box.createVerticalStrut(10))
-  box.add(makeTitledPanel("spinner.setEnabled(false)", spinner1))
+  box.add(makeTitledPanel("spinner.setEnabled(false)", disabledSpinner))
   box.add(Box.createVerticalStrut(10))
-  box.add(makeTitledPanel("editor.setEditable(false)", spinner2))
+  box.add(makeTitledPanel("field.setEditable(false)", readOnlySpinner))
 
   val p = JPanel(BorderLayout())
   p.add(box, BorderLayout.NORTH)
