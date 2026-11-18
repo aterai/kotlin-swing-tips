@@ -16,19 +16,19 @@ fun createUI(): Component {
     printInfo(button, LocalTime.now(ZoneId.systemDefault()).toString())
   }
 
-  val check1 = JCheckBox("setVisible", true)
-  check1.addActionListener {
-    button.isVisible = (it.source as? JCheckBox)?.isSelected == true
+  val visibleCheck = JCheckBox("setVisible", true)
+  visibleCheck.addActionListener {
+    button.isVisible = visibleCheck.isSelected
   }
 
-  val check2 = JCheckBox("setEnabled", true)
-  check2.addActionListener {
-    button.isEnabled = (it.source as? JCheckBox)?.isSelected == true
+  val enabledCheck = JCheckBox("setEnabled", true)
+  enabledCheck.addActionListener {
+    button.isEnabled = enabledCheck.isSelected
   }
 
-  val check3 = JCheckBox("start", true)
-  check3.addActionListener {
-    if ((it.source as? JCheckBox)?.isSelected == true) {
+  val timerCheck = JCheckBox("start", true)
+  timerCheck.addActionListener {
+    if (timerCheck.isSelected) {
       timer.start()
     } else {
       timer.stop()
@@ -36,14 +36,7 @@ fun createUI(): Component {
   }
 
   val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-  button.addHierarchyListener { e ->
-    if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L) {
-      printInfo(button, "SHOWING_CHANGED")
-    }
-    if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L) {
-      printInfo(button, "DISPLAYABILITY_CHANGED")
-    }
-  }
+  button.addHierarchyListener { hierarchyChanged(it, timer) }
   printInfo(button, "after: new JButton, before: add(button); frame.setVisible(true)")
 
   val panel = JPanel()
@@ -55,31 +48,47 @@ fun createUI(): Component {
   tabs.addTab("JTree", JScrollPane(JTree()))
   tabs.addTab("JLabel", JLabel("Test"))
 
-  val p1 = JPanel(FlowLayout(FlowLayout.LEFT))
-  p1.add(JLabel("JButton:"))
-  p1.add(check1)
-  p1.add(check2)
+  val buttonPanel = JPanel(FlowLayout(FlowLayout.LEFT))
+  buttonPanel.add(JLabel("JButton:"))
+  buttonPanel.add(visibleCheck)
+  buttonPanel.add(enabledCheck)
 
-  val p2 = JPanel(FlowLayout(FlowLayout.LEFT))
-  p2.add(JLabel("Timer:"))
-  p2.add(check3)
+  val timerPanel = JPanel(FlowLayout(FlowLayout.LEFT))
+  timerPanel.add(JLabel("Timer:"))
+  timerPanel.add(timerCheck)
 
-  val p = JPanel(GridLayout(2, 1))
-  p.add(p1)
-  p.add(p2)
+  val controls = JPanel(GridLayout(2, 1))
+  controls.add(buttonPanel)
+  controls.add(timerPanel)
   timer.start()
 
   return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
+    it.add(controls, BorderLayout.NORTH)
     it.add(tabs)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-fun printInfo(c: Component, str: String) {
+private fun hierarchyChanged(e: HierarchyEvent, timer: Timer) {
+  val c = e.component
+  val flags = e.changeFlags
+  if (flags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L) {
+    printInfo(c, "SHOWING_CHANGED")
+  }
+  if (flags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L) {
+    printInfo(c, "DISPLAYABILITY_CHANGED")
+    // Stop the Timer when the frame is disposed so that it does not
+    // keep logging and prevent the application from shutting down.
+    if (!c.isDisplayable) {
+      timer.stop()
+    }
+  }
+}
+
+fun printInfo(c: Component, message: String) {
   logger.info {
     """
-      ${c.javaClass.name}: $str
+      ${c.javaClass.name}: $message
         isDisplayable: ${c.isDisplayable}
         isShowing: ${c.isShowing}
         isVisible: ${c.isVisible}
