@@ -3,29 +3,14 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun createUI(): Component {
-  // UIManager.put("FileChooser.readOnly", true)
-  val log = JTextArea()
+private val log = JTextArea()
 
+fun createUI(): Component {
   val readOnlyButton = JButton("readOnly")
-  readOnlyButton.addActionListener {
-    UIManager.put("FileChooser.readOnly", true)
-    val fileChooser = JFileChooser()
-    val retValue = fileChooser.showOpenDialog(log.rootPane)
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      log.text = fileChooser.selectedFile.absolutePath
-    }
-  }
+  readOnlyButton.addActionListener { showOpenDialog(true) }
 
   val defaultButton = JButton("Default")
-  defaultButton.addActionListener {
-    UIManager.put("FileChooser.readOnly", false)
-    val fileChooser = JFileChooser()
-    val retValue = fileChooser.showOpenDialog(log.rootPane)
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      log.text = fileChooser.selectedFile.absolutePath
-    }
-  }
+  defaultButton.addActionListener { showOpenDialog(false) }
 
   val p = JPanel()
   p.border = BorderFactory.createTitledBorder("JFileChooser")
@@ -36,6 +21,17 @@ fun createUI(): Component {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(log))
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun showOpenDialog(readOnly: Boolean) {
+  // The FileChooserUI reads "FileChooser.readOnly" when it is installed,
+  // so the value must be set before the JFileChooser is created.
+  UIManager.put("FileChooser.readOnly", readOnly)
+  val fileChooser = JFileChooser()
+  val retValue = fileChooser.showOpenDialog(log.rootPane)
+  if (retValue == JFileChooser.APPROVE_OPTION) {
+    log.text = fileChooser.selectedFile.absolutePath
   }
 }
 
