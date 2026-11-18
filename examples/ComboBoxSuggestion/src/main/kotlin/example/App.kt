@@ -80,20 +80,23 @@ private class ComboKeyHandler(
   }
 
   override fun keyTyped(e: KeyEvent) {
-    EventQueue.invokeLater {
-      val text = (e.component as? JTextField)?.text ?: ""
-      if (text.isEmpty()) {
-        val m = DefaultComboBoxModel(list.toTypedArray())
-        setSuggestionModel(comboBox, m, "")
+    val textField = e.component as? JTextField ?: return
+    // The typed character is not yet inserted into the document at this point
+    EventQueue.invokeLater { updateSuggestions(textField.text) }
+  }
+
+  private fun updateSuggestions(text: String) {
+    if (text.isEmpty()) {
+      val m = DefaultComboBoxModel(list.toTypedArray())
+      setSuggestionModel(comboBox, m, "")
+      comboBox.hidePopup()
+    } else {
+      val m = getSuggestedModel(list, text)
+      if (m.size == 0 || shouldHide) {
         comboBox.hidePopup()
       } else {
-        val m = getSuggestedModel(list, text)
-        if (m.size == 0 || shouldHide) {
-          comboBox.hidePopup()
-        } else {
-          setSuggestionModel(comboBox, m, text)
-          comboBox.showPopup()
-        }
+        setSuggestionModel(comboBox, m, text)
+        comboBox.showPopup()
       }
     }
   }
@@ -114,7 +117,8 @@ private class ComboKeyHandler(
   }
 
   private fun enter(text: String) {
-    if (!list.contains(text)) {
+    // Do not add an empty string as a candidate
+    if (text.isNotEmpty() && !list.contains(text)) {
       list.add(text)
       list.sort()
       setSuggestionModel(comboBox, getSuggestedModel(list, text), text)
