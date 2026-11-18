@@ -5,22 +5,19 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.ActionEvent
-import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
-import javax.swing.tree.MutableTreeNode
-import javax.swing.tree.TreeNode
 import javax.swing.tree.TreeSelectionModel
 
 fun createUI() = JPanel(GridLayout(1, 2)).also {
   val handler = TreeTransferHandler()
-  it.add(JScrollPane(makeTree(handler)))
-  it.add(JScrollPane(makeTree(handler)))
+  it.add(JScrollPane(createTree(handler)))
+  it.add(JScrollPane(createTree(handler)))
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeTree(handler: TransferHandler): JTree {
+private fun createTree(handler: TransferHandler): JTree {
   val tree = JTree()
   tree.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   tree.isRootVisible = false
@@ -29,12 +26,12 @@ private fun makeTree(handler: TransferHandler): JTree {
   tree.dropMode = DropMode.INSERT
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
   // Disable node Cut action
-  val empty = object : AbstractAction() {
+  val doNothing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       // do nothing action
     }
   }
-  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), empty)
+  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), doNothing)
   for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
@@ -47,6 +44,12 @@ private class TreeTransferHandler : TransferHandler() {
   override fun createTransferable(c: JComponent): Transferable {
     val src = c as? JTree
     source = src
+    // An empty array is transferred when nothing is selected, and importData(...) rejects it
+    val nodes = src
+      ?.selectionPaths
+      ?.mapNotNull { it.lastPathComponent as? DefaultMutableTreeNode }
+      .orEmpty()
+      .toTypedArray()
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -54,84 +57,80 @@ private class TreeTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        val paths = src?.selectionPaths
-        return if (isDataFlavorSupported(flavor) && paths != null) {
-          val nodes = arrayOfNulls<DefaultMutableTreeNode>(paths.size)
-          for (i in paths.indices) {
-            nodes[i] = paths[i].lastPathComponent as? DefaultMutableTreeNode
-          }
-          nodes
-        } else {
+        if (!isDataFlavorSupported(flavor)) {
           throw UnsupportedFlavorException(flavor)
         }
+        return nodes
       }
     }
   }
 
   override fun getSourceActions(c: JComponent) = MOVE
 
-  override fun canImport(support: TransferSupport) =
-    support.isDrop &&
-      support.isDataFlavorSupported(FLAVOR) &&
-      support.component != source
+  override fun canImport(support: TransferSupport): Boolean {
+    val isSource = support.component == source
+    return !isSource && support.isDrop && support.isDataFlavorSupported(FLAVOR)
+  }
 
   override fun importData(support: TransferSupport): Boolean {
-    @Suppress("UNCHECKED_CAST")
-    val nodes = runCatching {
-      support.transferable?.getTransferData(FLAVOR) as? Array<DefaultMutableTreeNode>
-    }.getOrNull().orEmpty()
-    val dl = support.dropLocation as? JTree.DropLocation
-    val target = dl?.path
-    val parent = target?.lastPathComponent
     val tree = support.component as? JTree
-    val model = tree?.model
-    if (dl != null && model is DefaultTreeModel && parent is DefaultMutableTreeNode) {
-      val childIndex = dl.childIndex
-      val idx = AtomicInteger(if (childIndex < 0) parent.childCount else childIndex)
-      nodes.forEach {
-        val clone = DefaultMutableTreeNode(it.userObject)
-        model.insertNodeInto(
-          deepCopyTreeNode(it, clone),
-          parent,
-          idx.incrementAndGet(),
-        )
-      }
-      return true
-    }
-    return false
+    val dl = support.dropLocation as? JTree.DropLocation
+    // Returning true lets exportDone(...) remove the nodes from the source tree,
+    // so report success only when the nodes were actually inserted
+    val nodes = getTransferData(support.transferable)
+    return tree != null && dl != null && insertNodes(tree, dl, nodes)
   }
 
-  override fun exportDone(
-    src: JComponent,
-    data: Transferable,
-    action: Int,
-  ) {
-    val tree = src as? JTree
-    val model = tree?.model
-    val selectionPaths = tree?.selectionPaths
-    if (action == MOVE && model is DefaultTreeModel && selectionPaths != null) {
-      for (path in selectionPaths) {
-        model.removeNodeFromParent(path.lastPathComponent as? MutableTreeNode)
-      }
+  private fun insertNodes(
+    tree: JTree,
+    dl: JTree.DropLocation,
+    nodes: List<DefaultMutableTreeNode>,
+  ): Boolean {
+    val parent = dl.path?.lastPathComponent as? DefaultMutableTreeNode
+    val model = tree.model as? DefaultTreeModel
+    if (parent == null || model == null || nodes.isEmpty()) {
+      return false
     }
+    val childIndex = dl.childIndex
+    var index = if (childIndex < 0) parent.childCount else childIndex
+    for (node in nodes) {
+      // Insert a copy without a parent: inserting the original node would detach it
+      // from the source model, and exportDone(...) could no longer remove it
+      model.insertNodeInto(deepCopy(node), parent, index)
+      index++
+    }
+    return true
   }
 
-  private fun deepCopyTreeNode(
-    src: TreeNode,
-    tgt: DefaultMutableTreeNode,
-  ): MutableTreeNode {
+  private fun getTransferData(transferable: Transferable?) =
+    runCatching {
+      (transferable?.getTransferData(FLAVOR) as? Array<*>)
+        ?.filterIsInstance<DefaultMutableTreeNode>()
+    }.getOrNull().orEmpty()
+
+  private fun deepCopy(src: DefaultMutableTreeNode): DefaultMutableTreeNode {
+    val copy = DefaultMutableTreeNode(src.userObject)
     src
       .children()
       .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
-      .forEach {
-        val clone = DefaultMutableTreeNode(it.userObject)
-        tgt.add(clone)
-        if (!it.isLeaf) {
-          deepCopyTreeNode(it, clone)
-        }
-      }
-    return tgt
+      .forEach { copy.add(deepCopy(it)) }
+    return copy
+  }
+
+  override fun exportDone(
+    src: JComponent,
+    data: Transferable?,
+    action: Int,
+  ) {
+    val model = (src as? JTree)?.model
+    if (action == MOVE && model is DefaultTreeModel) {
+      // Remove the transferred nodes rather than the current selection,
+      // which may have changed since the drag started
+      getTransferData(data)
+        .filter { it.parent != null }
+        .forEach { model.removeNodeFromParent(it) }
+    }
   }
 
   companion object {
