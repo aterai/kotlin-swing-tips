@@ -2,7 +2,7 @@ package example
 
 import java.awt.*
 import java.awt.geom.AffineTransform
-import java.awt.geom.GeneralPath
+import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
@@ -39,14 +39,15 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     for (i in runCount - 1 downTo 0) {
       val start = tabRuns[i]
       val end = getTabRunsEnd(i, tabCount)
+      // Paint the tabs from right to left so that the left tab overlaps the right one
       // https://stackoverflow.com/questions/41566659/tabs-rendering-order-in-custom-jtabbedpane
       for (j in end downTo start) {
-        if (j != selectedIndex && rects[j].intersects(clipRect)) {
+        if (j != selectedIndex && intersectsTrapezoid(rects[j], clipRect)) {
           paintTab(g, tabPlacement, rects, j, iconRect, textRect)
         }
       }
     }
-    if (selectedIndex >= 0 && rects[selectedIndex].intersects(clipRect)) {
+    if (selectedIndex >= 0 && intersectsTrapezoid(rects[selectedIndex], clipRect)) {
       paintTab(g, tabPlacement, rects, selectedIndex, iconRect, textRect)
     }
   }
@@ -56,7 +57,19 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     tabCount: Int,
   ): Int {
     val next = tabRuns[(i + 1) % runCount]
-    return (next - 1 + tabCount) % tabCount
+    return if (next == 0) tabCount - 1 else next - 1
+  }
+
+  // The trapezoid sticks out of the tab bounds by SLANT_WIDTH on both sides,
+  // so a tab must also be repainted when only its protruding part is in the clip
+  // (e.g. when only the adjacent tab is repainted by a focus change).
+  private fun intersectsTrapezoid(
+    tabRect: Rectangle,
+    clipRect: Rectangle,
+  ): Boolean {
+    val r = Rectangle(tabRect)
+    r.grow(SLANT_WIDTH, 0)
+    return r.intersects(clipRect)
   }
 
   override fun paintTabBorder(
@@ -94,11 +107,20 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     h: Int,
   ) {
     super.paintContentBorderTopEdge(g, tabPlacement, selectedIndex, x, y, w, h)
+    if (tabPlacement != TOP || selectedIndex < 0) {
+      return
+    }
     val selRect = getTabBounds(selectedIndex, calcRect)
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.color = selectedTabColor
-    g2.drawLine(selRect.x - ADJ2 + 1, y, selRect.x + selRect.width + ADJ2 - 1, y)
-    g2.dispose()
+    // Same condition as BasicTabbedPaneUI: skip if the selected tab is
+    // scrolled out of view (SCROLL_TAB_LAYOUT)
+    if (selRect.x in x..x + w) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.color = selectedTabColor
+      val x1 = selRect.x - SLANT_WIDTH + 1
+      val x2 = selRect.x + selRect.width + SLANT_WIDTH - 1
+      g2.drawLine(x1, y, x2, y)
+      g2.dispose()
+    }
   }
 
   override fun paintTabBackground(
@@ -116,15 +138,17 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
+    // The trapezoid sticks out of the tab bounds, so expand the clipping area
     val clipRect = g2.clipBounds
-    clipRect.grow(ADJ2 + 1, 0)
+    clipRect.grow(SLANT_WIDTH + 1, 0)
     g2.clip = clipRect
-    val textShiftOffset = if (isSelected) 0f else 1f
-    val trapezoid = GeneralPath()
-    trapezoid.moveTo(-ADJ2.toFloat(), h.toFloat())
-    trapezoid.lineTo(ADJ2.toFloat(), textShiftOffset)
-    trapezoid.lineTo((w - ADJ2).toFloat(), textShiftOffset)
-    trapezoid.lineTo((w + ADJ2).toFloat(), h.toFloat())
+    // Unselected tabs are 1px lower than the selected tab
+    val top = if (isSelected) 0.0 else 1.0
+    val trapezoid = Path2D.Float()
+    trapezoid.moveTo(-SLANT_WIDTH.toDouble(), h.toDouble())
+    trapezoid.lineTo(SLANT_WIDTH.toDouble(), top)
+    trapezoid.lineTo((w - SLANT_WIDTH).toDouble(), top)
+    trapezoid.lineTo((w + SLANT_WIDTH).toDouble(), h.toDouble())
     trapezoid.closePath()
     val tx = x.toDouble()
     val ty = y.toDouble()
@@ -137,7 +161,8 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
   }
 
   companion object {
-    private const val ADJ2 = 3
+    // horizontal width of the slanted sides of the trapezoid
+    private const val SLANT_WIDTH = 3
     private val TAB_BACKGROUND = Color.LIGHT_GRAY
     private val TAB_BORDER = Color.GRAY
   }
