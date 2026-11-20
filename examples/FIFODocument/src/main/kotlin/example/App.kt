@@ -7,6 +7,7 @@ import java.time.ZoneId
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 
 private val textArea = JTextArea()
@@ -58,16 +59,25 @@ private class FifoDocumentListener(
 ) : DocumentListener {
   override fun insertUpdate(e: DocumentEvent) {
     val doc = e.document
-    val root = doc.defaultRootElement
-    if (root.elementCount <= MAX_LINES) {
-      return
-    }
-    EventQueue.invokeLater {
-      runCatching {
-        doc.remove(0, root.getElement(0).endOffset)
+    if (doc.defaultRootElement.elementCount > MAX_LINES) {
+      // A Document cannot be mutated from within its DocumentListener notification,
+      // so the removal is deferred until the current event has been processed.
+      EventQueue.invokeLater {
+        removeExcessLines(doc)
+        textComponent.caretPosition = doc.length
       }
     }
-    textComponent.caretPosition = doc.length
+  }
+
+  private fun removeExcessLines(doc: Document) {
+    // Remove all leading lines exceeding MAX_LINES at once (also handles multi-line inserts)
+    val root = doc.defaultRootElement
+    val excess = root.elementCount - MAX_LINES
+    if (excess > 0) {
+      runCatching {
+        doc.remove(0, root.getElement(excess - 1).endOffset)
+      }
+    }
   }
 
   override fun removeUpdate(e: DocumentEvent) {
@@ -85,11 +95,25 @@ private class FifoDocumentListener(
 
 // private class FifoDocumentFilter : DocumentFilter() {
 //   @Throws(BadLocationException::class)
-//   override fun insertString(fb: FilterBypass, offset: Int, text: String, attr: AttributeSet) {
+//   override fun insertString(fb: FilterBypass, offset: Int, text: String, attr: AttributeSet?) {
 //     fb.insertString(offset, text, attr)
+//     removeExcessLines(fb)
+//   }
+//
+//   // Typing and pasting in a JTextComponent go through replace(...), not insertString(...)
+//   @Throws(BadLocationException::class)
+//   override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
+//     fb.replace(offset, length, text, attrs)
+//     removeExcessLines(fb)
+//   }
+//
+//   @Throws(BadLocationException::class)
+//   private fun removeExcessLines(fb: FilterBypass) {
+//     // Remove all leading lines exceeding MAX_LINES at once (also handles multi-line inserts)
 //     val root = fb.document.defaultRootElement
-//     if (root.elementCount > MAX_LINES) {
-//       fb.remove(0, root.getElement(0).endOffset)
+//     val excess = root.elementCount - MAX_LINES
+//     if (excess > 0) {
+//       fb.remove(0, root.getElement(excess - 1).endOffset)
 //     }
 //   }
 //
