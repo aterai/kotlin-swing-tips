@@ -19,26 +19,27 @@ fun createUI(): Component {
   c.gridy++
   panel.add(makeButton("7", "Home"), c)
   c.gridx = GridBagConstraints.RELATIVE
-  panel.add(makeButton("8", "ª"), c)
+  panel.add(makeButton("8", "â†‘"), c)
   panel.add(makeButton("9", "PgUp"), c)
   c.gridheight = 2
   panel.add(makeButton("+", "+"), c)
   c.gridx = 0
   c.gridy++
   c.gridheight = 1
-  panel.add(makeButton("4", "©"), c)
+  panel.add(makeButton("4", "â†"), c)
   c.gridx = GridBagConstraints.RELATIVE
   panel.add(makeButton("5"), c)
-  panel.add(makeButton("6", "¨"), c)
+  panel.add(makeButton("6", "â†’"), c)
   c.gridx = 0
   c.gridy++
   panel.add(makeButton("1", "End"), c)
   c.gridx = GridBagConstraints.RELATIVE
-  panel.add(makeButton("2", "«"), c)
+  panel.add(makeButton("2", "â†“"), c)
   panel.add(makeButton("3", "PgDn"), c)
   c.gridheight = 2
   val enter = makeButton("Enter", "Enter")
   panel.add(enter, c)
+  // The root pane is not available until the keypad is added to a window
   EventQueue.invokeLater {
     panel.rootPane.defaultButton = enter
     enter.requestFocusInWindow()
@@ -58,17 +59,17 @@ fun createUI(): Component {
 
 private const val SIZE = 46
 
-private fun makeButton(vararg s: String): JButton {
-  val key = s[0]
-  val sub = if (s.size > 1) s[1] else " "
+private fun makeButton(vararg labels: String): JButton {
+  val key = labels[0]
+  val sub = if (labels.size > 1) labels[1] else " "
   val gap = 2
   val border = BorderFactory.createEmptyBorder(gap, gap, gap, gap)
-  val l1 = JLabel(key)
-  l1.font = l1.font.deriveFont(12f)
-  l1.border = border
-  val l2 = JLabel(sub)
-  l2.font = l2.font.deriveFont(9.5f)
-  l2.border = border
+  val keyLabel = JLabel(key)
+  keyLabel.font = keyLabel.font.deriveFont(12f)
+  keyLabel.border = border
+  val subLabel = JLabel(sub)
+  subLabel.font = subLabel.font.deriveFont(9.5f)
+  subLabel.border = border
   val button = object : JButton() {
     override fun updateUI() {
       super.updateUI()
@@ -77,15 +78,15 @@ private fun makeButton(vararg s: String): JButton {
     }
 
     override fun getPreferredSize(): Dimension {
-      val sz = SIZE - gap * 2
-      return Dimension(sz, sz)
+      val size = SIZE - gap * 2
+      return Dimension(size, size)
     }
   }
   if (key == sub) {
-    button.add(l1)
+    button.add(keyLabel)
   } else {
-    button.add(l1, BorderLayout.NORTH)
-    button.add(l2, BorderLayout.SOUTH)
+    button.add(keyLabel, BorderLayout.NORTH)
+    button.add(subLabel, BorderLayout.SOUTH)
   }
   return button
 }
