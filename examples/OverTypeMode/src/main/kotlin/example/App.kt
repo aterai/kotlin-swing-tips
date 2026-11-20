@@ -7,7 +7,7 @@ import javax.swing.text.Caret
 import javax.swing.text.DefaultCaret
 
 fun createUI(): Component {
-  val textArea = OvertypeTextArea()
+  val textArea = OverTypeTextArea()
   textArea.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
   textArea.text =
     """
@@ -22,80 +22,93 @@ fun createUI(): Component {
   }
 }
 
-private class OvertypeTextArea : JTextArea() {
-  private var overtypeMode = true
+// https://community.oracle.com/tech/developers/discussion/1385467
+// JTextPane edit mode (insert or overwrite)???
+private class OverTypeTextArea : JTextArea() {
+  private var overTypeMode = true
   private var defaultCaret: Caret? = null
-  private var overtypeCaret: Caret? = null
+  private var overTypeCaret: Caret? = null
 
   override fun updateUI() {
+    // The UI only replaces a caret that is null or a UIResource, so restore
+    // the default caret first to avoid keeping the OverTypeCaret as the default one
+    if (caret is OverTypeCaret) {
+      caret = defaultCaret
+    }
     super.updateUI()
+    // Deferred because this method is called from the super constructor
+    // before the property initializer of overTypeMode is executed
     EventQueue.invokeLater {
       defaultCaret = caret
-      overtypeCaret = OvertypeCaret().also {
+      overTypeCaret = OverTypeCaret().also {
         it.blinkRate = caret.blinkRate
       }
-      setOvertypeMode(overtypeMode)
+      setOverTypeMode(overTypeMode)
     }
   }
 
-  fun isOvertypeMode() = overtypeMode
+  fun isOverTypeMode() = overTypeMode
 
-  private fun setOvertypeMode(overtypeMode: Boolean) {
-    this.overtypeMode = overtypeMode
+  // Set the caret to use depending on over-type/insert mode
+  private fun setOverTypeMode(overType: Boolean) {
+    this.overTypeMode = overType
     val pos = caretPosition
-    caret = if (isOvertypeMode()) {
-      overtypeCaret
-    } else {
-      defaultCaret
-    }
+    caret = if (overType) overTypeCaret else defaultCaret
     caretPosition = pos
   }
 
-  override fun replaceSelection(text: String) {
-    if (isOvertypeMode()) {
+  // Returns the number of chars of the character at the given position
+  // that can be overwritten: 2 for a surrogate pair, 0 for a line feed
+  // or the end of the document, otherwise 1.
+  fun getOverTypeLength(pos: Int): Int {
+    val len = minOf(2, document.length - pos)
+    val codePoint = if (len > 0) getText(pos, len).codePointAt(0) else '\n'.code
+    return if (codePoint == '\n'.code) 0 else Character.charCount(codePoint)
+  }
+
+  override fun replaceSelection(text: String?) {
+    // Implement over-type mode by selecting the character at the current
+    // caret position (line feeds are not overwritten)
+    if (isOverTypeMode() && selectionStart == selectionEnd) {
       val pos = caretPosition
-      if (selectionStart == selectionEnd && pos < document.length) {
-        moveCaretPosition(pos + 1)
-      }
+      moveCaretPosition(pos + getOverTypeLength(pos))
     }
     super.replaceSelection(text)
   }
 
   override fun processKeyEvent(e: KeyEvent) {
     super.processKeyEvent(e)
-    // Handle release of Insert key to toggle overtype/insert mode
+    // Handle release of Insert key to toggle over-type/insert mode
     if (e.id == KeyEvent.KEY_RELEASED && e.keyCode == KeyEvent.VK_INSERT) {
-      moveCaretPosition(caretPosition) // add
-      setOvertypeMode(!isOvertypeMode())
-      repaint() // add
+      // Clear the selection, otherwise its highlight is left behind
+      // by the uninstalled caret
+      caretPosition = caretPosition
+      setOverTypeMode(!isOverTypeMode())
+      repaint()
     }
   }
 
-  private inner class OvertypeCaret : DefaultCaret() {
+  private inner class OverTypeCaret : DefaultCaret() {
     override fun paint(g: Graphics) {
       if (isVisible) {
         runCatching {
-          val component = component
-          val mapper = component.ui
-          val r = mapper.modelToView(component, dot)
-          g.color = component.caretColor
-          var width = g.fontMetrics.charWidth('w')
-          // A patch for full width characters >>>>
-          if (isOvertypeMode()) {
-            val pos = caretPosition
-            if (pos < document.length) {
-              width = if (selectionStart == selectionEnd) {
-                val str = getText(pos, 1)
-                g.fontMetrics.stringWidth(str)
-              } else {
-                0
-              }
-            }
-          } // <<<<
+          val c = component
+          val r = c.ui.modelToView(c, dot)
+          // Java 9:
+          // val r = c.ui.modelToView2D(c, dot, Position.Bias.Forward).bounds
+          g.color = c.caretColor
+          val width = getOverTypeCaretWidth(g.fontMetrics)
           val y = r.y + r.height - 2
           g.drawLine(r.x, y, r.x + width - 2, y)
         }
       }
+    }
+
+    private fun getOverTypeCaretWidth(fm: FontMetrics): Int {
+      val pos = dot
+      val len = if (dot == mark) getOverTypeLength(pos) else 0
+      // A patch for full width characters and surrogate pairs
+      return if (len > 0) fm.stringWidth(getText(pos, len)) else fm.charWidth('w')
     }
 
     @Synchronized
@@ -105,10 +118,11 @@ private class OvertypeTextArea : JTextArea() {
         x = r.x
         y = r.y
         // width = c.getFontMetrics(c.getFont()).charWidth('w')
-        // width = c.getFontMetrics(c.getFont()).charWidth('\u3042')
+        // A full width character is wider than 'w'
         width = c.getFontMetrics(c.font).charWidth('■')
         height = r.height
-        c.repaint()
+        // Repaint only the caret area instead of the whole component
+        repaint()
       }
     }
   }
