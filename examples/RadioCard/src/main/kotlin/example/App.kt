@@ -15,8 +15,8 @@ fun createUI(): Component {
   bg.add(b1)
   bg.add(b2)
   val p = JPanel(GridLayout(1, 2, 5, 5))
-  val help = "RadioCard with JToggleButton and JRadioButton"
-  p.border = BorderFactory.createTitledBorder(help)
+  val title = "RadioCard with JToggleButton and JRadioButton"
+  p.border = BorderFactory.createTitledBorder(title)
   p.add(makeRadioIconLayer(b1))
   p.add(makeRadioIconLayer(b2))
   return JPanel().also {
@@ -37,17 +37,13 @@ private fun makeRadioIconLayer(button: AbstractButton): Component {
   val layer = object : LayerUI<AbstractButton>() {
     override fun paint(g: Graphics, c: JComponent) {
       super.paint(g, c)
-      if (c is JLayer<*>) {
-        val b = c.view
-        if (b is AbstractButton) {
-          val g2 = g.create() as? Graphics2D ?: return
-          radio.isSelected = b.isSelected
-          val x = i.left - d.width + 8
-          val y = i.top + 8
-          SwingUtilities.paintComponent(g2, radio, b, x, y, d.width, d.height)
-          g2.dispose()
-        }
-      }
+      // The view of this JLayer is always the captured button, so there is no need
+      // to cast JLayer#getView(). SwingUtilities#paintComponent(...) creates its own
+      // Graphics copy internally, so g.create()/dispose() is also unnecessary.
+      radio.isSelected = button.isSelected
+      val x = i.left - d.width + 8
+      val y = i.top + 8
+      SwingUtilities.paintComponent(g, radio, button, x, y, d.width, d.height)
     }
   }
   return JLayer(button, layer)
