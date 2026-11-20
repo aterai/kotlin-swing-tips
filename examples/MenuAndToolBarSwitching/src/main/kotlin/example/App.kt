@@ -15,6 +15,7 @@ fun createUI(): Component {
   wrappingMenuBar.add(makeToolBar(button))
   EventQueue.invokeLater { p.rootPane.jMenuBar = wrappingMenuBar }
 
+  // Keep the JPopupMenu open when its top-level JMenu is pressed again
   val popupKeeper = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       (e.component as? JMenu)?.doClick()
@@ -23,7 +24,7 @@ fun createUI(): Component {
 
   val switchHandler = object : PopupMenuListener {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-      // not need
+      // not needed
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
@@ -81,9 +82,9 @@ private fun makeToolBar(button: JButton): JToolBar {
   toolBar.add(button)
   toolBar.add(Box.createHorizontalStrut(5))
   toolBar.add(JLabel("<- Switch to JMenuBar"))
-  val check = JCheckBox("JCheckBox")
-  check.isOpaque = false
-  toolBar.add(check)
+  val checkBox = JCheckBox("JCheckBox")
+  checkBox.isOpaque = false
+  toolBar.add(checkBox)
   return toolBar
 }
 
@@ -105,10 +106,10 @@ private fun makeMenu(title: String): JMenu {
   menu.addSeparator()
   menu.add("4444")
   menu.add("55555")
-  val sub = JMenu("sub")
-  sub.add("666")
-  sub.add("777")
-  menu.add(sub)
+  val subMenu = JMenu("sub")
+  subMenu.add("666")
+  subMenu.add("777")
+  menu.add(subMenu)
   return menu
 }
 
