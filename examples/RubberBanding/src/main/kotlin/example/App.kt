@@ -61,7 +61,7 @@ private fun makeMissingImage(): Image {
 private class RubberBandSelectionList(
   model: ListModel<ListItem>,
 ) : JList<ListItem>(model) {
-  private var rbl: RubberBandingListener? = null
+  private var handler: RubberBandingListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
 
@@ -69,11 +69,11 @@ private class RubberBandSelectionList(
     selectionForeground = null // Nimbus
     selectionBackground = null // Nimbus
     cellRenderer = null
-    removeMouseListener(rbl)
-    removeMouseMotionListener(rbl)
+    removeMouseListener(handler)
+    removeMouseMotionListener(handler)
     super.updateUI()
 
-    rubberBandColor = makeRubberBandColor(selectionBackground)
+    rubberBandColor = createRubberBandColor(selectionBackground)
     layoutOrientation = HORIZONTAL_WRAP
     visibleRowCount = 0
     fixedCellWidth = 62
@@ -81,9 +81,9 @@ private class RubberBandSelectionList(
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
 
     cellRenderer = ListItemListCellRenderer()
-    rbl = RubberBandingListener()
-    addMouseMotionListener(rbl)
-    addMouseListener(rbl)
+    handler = RubberBandingListener()
+    addMouseMotionListener(handler)
+    addMouseListener(handler)
   }
 
   override fun paintComponent(g: Graphics) {
@@ -98,24 +98,26 @@ private class RubberBandSelectionList(
   }
 
   private inner class RubberBandingListener : MouseAdapter() {
-    private val srcPoint = Point()
+    private val startPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val l = e.component as? JList<*> ?: return
-      l.isFocusable = true
-      val dstPoint = e.point
+      val list = e.component as? JList<*> ?: return
+      list.isFocusable = true
+      val endPoint = e.point
       rubberBand.reset()
-      rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(dstPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(dstPoint.getX(), dstPoint.getY())
-      rubberBand.lineTo(srcPoint.getX(), dstPoint.getY())
+      rubberBand.moveTo(startPoint.getX(), startPoint.getY())
+      rubberBand.lineTo(endPoint.getX(), startPoint.getY())
+      rubberBand.lineTo(endPoint.getX(), endPoint.getY())
+      rubberBand.lineTo(startPoint.getX(), endPoint.getY())
       rubberBand.closePath()
 
-      val indices = (0..<l.model.size)
-        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
+      // A Path2D is used instead of a Rectangle so that a zero-width or
+      // zero-height rubber band (a straight line) still intersects the cells.
+      val indices = (0..<list.model.size)
+        .filter { rubberBand.intersects(list.getCellBounds(it, it)) }
         .toIntArray()
-      l.selectedIndices = indices
-      l.repaint()
+      list.selectedIndices = indices
+      list.repaint()
     }
 
     override fun mouseReleased(e: MouseEvent) {
@@ -126,32 +128,36 @@ private class RubberBandSelectionList(
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val l = e.component as? JList<*> ?: return
-      val index = l.locationToIndex(e.point)
-      val rect = l.getCellBounds(index, index)
-      if (rect.contains(e.point)) {
-        l.setFocusable(true)
+      val list = e.component as? JList<*> ?: return
+      val pt = e.point
+      val index = list.locationToIndex(pt)
+      // getCellBounds(...) returns null if the list is empty (index == -1)
+      val r: Rectangle? = list.getCellBounds(index, index)
+      if (r?.contains(pt) == true) {
+        list.isFocusable = true
       } else {
-        l.clearSelection()
-        l.selectionModel.anchorSelectionIndex = -1
-        l.selectionModel.leadSelectionIndex = -1
-        l.setFocusable(false)
+        list.clearSelection()
+        list.selectionModel.anchorSelectionIndex = -1
+        list.selectionModel.leadSelectionIndex = -1
+        list.isFocusable = false
       }
-      srcPoint.location = e.point
-      l.repaint()
+      startPoint.location = pt
+      list.repaint()
     }
   }
 
   companion object {
     private val ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .1f)
 
-    private fun makeRubberBandColor(c: Color): Color {
+    private fun createRubberBandColor(c: Color): Color {
       val r = c.red
       val g = c.green
       val b = c.blue
+      // Keep only the dominant RGB component of the selection background.
+      // Color(int) is 0xRRGGBB, so red is shifted by 16 bits and green by 8 bits.
       val v = when (val max = maxOf(r, g, b)) {
-        r -> max shl 8
-        g -> max shl 4
+        r -> max shl 16
+        g -> max shl 8
         else -> max
       }
       return Color(v)
@@ -164,7 +170,7 @@ private class SelectedImageFilter : RGBImageFilter() {
     x: Int,
     y: Int,
     argb: Int,
-  ) = argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
+  ) = (argb and 0xFF_FF_FF_00.toInt()) or ((argb and 0xFF) shr 1) // Halve the blue component
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
@@ -176,8 +182,6 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 
   init {
     icon.isOpaque = false
-    label.foreground = renderer.foreground
-    label.background = renderer.background
     label.border = noFocusBorder
     renderer.isOpaque = false
     renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
