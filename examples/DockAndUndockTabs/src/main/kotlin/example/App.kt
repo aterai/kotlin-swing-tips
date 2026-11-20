@@ -136,28 +136,21 @@ class DnDTabbedPane : JTabbedPane() {
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
-  fun autoScrollTest(pt: Point) {
+  fun autoScroll(pt: Point) {
     val r = tabAreaBounds
+    val arrowBoxSize = SCROLL_SIZE + BUTTON_SIZE
+    val backward: Rectangle
+    val forward: Rectangle
     if (isTopBottomTabPlacement(getTabPlacement())) {
-      RECT_BACKWARD.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
-      RECT_FORWARD.setBounds(
-        r.x + r.width - SCROLL_SIZE - BUTTON_SIZE,
-        r.y,
-        SCROLL_SIZE + BUTTON_SIZE,
-        r.height,
-      )
+      backward = Rectangle(r.x, r.y, SCROLL_SIZE, r.height)
+      forward = Rectangle(r.x + r.width - arrowBoxSize, r.y, arrowBoxSize, r.height)
     } else { // if (tabPlacement == LEFT || tabPlacement == RIGHT) {
-      RECT_BACKWARD.setBounds(r.x, r.y, r.width, SCROLL_SIZE)
-      RECT_FORWARD.setBounds(
-        r.x,
-        r.y + r.height - SCROLL_SIZE - BUTTON_SIZE,
-        r.width,
-        SCROLL_SIZE + BUTTON_SIZE,
-      )
+      backward = Rectangle(r.x, r.y, r.width, SCROLL_SIZE)
+      forward = Rectangle(r.x, r.y + r.height - arrowBoxSize, r.width, arrowBoxSize)
     }
-    if (RECT_BACKWARD.contains(pt)) {
+    if (backward.contains(pt)) {
       clickArrowButton(ScrollDirection.BACKWARD)
-    } else if (RECT_FORWARD.contains(pt)) {
+    } else if (forward.contains(pt)) {
       clickArrowButton(ScrollDirection.FORWARD)
     }
   }
@@ -221,14 +214,14 @@ class DnDTabbedPane : JTabbedPane() {
     val icon = getIconAt(prev)
     val toolTipText = getToolTipTextAt(prev)
     val isEnabled = isEnabledAt(prev)
-    val tgtIndex = if (prev > next) next else next - 1
+    val targetIndex = if (prev > next) next else next - 1
     remove(prev)
-    insertTab(title, icon, cmp, toolTipText, tgtIndex)
-    setEnabledAt(tgtIndex, isEnabled)
+    insertTab(title, icon, cmp, toolTipText, targetIndex)
+    setEnabledAt(targetIndex, isEnabled)
     if (isEnabled) {
-      selectedIndex = tgtIndex
+      selectedIndex = targetIndex
     }
-    setTabComponentAt(tgtIndex, tab)
+    setTabComponentAt(targetIndex, tab)
     pointOnScreen.setLocation(-1, -1)
   }
 
@@ -251,8 +244,8 @@ class DnDTabbedPane : JTabbedPane() {
       val src = e.component as? DnDTabbedPane ?: return
       val tabPt = e.point // e.getDragOrigin()
       val idx = src.indexAtLocation(tabPt.x, tabPt.y)
-      val flag = idx < 0 || !src.isEnabledAt(idx) || src.getComponentAt(idx) == null
-      startPt = if (flag) null else tabPt
+      val invalid = idx < 0 || !src.isEnabledAt(idx) || src.getComponentAt(idx) == null
+      startPt = if (invalid) null else tabPt
     }
 
     override fun mouseDragged(e: MouseEvent) {
@@ -272,13 +265,16 @@ class DnDTabbedPane : JTabbedPane() {
     }
   }
 
+  // The location is reset to (-1, -1) when the tab is imported into a JTabbedPane.
+  // Compare it with this sentinel value instead of checking `x > 0`, because
+  // a screen location can be zero or negative in a multi-monitor environment.
+  fun isDraggedOut() = pointOnScreen.x != -1 || pointOnScreen.y != -1
+
   private fun isTopBottomTabPlacement(tp: Int) = tp == TOP || tp == BOTTOM
 
   companion object {
     private const val SCROLL_SIZE = 20 // Test
     private const val BUTTON_SIZE = 30 // 30 is magic number of buttons
-    private val RECT_BACKWARD = Rectangle()
-    private val RECT_FORWARD = Rectangle()
   }
 }
 
@@ -323,16 +319,24 @@ private class TabTransferHandler : TransferHandler() {
       y: Int,
     ) = false
   }
-  private var dialog: JWindow? = null
+  private var window: JWindow? = null
 
   init {
-    DragSource.getDefaultDragSource().addDragSourceMotionListener {
-      val pt = it.location
-      pt.translate(5, 5) // offset
-      dialog?.location = pt
-      source?.pointOnScreen?.location = pt
+    // The default DragSource is shared with other drags (e.g. text in a JTextArea),
+    // so update the location only while a tab is being dragged.
+    DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
+      val src = source
+      if (isTabDragging() && src != null) {
+        val pt = e.location
+        pt.translate(5, 5) // offset
+        window?.location = pt
+        src.pointOnScreen.location = pt
+      }
     }
   }
+
+  // The drag image window is displayable only between getSourceActions() and exportDone().
+  private fun isTabDragging() = window?.isDisplayable == true
 
   override fun createTransferable(c: JComponent): Transferable {
     val src = c as? DnDTabbedPane
@@ -369,7 +373,7 @@ private class TabTransferHandler : TransferHandler() {
     support.dropAction = MOVE
     val tdl = support.dropLocation
     val pt = tdl.dropPoint
-    target.autoScrollTest(pt)
+    target.autoScroll(pt)
     val dl = target.tabDropLocationForPoint(pt)
     val idx = dl.index
 
@@ -419,7 +423,7 @@ private class TabTransferHandler : TransferHandler() {
       NONE
     } else {
       label.icon = ImageIcon(createDragTabImage(src))
-      dialog = JWindow().also {
+      window = JWindow().also {
         it.add(label)
         it.opacity = .5f
         it.pack()
@@ -453,15 +457,19 @@ private class TabTransferHandler : TransferHandler() {
     action: Int,
   ) {
     val src = c as? DnDTabbedPane ?: return
-    if (src.pointOnScreen.x > 0) {
-      createNewFrame(src)
+    // exportDone(c, null, NONE) is also called when the drag does not start,
+    // in which case the drag image window has not been created.
+    if (isTabDragging()) {
+      if (src.isDraggedOut()) {
+        createNewFrame(src)
+      }
+      window?.dispose()
     }
     if (src.tabCount == 0) {
       SwingUtilities.getWindowAncestor(src)?.dispose()
     }
     src.updateTabDropLocation(null, false)
     src.repaint()
-    dialog?.dispose()
   }
 
   private fun createNewFrame(src: DnDTabbedPane) {
@@ -488,6 +496,7 @@ private class TabTransferHandler : TransferHandler() {
     frame.contentPane.add(JLayer(tabs, DropLocationLayerUI()))
     frame.setSize(320, 240)
     frame.location = src.pointOnScreen
+    src.pointOnScreen.setLocation(-1, -1)
     frame.isVisible = true
     EventQueue.invokeLater { frame.toFront() }
   }
