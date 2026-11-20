@@ -21,6 +21,12 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
+private val COLUMN_CLASSES = arrayOf(
+  String::class.java,
+  Int::class.javaObjectType,
+  Boolean::class.javaObjectType,
+)
+
 fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
@@ -34,7 +40,8 @@ fun createUI(): Component {
     arrayOf("fff", 4, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+    // Do not depend on getValueAt(0, column): all rows can be deleted from the popup menu
+    override fun getColumnClass(column: Int) = COLUMN_CLASSES[column]
   }
   val table = DnDTable(model)
   table.fillsViewportHeight = true
@@ -135,38 +142,37 @@ private class DnDTable(
     }
   }
 
-  private fun initTargetLine(p: Point) {
-    val rect = Rectangle()
-    val cellHeight = getRowHeight()
-    val lineWidth = width
-    val lineHeight = 2
-    rect.setSize(lineWidth, cellHeight)
-    targetLine.setSize(lineWidth, lineHeight)
-    targetIndex = -1
+  private fun updateTargetLine(p: Point) {
     val rowCount = rowCount
-    for (i in 0..<rowCount) {
-      rect.setLocation(0, cellHeight * i - cellHeight / 2)
-      if (rect.contains(p)) {
-        targetIndex = i
-        targetLine.setLocation(0, i * cellHeight)
-        break
+    val row = rowAtPoint(p)
+    targetIndex = if (row < 0) {
+      rowCount
+    } else {
+      // Insert after the row if the cursor is in its lower half
+      val r = getCellRect(row, 0, true)
+      if (p.y < r.centerY) row else row + 1
+    }
+    val y = when {
+      targetIndex < rowCount -> getCellRect(targetIndex, 0, true).y
+
+      rowCount > 0 -> getCellRect(rowCount - 1, 0, true).let {
+        it.y + it.height -
+          LINE_HEIGHT
       }
+
+      else -> 0
     }
-    if (targetIndex < 0) {
-      targetIndex = rowCount
-      targetLine.setLocation(0, targetIndex * cellHeight - lineHeight)
-    }
+    targetLine.setBounds(0, y, width, LINE_HEIGHT)
   }
 
   // Interface: DragGestureListener
   override fun dragGestureRecognized(e: DragGestureEvent) {
-    val oneOrMore = selectedRowCount > 1
     draggedIndex = rowAtPoint(e.dragOrigin)
-    if (oneOrMore || draggedIndex < 0) {
-      return
-    }
-    runCatching {
-      e.startDrag(DragSource.DefaultMoveDrop, this, dsl)
+    // Only a single selected row under the drag origin can be moved
+    if (selectedRowCount == 1 && draggedIndex >= 0 && isRowSelected(draggedIndex)) {
+      runCatching {
+        e.startDrag(DragSource.DefaultMoveDrop, this, dsl)
+      }
     }
   }
 
@@ -175,8 +181,7 @@ private class DnDTable(
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) =
-    flavor.humanPresentableName == NAME
+  override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
   private inner class CDropTargetListener : DropTargetListener {
     override fun dragExit(e: DropTargetEvent) {
@@ -201,72 +206,72 @@ private class DnDTable(
         cursor = DragSource.DefaultMoveNoDrop
         return
       }
-      initTargetLine(e.location)
+      updateTargetLine(e.location)
       repaint()
     }
 
     override fun dropActionChanged(e: DropTargetDragEvent) {
-      // if (isDragAcceptable(e)) {
-      //   e.acceptDrag(e.getDropAction())
-      // } else {
-      //   e.rejectDrag()
-      // }
+      // not needed
     }
 
     override fun drop(e: DropTargetDropEvent) {
-      val model = model as? DefaultTableModel ?: return
-      if (isDropAcceptable(e)) {
-        if (targetIndex == draggedIndex) {
-          setRowSelectionInterval(targetIndex, targetIndex)
-        } else {
-          val tg = if (targetIndex < draggedIndex) targetIndex else targetIndex - 1
-          model.moveRow(draggedIndex, draggedIndex, tg)
-          setRowSelectionInterval(tg, tg)
+      val model = model as? DefaultTableModel
+      if (model != null && isDropAcceptable(e)) {
+        e.acceptDrop(e.dropAction)
+        // Removing the dragged row shifts the following rows up by one
+        val toIndex = if (targetIndex > draggedIndex) targetIndex - 1 else targetIndex
+        if (toIndex != draggedIndex) {
+          model.moveRow(draggedIndex, draggedIndex, toIndex)
         }
+        setRowSelectionInterval(toIndex, toIndex)
         e.dropComplete(true)
       } else {
-        e.dropComplete(false)
+        e.rejectDrop()
       }
-      e.dropComplete(false)
       cursor = Cursor.getDefaultCursor()
       targetIndex = -1
       repaint()
     }
 
     private fun isDragAcceptable(e: DropTargetDragEvent) =
-      isDataFlavorSupported(e.currentDataFlavors[0])
+      draggedIndex >= 0 && e.isDataFlavorSupported(FLAVOR)
 
     private fun isDropAcceptable(e: DropTargetDropEvent) =
-      isDataFlavorSupported(e.transferable.transferDataFlavors[0])
+      draggedIndex >= 0 && targetIndex >= 0 && e.isDataFlavorSupported(FLAVOR)
+  }
+
+  private inner class TableDragSourceListener : DragSourceListener {
+    override fun dragEnter(e: DragSourceDragEvent) {
+      e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
+    }
+
+    override fun dragExit(e: DragSourceEvent) {
+      e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
+    }
+
+    override fun dragOver(e: DragSourceDragEvent) {
+      // not needed
+    }
+
+    override fun dropActionChanged(e: DragSourceDragEvent) {
+      // not needed
+    }
+
+    override fun dragDropEnd(e: DragSourceDropEvent) {
+      // Always called at the end of a drag, including a cancel or a drop outside the table
+      cursor = Cursor.getDefaultCursor()
+      draggedIndex = -1
+      targetIndex = -1
+      repaint()
+    }
   }
 
   companion object {
+    private const val LINE_HEIGHT = 2
     private val LINE_COLOR = Color(0xFF_64_64)
     private const val NAME = "test"
     private val FLAVOR = DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME)
     private val EVEN_BACKGROUND = Color(0xF0_F0_F0)
-  }
-}
-
-private class TableDragSourceListener : DragSourceListener {
-  override fun dragEnter(e: DragSourceDragEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
-  }
-
-  override fun dragExit(e: DragSourceEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
-  }
-
-  override fun dragOver(e: DragSourceDragEvent) {
-    // not needed
-  }
-
-  override fun dropActionChanged(e: DragSourceDragEvent) {
-    // not needed
-  }
-
-  override fun dragDropEnd(e: DragSourceDropEvent) {
-    // e.getDragSourceContext().setCursor(Cursor.getDefaultCursor())
   }
 }
 
