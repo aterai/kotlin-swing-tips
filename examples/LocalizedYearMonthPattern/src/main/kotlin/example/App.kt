@@ -78,14 +78,14 @@ fun createUI(): Component {
   p.add(next, BorderLayout.EAST)
 
   val log = JTextArea()
+  val currentYearMonth = YearMonth.now(ZoneId.systemDefault())
   listOf(Locale.JAPAN, Locale.US, Locale.FRANCE).forEach {
     val isYearFirst = isYearFirst(it)
     val pattern = if (isYearFirst) "yyyy/MMM" else "MMM/yyyy"
-    val currentYm = YearMonth.now(ZoneId.systemDefault())
     val fmt = DateTimeFormatter.ofPattern(pattern, it)
-    val str = currentYm.format(fmt)
+    val text = currentYearMonth.format(fmt)
     val lang = it.toLanguageTag()
-    log.append("%s, %s, isYearFirst? %b%n".format(lang, str, isYearFirst))
+    log.append("%s, %s, isYearFirst? %b%n".format(lang, text, isYearFirst))
   }
 
   return JPanel(BorderLayout()).also {
@@ -101,8 +101,8 @@ private fun updateMonthView(localDate: LocalDate) {
   currentLocalDate = localDate
   val locale = Locale.getDefault()
   val fmt = getLocalizedYearMonthFormatter(locale)
-  val txt = localDate.format(fmt.withLocale(locale))
-  monthLabel.text = getLocalizedYearMonthText(txt)
+  val text = localDate.format(fmt)
+  monthLabel.text = getLocalizedYearMonthText(text)
   monthTable.model = CalendarViewTableModel(localDate)
 }
 
@@ -121,8 +121,8 @@ private class CalendarViewTableModel(
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
     // val minusDays = firstDayOfMonth[WeekFields.SUNDAY_START.dayOfWeek()] - 1
-    val minusDays = firstDayOfMonth[weekFields.dayOfWeek()] - 1
-    startDate = firstDayOfMonth.minusDays(minusDays.toLong())
+    val offset = firstDayOfMonth[weekFields.dayOfWeek()] - 1
+    startDate = firstDayOfMonth.minusDays(offset.toLong())
   }
 
   override fun getColumnClass(column: Int) = LocalDate::class.java
@@ -147,20 +147,31 @@ private class CalendarViewTableModel(
   ) = false
 }
 
-fun getLocalizedPattern(locale: Locale): String = DateTimeFormatterBuilder
-  .getLocalizedDateTimePattern(
+private val YEAR = Pattern.compile("(y+)")
+private val MONTH = Pattern.compile("(M+)")
+
+// Quoted literal text such as 'de' in "d 'de' MMMM 'de' y"
+private val QUOTED = Pattern.compile("'[^']*'")
+
+fun getLocalizedPattern(locale: Locale): String {
+  val pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(
     FormatStyle.LONG,
     null,
     Chronology.ofLocale(locale),
     locale,
   )
+  // Remove quoted literals so that letters inside them are not
+  // mistaken for the year or month pattern symbols
+  return QUOTED.matcher(pattern).replaceAll("")
+}
 
 fun getLocalizedYearMonthFormatter(locale: Locale): DateTimeFormatter {
   val localizedPattern = getLocalizedPattern(locale)
-  val year = find(localizedPattern, Pattern.compile("(y+)"))
-  val month = find(localizedPattern, Pattern.compile("(M+)"))
-  val pattern = if (isYearFirst(locale)) "$year / $month" else "$month / $year"
-  return DateTimeFormatter.ofPattern(pattern)
+  val year = find(localizedPattern, YEAR)
+  val month = find(localizedPattern, MONTH)
+  val yearFirst = isYearFirst(localizedPattern)
+  val pattern = if (yearFirst) "$year $month" else "$month $year"
+  return DateTimeFormatter.ofPattern(pattern, locale)
 }
 
 fun find(str: String, ptn: Pattern): String {
@@ -168,18 +179,20 @@ fun find(str: String, ptn: Pattern): String {
   return if (matcher.find()) matcher.group(1) else ""
 }
 
-fun getLocalizedYearMonthText(str: String): String {
-  val list = str
-    .split(" ".toRegex())
-    .dropLastWhile { it.isEmpty() }
-    .toTypedArray()
-  val isNumeric = list.all { it.toIntOrNull() != null }
-  val separator = if (isNumeric) " / " else " "
-  return list.joinToString(separator)
+fun getLocalizedYearMonthText(text: String): String {
+  val tokens = text.split(" ")
+  val isNumeric = tokens.all { token -> token.all { it.isDigit() } }
+  return if (isNumeric && tokens.size == 2) {
+    // e.g. "2025 7" -> "2025 / 7"
+    tokens.joinToString(" / ")
+  } else {
+    text
+  }
 }
 
-fun isYearFirst(locale: Locale): Boolean {
-  val localizedPattern = getLocalizedPattern(locale)
+fun isYearFirst(locale: Locale) = isYearFirst(getLocalizedPattern(locale))
+
+private fun isYearFirst(localizedPattern: String): Boolean {
   val yearIndex = localizedPattern.indexOf('y')
   val monthIndex = localizedPattern.indexOf('M')
   return yearIndex != -1 && monthIndex != -1 && yearIndex < monthIndex
