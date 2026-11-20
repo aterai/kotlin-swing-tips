@@ -19,8 +19,33 @@ fun createUI(): Component {
   tabs.addTab("JTree", JScrollPane(JTree()))
   tabs.addTab("JButton", JButton("button"))
   tabs.addTab("JSplitPane", JSplitPane())
-  tabs.preferredSize = Dimension(320, 240)
-  return tabs
+
+  // Switch the tab placement between TOP and BOTTOM
+  val box = JPanel(FlowLayout(FlowLayout.LEFT))
+  box.add(JLabel("TabPlacement:"))
+  val top = createRadioButton("TOP", SwingConstants.TOP, tabs)
+  val bottom = createRadioButton("BOTTOM", SwingConstants.BOTTOM, tabs)
+  val group = ButtonGroup()
+  group.add(top)
+  group.add(bottom)
+  box.add(top)
+  box.add(bottom)
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.add(tabs)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun createRadioButton(
+  text: String,
+  placement: Int,
+  tabs: JTabbedPane,
+): JRadioButton {
+  val radio = JRadioButton(text, tabs.tabPlacement == placement)
+  radio.addActionListener { tabs.tabPlacement = placement }
+  return radio
 }
 
 private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
@@ -107,19 +132,54 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     h: Int,
   ) {
     super.paintContentBorderTopEdge(g, tabPlacement, selectedIndex, x, y, w, h)
-    if (tabPlacement != TOP || selectedIndex < 0) {
-      return
-    }
-    val selRect = getTabBounds(selectedIndex, calcRect)
-    // Same condition as BasicTabbedPaneUI: skip if the selected tab is
-    // scrolled out of view (SCROLL_TAB_LAYOUT)
-    if (selRect.x in x..x + w) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.color = selectedTabColor
-      val x1 = selRect.x - SLANT_WIDTH + 1
-      val x2 = selRect.x + selRect.width + SLANT_WIDTH - 1
-      g2.drawLine(x1, y, x2, y)
+    if (tabPlacement == TOP) {
+      val g2 = g.create()
+      paintSelectedTabEdge(g2, selectedIndex, x, w, y)
       g2.dispose()
+    }
+  }
+
+  override fun paintContentBorderBottomEdge(
+    g: Graphics,
+    tabPlacement: Int,
+    selectedIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ) {
+    if (tabPlacement == BOTTOM) {
+      // Mirror of the TOP edge: a single 1px line in the same color as the top edge
+      // instead of the BasicTabbedPaneUI 3D shadow lines
+      val g2 = g.create()
+      val lineY = y + h - 1
+      g2.color = lightHighlight
+      g2.drawLine(x, lineY, x + w - 2, lineY)
+      paintSelectedTabEdge(g2, selectedIndex, x, w, lineY)
+      g2.dispose()
+    } else {
+      super.paintContentBorderBottomEdge(g, tabPlacement, selectedIndex, x, y, w, h)
+    }
+  }
+
+  // Paint over the content border line covered by the long side of the selected trapezoidal tab
+  private fun paintSelectedTabEdge(
+    g: Graphics,
+    selectedIndex: Int,
+    x: Int,
+    w: Int,
+    lineY: Int,
+  ) {
+    if (selectedIndex >= 0) {
+      val selRect = getTabBounds(selectedIndex, calcRect)
+      // Same condition as BasicTabbedPaneUI: skip if the selected tab is
+      // scrolled out of view (SCROLL_TAB_LAYOUT)
+      if (selRect.x in x..x + w) {
+        g.color = selectedTabColor
+        val x1 = selRect.x - SLANT_WIDTH + 1
+        val x2 = selRect.x + selRect.width + SLANT_WIDTH - 1
+        g.drawLine(x1, lineY, x2, lineY)
+      }
     }
   }
 
@@ -142,14 +202,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     val clipRect = g2.clipBounds
     clipRect.grow(SLANT_WIDTH + 1, 0)
     g2.clip = clipRect
-    // Unselected tabs are 1px lower than the selected tab
-    val top = if (isSelected) 0.0 else 1.0
-    val trapezoid = Path2D.Float()
-    trapezoid.moveTo(-SLANT_WIDTH.toDouble(), h.toDouble())
-    trapezoid.lineTo(SLANT_WIDTH.toDouble(), top)
-    trapezoid.lineTo((w - SLANT_WIDTH).toDouble(), top)
-    trapezoid.lineTo((w + SLANT_WIDTH).toDouble(), h.toDouble())
-    trapezoid.closePath()
+    val trapezoid = createTrapezoid(tabPlacement, w, h, isSelected)
     val tx = x.toDouble()
     val ty = y.toDouble()
     trapezoid.transform(AffineTransform.getTranslateInstance(tx, ty))
@@ -165,6 +218,32 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     private const val SLANT_WIDTH = 3
     private val TAB_BACKGROUND = Color.LIGHT_GRAY
     private val TAB_BORDER = Color.GRAY
+
+    // TOP: the long side is at the bottom, adjoining the content area.
+    // BOTTOM: vertically flipped, the long side is at the top.
+    // Unselected tabs are 1px shorter than the selected tab on the side away from the content area.
+    // A normalized 1px stroke at an integer y lights the pixel row y (just below the coordinate),
+    // so the mirror of y = h is y = -1: the BOTTOM trapezoid is shifted up by 1px so that
+    // its long side falls outside the tab area (clipped) just like the TOP one, instead of
+    // drawing an extra line right below the content border edge.
+    private fun createTrapezoid(
+      tabPlacement: Int,
+      w: Int,
+      h: Int,
+      isSelected: Boolean,
+    ): Path2D {
+      val inset = if (isSelected) 0.0 else 1.0
+      val bottom = tabPlacement == BOTTOM
+      val longSideY = if (bottom) -1.0 else h.toDouble()
+      val shortSideY = if (bottom) h - 1.0 - inset else inset
+      val trapezoid = Path2D.Float()
+      trapezoid.moveTo(-SLANT_WIDTH.toDouble(), longSideY)
+      trapezoid.lineTo(SLANT_WIDTH.toDouble(), shortSideY)
+      trapezoid.lineTo((w - SLANT_WIDTH).toDouble(), shortSideY)
+      trapezoid.lineTo((w + SLANT_WIDTH).toDouble(), longSideY)
+      trapezoid.closePath()
+      return trapezoid
+    }
   }
 }
 
