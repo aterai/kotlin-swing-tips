@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
@@ -14,23 +13,23 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 
 fun createUI() = JPanel(GridBagLayout()).also {
-  val list = makeIconList()
-  val ins = 2
+  val list = createIconList()
+  val gap = 2
   val icon = list.getElementAt(0).small
-  val iw = ins + icon.iconWidth
-  val ih = ins + icon.iconHeight
-  val d = Dimension(iw * 3 + ins, ih * 3 + ins)
+  val iw = gap + icon.iconWidth
+  val ih = gap + icon.iconHeight
+  val d = Dimension(iw * 3 + gap, ih * 3 + gap)
   val editor = EditorFromList(list, d)
   editor.setFixedCellWidth(iw)
   editor.setFixedCellHeight(ih)
-  val model = makeIconTableModel(list)
+  val model = createIconTableModel(list)
   val table = IconTable(model, editor)
   it.add(table, GridBagConstraints())
   it.background = Color.WHITE
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeIconList() = DefaultListModel<IconItem>().also {
+private fun createIconList() = DefaultListModel<IconItem>().also {
   it.addElement(IconItem("wi0009"))
   it.addElement(IconItem("wi0054"))
   it.addElement(IconItem("wi0062"))
@@ -42,30 +41,29 @@ private fun makeIconList() = DefaultListModel<IconItem>().also {
   it.addElement(IconItem("wi0124"))
 }
 
-private fun makeIconTableModel(list: ListModel<IconItem>): TableModel {
+private fun createIconTableModel(list: ListModel<IconItem>): TableModel {
   val data = arrayOf(
     arrayOf(list.getElementAt(0), list.getElementAt(1), list.getElementAt(2)),
     arrayOf(list.getElementAt(3), list.getElementAt(4), list.getElementAt(5)),
     arrayOf(list.getElementAt(6), list.getElementAt(7), list.getElementAt(8)),
   )
-  return object : DefaultTableModel(data, null) {
+  val columnNames = arrayOf("A", "B", "C")
+  return object : DefaultTableModel(data, columnNames) {
     override fun isCellEditable(
       row: Int,
       column: Int,
     ) = false
-
-    override fun getColumnCount() = 3
   }
 }
 
 private data class IconItem(
   val name: String,
 ) {
-  val large = makeIcon("example/$name-48.png")
-  val small = makeIcon("example/$name-24.png")
+  val large = createIcon("example/$name-48.png")
+  val small = createIcon("example/$name-24.png")
 }
 
-private fun makeIcon(path: String): Icon {
+private fun createIcon(path: String): Icon {
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   return url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
     ?: UIManager.getIcon("html.missingImage")
@@ -108,10 +106,12 @@ private class IconTable(
     }
 
     override fun paintComponent(g: Graphics) {
-      g.color = Color(0x64_FF_FF_FF, true)
-      g.fillRect(0, 0, width, height)
-      val buffer = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-      val g2 = buffer.createGraphics()
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.paint = Color(0x64_FF_FF_FF, true)
+      g2.fillRect(0, 0, width, height)
+      // Draw the translucent drop shadow directly instead of allocating
+      // a full-size off-screen BufferedImage on every repaint.
+      // SRC_OVER compositing gives the same result as the intermediate buffer.
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
@@ -130,7 +130,6 @@ private class IconTable(
         )
       }
       g2.dispose()
-      g.drawImage(buffer, 0, 0, this)
     }
   }
   private var handler: MouseListener? = null
@@ -146,15 +145,20 @@ private class IconTable(
     editor.actionMap.put("cancel-editing", a)
     editor.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
-        val p = e.point
-        val item = editor.model.getElementAt(editor.locationToIndex(p))
-        setValueAt(item, selectedRow, selectedColumn)
+        val idx = editor.locationToIndex(e.point)
+        val row = selectedRow
+        val col = selectedColumn
+        if (idx >= 0 && row >= 0 && col >= 0) {
+          setValueAt(editor.model.getElementAt(idx), row, col)
+        }
         cancelEditing()
       }
     })
 
     glassPane.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
+        // Clicks on the editor JList are consumed by the JList itself,
+        // so any click reaching the glass pane is outside the editor.
         cancelEditing()
       }
     })
@@ -192,11 +196,14 @@ private class IconTable(
   }
 
   fun startEditing() {
+    val sr = selectedRow
+    val sc = selectedColumn
+    if (sr < 0 || sc < 0) {
+      return
+    }
     rootPane.glassPane = glassPane
     val d = editor.preferredSize
     editor.size = d
-    val sr = selectedRow
-    val sc = selectedColumn
     val r = getCellRect(sr, sc, true)
     val p = SwingUtilities.convertPoint(this, r.location, glassPane)
     p.translate((r.width - d.width) / 2, (r.height - d.height) / 2)
@@ -218,18 +225,18 @@ private class IconTable(
 
 private class EditorFromList(
   model: ListModel<IconItem>,
-  private val dim: Dimension,
+  private val fixedSize: Dimension,
 ) : JList<IconItem>(model) {
-  private var handler: RollOverListener? = null
-  private var rollOverRowIndex = -1
+  private var handler: RolloverListener? = null
+  private var rolloverIndex = -1
 
-  override fun getPreferredSize() = dim
+  override fun getPreferredSize() = fixedSize
 
   override fun updateUI() {
     removeMouseMotionListener(handler)
     removeMouseListener(handler)
     super.updateUI()
-    handler = RollOverListener()
+    handler = RolloverListener()
     addMouseMotionListener(handler)
     addMouseListener(handler)
     border = BorderFactory.createLineBorder(Color.BLACK)
@@ -241,7 +248,7 @@ private class EditorFromList(
         it.isOpaque = true
         it.horizontalAlignment = SwingConstants.CENTER
         when {
-          index == rollOverRowIndex -> it.background = selectionBackground
+          index == rolloverIndex -> it.background = selectionBackground
           isSelected -> it.background = selectedColor
           else -> it.background = background
         }
@@ -250,16 +257,16 @@ private class EditorFromList(
     }
   }
 
-  private inner class RollOverListener : MouseAdapter() {
+  private inner class RolloverListener : MouseAdapter() {
     override fun mouseExited(e: MouseEvent) {
-      rollOverRowIndex = -1
+      rolloverIndex = -1
       e.component.repaint()
     }
 
     override fun mouseMoved(e: MouseEvent) {
-      val row = locationToIndex(e.point)
-      if (row != rollOverRowIndex) {
-        rollOverRowIndex = row
+      val idx = locationToIndex(e.point)
+      if (idx != rolloverIndex) {
+        rolloverIndex = idx
         e.component.repaint()
       }
     }
