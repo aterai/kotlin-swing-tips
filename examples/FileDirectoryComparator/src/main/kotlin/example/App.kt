@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-private val check1 = JRadioButton("Default", true)
-private val check2 = JRadioButton("Directory < File", false)
-private val check3 = JRadioButton("Group Sorting", false)
+private val defaultRadio = JRadioButton("Default", true)
+private val dirFirstRadio = JRadioButton("Directory < File", false)
+private val groupSortingRadio = JRadioButton("Group Sorting", false)
 private val table = createTable()
 
 fun createUI(): Component {
@@ -28,7 +28,7 @@ fun createUI(): Component {
   }
   val p = JPanel()
   val group = ButtonGroup()
-  listOf(check1, check2, check3).forEach {
+  listOf(defaultRadio, dirFirstRadio, groupSortingRadio).forEach {
     it.addItemListener(listener)
     group.add(it)
     p.add(it)
@@ -51,31 +51,33 @@ private fun setFileComparators(sorter: TableRowSorter<out TableModel>) {
 // Get the underlying Comparator for each column
 private fun getFileComparator(index: Int): Comparator<File> {
   val baseComp = getBaseFileComparator(index)
-  val finalComp: Comparator<File>?
-
-  if (check1.isSelected) {
-    // Default:
-    finalComp = baseComp
-  } else if (check2.isSelected) {
-    // Directory < File: Always prioritize directories
-    // (fixed at the top regardless of ascending or descending order)
-    finalComp = Comparator
-      .comparing<File, Boolean>({ it.isDirectory() }, Comparator.reverseOrder())
-      .thenComparing(baseComp)
-  } else if (check3.isSelected) {
-    // Group Sorting: Group according to sort direction
-    finalComp = Comparator { a, b ->
-      val dir = getSortOrderDirection(index)
-      // Multiplying the directory priority comparison result by the current
-      // sort direction (dir) controls the directory to be on top
-      // when in ascending order and below when in descending order.
-      val v = java.lang.Boolean.compare(b.isDirectory(), a.isDirectory())
-      if (v == 0) baseComp.compare(a, b) else v * dir
+  return when {
+    dirFirstRadio.isSelected -> {
+      // Directory < File: directories are compared as smaller than files.
+      // Since the RowSorter reverses the comparator result in descending order,
+      // directories are placed at the top in ascending order
+      // and at the bottom in descending order.
+      Comparator
+        .comparing<File, Boolean>({ it.isDirectory() }, Comparator.reverseOrder())
+        .thenComparing(baseComp)
     }
-  } else {
-    finalComp = baseComp
+
+    groupSortingRadio.isSelected -> {
+      // Group Sorting: directories are always placed at the top
+      Comparator { a, b ->
+        val v = java.lang.Boolean.compare(b.isDirectory(), a.isDirectory())
+        // Multiplying the directory-first result by the current sort direction
+        // cancels out the reversal by the RowSorter in descending order,
+        // so only the files and directories within each group are reversed.
+        if (v == 0) baseComp.compare(a, b) else v * getSortOrderDirection(index)
+      }
+    }
+
+    // Default
+    else -> {
+      baseComp
+    }
   }
-  return finalComp
 }
 
 // Returns a basic File Comparator according to column index
@@ -94,11 +96,13 @@ private fun getBaseFileComparator(column: Int): Comparator<File> = when (column)
 }
 
 // Get the current sort direction of the specified column
-// (ascending: 1, descending: -1)
+// (ascending or unsorted: 1, descending: -1)
+// Search the sort key of the specified column, not just the primary key,
+// because the comparator is also used for the secondary sort keys.
 private fun getSortOrderDirection(column: Int) = table.rowSorter
   ?.sortKeys
-  ?.firstOrNull()
-  ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
+  ?.firstOrNull { it.column == column }
+  ?.takeIf { it.sortOrder == SortOrder.DESCENDING }
   ?.let { -1 }
   ?: 1
 
