@@ -8,10 +8,11 @@ import javax.swing.*
 
 fun createUI(): Component {
   val p = JPanel(GridLayout(1, 2, 10, 0))
-  val h = ListItemTransferHandler()
+  // Share a single handler so that it can tell whether the drop target is the drag source
+  val handler = ListItemTransferHandler()
   p.border = BorderFactory.createTitledBorder("Drag & Drop between JLists")
-  p.add(JScrollPane(makeList(h)))
-  p.add(JScrollPane(makeList(h)))
+  p.add(JScrollPane(createList(createModel(), handler)))
+  p.add(JScrollPane(createList(createModel(), handler)))
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -19,39 +20,41 @@ fun createUI(): Component {
   }
 }
 
-private fun makeList(handler: TransferHandler): JList<Color> {
-  val listModel = DefaultListModel<Color>().also {
-    it.addElement(Color.RED)
-    it.addElement(Color.BLUE)
-    it.addElement(Color.GREEN)
-    it.addElement(Color.CYAN)
-    it.addElement(Color.ORANGE)
-    it.addElement(Color.PINK)
-    it.addElement(Color.MAGENTA)
-  }
-  return object : JList<Color>(listModel) {
-    override fun updateUI() {
-      selectionBackground = null // Nimbus
-      cellRenderer = null
-      super.updateUI()
-      selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-      dropMode = DropMode.INSERT
-      dragEnabled = true
-      val renderer = cellRenderer
-      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer
-          .getListCellRendererComponent(
-            list,
-            value,
-            index,
-            isSelected,
-            cellHasFocus,
-          ).also {
-            it.foreground = value
-          }
-      }
-      transferHandler = handler
+private fun createModel() = DefaultListModel<Color>().also {
+  it.addElement(Color.RED)
+  it.addElement(Color.BLUE)
+  it.addElement(Color.GREEN)
+  it.addElement(Color.CYAN)
+  it.addElement(Color.ORANGE)
+  it.addElement(Color.PINK)
+  it.addElement(Color.MAGENTA)
+}
+
+private fun createList(
+  model: ListModel<Color>,
+  handler: TransferHandler,
+): JList<Color> = object : JList<Color>(model) {
+  override fun updateUI() {
+    selectionBackground = null // Nimbus
+    cellRenderer = null
+    super.updateUI()
+    selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+    dropMode = DropMode.INSERT
+    dragEnabled = true
+    val renderer = cellRenderer
+    setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          it.foreground = value
+        }
     }
+    transferHandler = handler
   }
 }
 
@@ -59,9 +62,10 @@ private class ListItemTransferHandler : TransferHandler() {
   private var source: JList<*>? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
-  private var addCount = 0 // Number of items added.
+  private var addCount = 0 // Number of items added to the drag source list
 
   override fun createTransferable(c: JComponent): Transferable {
+    selectedIndices.clear()
     source = (c as? JList<*>)?.also { s ->
       s.selectedIndices.forEach { selectedIndices.add(it) }
     }
@@ -146,20 +150,17 @@ private class ListItemTransferHandler : TransferHandler() {
 
   private fun getIndex(info: TransferSupport): Int {
     val target = info.component as? JList<*> ?: return -1
-    var index = if (info.isDrop) { // Mouse Drag & Drop
-      val tdl = info.dropLocation
-      if (tdl is JList.DropLocation) {
-        tdl.index
-      } else {
-        target.selectedIndex
+    // Keyboard Copy & Paste: insert at the selected index
+    var index = target.selectedIndex
+    if (info.isDrop) { // Mouse Drag & Drop
+      val location = info.dropLocation
+      if (location is JList.DropLocation) {
+        index = location.index
       }
-    } else { // Keyboard Copy & Paste
-      target.selectedIndex
     }
-    val max = (target.model as? DefaultListModel<*>)?.size ?: -1
-    index = if (index < 0) max else index
-    index = index.coerceAtMost(max)
-    return index
+    val max = target.model.size
+    // If it is out of range, it is appended to the end
+    return if (index < 0 || index > max) max else index
   }
 
   companion object {
