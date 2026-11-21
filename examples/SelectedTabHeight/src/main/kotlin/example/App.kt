@@ -56,6 +56,33 @@ private enum class TabPlacements(
   RIGHT(JTabbedPane.RIGHT),
 }
 
+private const val TAB_AREA_HEIGHT = 32
+private const val LOW_TAB_HEIGHT = TAB_AREA_HEIGHT / 2 + 3
+
+// Returns the tab rectangles used only for painting: an unselected tab of the
+// TOP/BOTTOM placement is shortened (and moved down to the bottom of the tab area
+// in the TOP placement). A copy is returned so that the layout rectangles
+// shared with hit testing and scrolling are not modified while painting.
+private fun getPaintRects(
+  tabPane: JTabbedPane,
+  tabPlacement: Int,
+  rects: Array<Rectangle>,
+  tabIndex: Int,
+): Array<Rectangle> {
+  val isHorizontal = tabPlacement == SwingConstants.TOP ||
+    tabPlacement == SwingConstants.BOTTOM
+  return if (isHorizontal && tabPane.selectedIndex != tabIndex) {
+    val r = Rectangle(rects[tabIndex])
+    if (tabPlacement == SwingConstants.TOP) {
+      r.y += r.height - LOW_TAB_HEIGHT
+    }
+    r.height = LOW_TAB_HEIGHT
+    rects.copyOf().also { it[tabIndex] = r }
+  } else {
+    rects
+  }
+}
+
 private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
   override fun calculateTabHeight(
     tabPlacement: Int,
@@ -71,19 +98,8 @@ private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
     iconRect: Rectangle,
     textRect: Rectangle,
   ) {
-    val b = tabPlacement == TOP || tabPlacement == BOTTOM
-    if (b && tabPane.selectedIndex != tabIndex) {
-      val tabHeight = TAB_AREA_HEIGHT / 2 + 3
-      rects[tabIndex].height = tabHeight
-      if (tabPlacement == TOP) {
-        rects[tabIndex].y = TAB_AREA_HEIGHT - tabHeight + 3
-      }
-    }
-    super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect)
-  }
-
-  companion object {
-    private const val TAB_AREA_HEIGHT = 32
+    val paintRects = getPaintRects(tabPane, tabPlacement, rects, tabIndex)
+    super.paintTab(g, tabPlacement, paintRects, tabIndex, iconRect, textRect)
   }
 }
 
@@ -102,19 +118,8 @@ private class BasicTabHeightTabbedPaneUI : BasicTabbedPaneUI() {
     iconRect: Rectangle,
     textRect: Rectangle,
   ) {
-    val b = tabPlacement == TOP || tabPlacement == BOTTOM
-    if (b && tabPane.selectedIndex != tabIndex) {
-      val tabHeight = TAB_AREA_HEIGHT / 2 + 3
-      rects[tabIndex].height = tabHeight
-      if (tabPlacement == TOP) {
-        rects[tabIndex].y = TAB_AREA_HEIGHT - tabHeight + 3
-      }
-    }
-    super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect)
-  }
-
-  companion object {
-    private const val TAB_AREA_HEIGHT = 32
+    val paintRects = getPaintRects(tabPane, tabPlacement, rects, tabIndex)
+    super.paintTab(g, tabPlacement, paintRects, tabIndex, iconRect, textRect)
   }
 }
 

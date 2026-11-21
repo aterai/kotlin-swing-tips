@@ -21,8 +21,64 @@ repositories {
   mavenCentral()
 }
 
+// --- JDK internal Swing API (com.sun.java.swing.plaf.windows, ...) -----------
+// javac accepts --add-exports, but kotlinc has no equivalent option, so the
+// classes are extracted from the running JDK image and put on the compile
+// classpath instead: a class found on the classpath is in the unnamed module
+// and is not subject to the module export check.
+ext.internalPackages = [
+  'com/sun/java/swing/plaf/windows',
+  'sun/awt/shell',
+  'sun/swing',
+]
+
+ext.internalExports = internalPackages.collect {
+  "--add-exports=java.desktop/${it.replace('/', '.')}=ALL-UNNAMED"
+}
+
+def internalApiJar = layout.buildDirectory.file('jdk-internal-api/java.desktop-internal.jar')
+
+tasks.register('jdkInternalApiJar') {
+  description = 'Extracts non-exported java.desktop packages into a jar for the compile classpath.'
+  def packages = internalPackages
+  def outputFile = internalApiJar
+  outputs.file(outputFile)
+  doLast {
+    def jrt = java.nio.file.FileSystems.getFileSystem(java.net.URI.create('jrt:/'))
+    def jar = outputFile.get().asFile
+    jar.parentFile.mkdirs()
+    new java.util.zip.ZipOutputStream(new FileOutputStream(jar)).withCloseable { zip ->
+      packages.each { pkg ->
+        def dir = jrt.getPath("/modules/java.desktop/$pkg")
+        if (java.nio.file.Files.isDirectory(dir)) {
+          java.nio.file.Files.list(dir).withCloseable { s ->
+            s.filter { it.fileName.toString().endsWith('.class') }.forEach { p ->
+              zip.putNextEntry(new java.util.zip.ZipEntry("$pkg/${p.fileName}"))
+              zip.write(java.nio.file.Files.readAllBytes(p))
+              zip.closeEntry()
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+dependencies {
+  compileOnly files(internalApiJar) { builtBy 'jdkInternalApiJar' }
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.compilerArgs += internalExports
+}
+
+application {
+  applicationDefaultJvmArgs = internalExports
+}
+// ---------------------------------------------------------------------------
+
 jar {
   manifest { attributes 'Main-Class': 'application.$mainClass' }
-  from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+  from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
