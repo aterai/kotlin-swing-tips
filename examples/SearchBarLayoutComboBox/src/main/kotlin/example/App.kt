@@ -10,16 +10,18 @@ fun createUI(): Component {
   p.add(JComboBox(arrayOf("Google", "Yahoo!", "Bing")))
   p.add(JLabel("SearchBar JComboBox"))
 
-  val m = SearchEngineComboBoxModel<example.SearchEngine>()
-  m.addElement(SearchEngine("Google", "https://www.google.com/", makeIcon("google")))
-  m.addElement(SearchEngine("Yahoo!", "https://www.yahoo.com/", makeIcon("yahoo")))
-  m.addElement(SearchEngine("Bing", "https://www.bing.com/", makeIcon("bing")))
+  val model = SearchEngineComboBoxModel<example.SearchEngine>()
+  model.addElement(
+    SearchEngine("Google", "https://www.google.com/", createIcon("google")),
+  )
+  model.addElement(SearchEngine("Yahoo!", "https://www.yahoo.com/", createIcon("yahoo")))
+  model.addElement(SearchEngine("Bing", "https://www.bing.com/", createIcon("bing")))
 
-  val combo = SearchBarComboBox(m)
+  val combo = SearchBarComboBox(model)
   combo.getEditor().setItem("java swing")
 
   p.add(combo)
-  // p.add(SearchBarComboBox(makeModel()))
+  // p.add(SearchBarComboBox(createModel()))
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
@@ -27,7 +29,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeIcon(name: String): ImageIcon {
+private fun createIcon(name: String): ImageIcon {
   val path = "example/$name.png"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   return if (url == null) ImageIcon(makeMissingImage()) else ImageIcon(url)

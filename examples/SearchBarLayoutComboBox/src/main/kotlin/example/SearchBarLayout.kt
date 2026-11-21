@@ -24,27 +24,26 @@ class SearchBarLayout : LayoutManager {
     val r = SwingUtilities.calculateInnerArea(cb, null)
 
     // ArrowButton
-    var arrowSize = 0
-    (cb.getComponent(0) as? JButton)?.also {
-      val arrowInsets = it.insets
-      val bw = it.preferredSize.width + arrowInsets.left + arrowInsets.right
-      it.setBounds(r.x, r.y, bw, r.height)
-      arrowSize = bw
+    var arrowWidth = 0
+    // BasicSearchBarComboBoxUI#installComponents() adds the arrow button first
+    val arrowButton = if (cb.componentCount > 0) cb.getComponent(0) else null
+    if (arrowButton is JButton) {
+      val arrowInsets = arrowButton.insets
+      arrowWidth = arrowButton.preferredSize.width + arrowInsets.left + arrowInsets.right
+      arrowButton.setBounds(r.x, r.y, arrowWidth, r.height)
     }
 
     // LoupeButton
-    var loupeButton = cb.components
-      .filter { it.name == "ComboBox.loupeButton" }
-      .firstOrNull()
-    var loupeSize = 0
+    val loupeButton = cb.components.firstOrNull { it.name == "ComboBox.loupeButton" }
+    var loupeWidth = 0
     if (loupeButton is JButton) {
-      loupeSize = r.height
-      loupeButton.setBounds(r.x + r.width - loupeSize, r.y, loupeSize, r.height)
+      loupeWidth = r.height // square button
+      loupeButton.setBounds(r.x + r.width - loupeWidth, r.y, loupeWidth, r.height)
     }
 
     // ComboBox Editor
     (cb.editor.editorComponent as? JTextField)?.also {
-      it.setBounds(r.x + arrowSize, r.y, r.width - arrowSize - loupeSize, r.height)
+      it.setBounds(r.x + arrowWidth, r.y, r.width - arrowWidth - loupeWidth, r.height)
     }
   }
 }

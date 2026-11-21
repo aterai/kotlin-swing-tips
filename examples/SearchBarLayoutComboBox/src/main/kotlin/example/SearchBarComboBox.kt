@@ -28,9 +28,11 @@ open class SearchBarComboBox<E : SearchEngine> : JComboBox<E> {
     setUI(BasicSearchBarComboBoxUI())
     // }
     UIManager.put("ComboBox.font", font) // XXX: ???
-    getItemAt(0)?.also {
-      // set ArrowButton Icon
-      (getComponent(0) as? JButton)?.icon = it.favicon
+    // Show the favicon of the first search engine on the newly created arrow button
+    val se = getItemAt(0)
+    val button = if (componentCount > 0) getComponent(0) as? JButton else null
+    if (se != null && button != null) {
+      BasicSearchBarComboBoxUI.setArrowButtonIcon(button, se.favicon)
     }
   }
 

@@ -43,22 +43,24 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   private fun createPopupMenuListener(): PopupMenuListener? {
     if (popupMenuListener == null) {
       popupMenuListener = object : PopupMenuListener {
-        private var str: String? = null
+        private var editorText = ""
 
         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+          // Save the search text, selecting a search engine must not overwrite it
           (e.source as? JComboBox<*>)?.also {
-            str = it.editor.item.toString()
+            editorText = it.editor.item
+              ?.toString()
+              .orEmpty()
           }
         }
 
         override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-          val combo = e.source
+          val combo = e.source as? JComboBox<*> ?: return
           val se = listBox.getSelectedValue()
-          if (combo is JComboBox<*> && se is SearchEngine) {
-            arrowButton.setIcon(se.favicon)
-            arrowButton.setRolloverIcon(makeRolloverIcon(se.favicon))
-            combo.editor.item = str
+          if (se is SearchEngine) {
+            setArrowButtonIcon(arrowButton, se.favicon)
           }
+          combo.editor.item = editorText
         }
 
         override fun popupMenuCanceled(e: PopupMenuEvent) {
@@ -123,9 +125,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   }
 
   override fun uninstallComponents() {
-    if (loupeButton != null) {
-      unconfigureLoupeButton()
-    }
+    unconfigureLoupeButton()
     loupeButton = null
     super.uninstallComponents()
   }
@@ -140,7 +140,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
       ImageIcon(url)
     }
     button.icon = loupe
-    button.rolloverIcon = makeRolloverIcon(loupe)
+    button.rolloverIcon = createRolloverIcon(loupe)
     return button
   }
 
@@ -170,22 +170,32 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
 
   override fun createLayoutManager() = SearchBarLayout()
 
-  private fun makeRolloverIcon(srcIcon: Icon): Icon {
-    val op = RescaleOp(
-      floatArrayOf(1.2f, 1.2f, 1.2f, 1f),
-      floatArrayOf(0f, 0f, 0f, 0f),
-      null,
-    )
-    val img = BufferedImage(
-      srcIcon.iconWidth,
-      srcIcon.iconHeight,
-      BufferedImage.TYPE_INT_ARGB,
-    )
-    val g = img.graphics
-    // g.drawImage(srcIcon.getImage(), 0, 0, null)
-    srcIcon.paintIcon(null, g, 0, 0)
-    g.dispose()
-    return ImageIcon(op.filter(img, null))
+  companion object {
+    fun setArrowButtonIcon(
+      button: AbstractButton,
+      icon: Icon,
+    ) {
+      button.icon = icon
+      button.rolloverIcon = createRolloverIcon(icon)
+    }
+
+    private fun createRolloverIcon(srcIcon: Icon): Icon {
+      val img = BufferedImage(
+        srcIcon.iconWidth,
+        srcIcon.iconHeight,
+        BufferedImage.TYPE_INT_ARGB,
+      )
+      val g = img.createGraphics()
+      srcIcon.paintIcon(null, g, 0, 0)
+      g.dispose()
+      // Brighten the RGB components by 20% and keep the alpha
+      val op = RescaleOp(
+        floatArrayOf(1.2f, 1.2f, 1.2f, 1f),
+        floatArrayOf(0f, 0f, 0f, 0f),
+        null,
+      )
+      return ImageIcon(op.filter(img, null))
+    }
   }
 
 //  companion object {
