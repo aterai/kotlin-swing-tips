@@ -4,13 +4,15 @@ import java.awt.*
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
+import javax.swing.border.Border
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
 private val alphaZero = Color(0x0, true)
-private val color = Color(255, 0, 0, 50)
+private val translucentRed = Color(255, 0, 0, 50)
+private val SELECTION_BGC = Color(0, 0, 100, 50)
 
 fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
@@ -58,11 +60,12 @@ fun createUI(): Component {
   table.intercellSpacing = Dimension(0, 1)
   table.rowHeight = 24
   table.selectionForeground = table.foreground
-  table.selectionBackground = Color(0, 0, 100, 50)
+  table.selectionBackground = SELECTION_BGC
 
   val checkBox = object : JCheckBox() {
     override fun paintComponent(g: Graphics) {
-      g.color = Color(0, 0, 100, 50)
+      // The row being edited is always selected
+      g.color = SELECTION_BGC
       g.fillRect(0, 0, width, height)
       super.paintComponent(g)
     }
@@ -79,7 +82,7 @@ fun createUI(): Component {
   table.isOpaque = false
   table.background = alphaZero
   // table.gridColor = alphaZero
-  table.tableHeader.defaultRenderer = TransparentHeader()
+  table.tableHeader.defaultRenderer = TransparentHeaderRenderer()
   table.tableHeader.isOpaque = false
   table.tableHeader.background = alphaZero
 
@@ -104,8 +107,8 @@ fun createUI(): Component {
 
   val check = JCheckBox("setBackground(new Color(255, 0, 0, 50))")
   check.addActionListener { e ->
-    val b = (e.source as? JCheckBox)?.isSelected ?: false
-    table.background = if (b) color else alphaZero
+    val selected = (e.source as? JCheckBox)?.isSelected ?: false
+    table.background = if (selected) translucentRed else alphaZero
   }
 
   return JPanel(BorderLayout()).also {
@@ -134,7 +137,7 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private class TransparentHeader : TableCellRenderer {
+private class TransparentHeaderRenderer : TableCellRenderer {
   private val border = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
     BorderFactory.createEmptyBorder(2, 2, 1, 2),
@@ -158,8 +161,9 @@ private class TransparentHeader : TableCellRenderer {
       row,
       column,
     )
+    // DefaultTableCellRenderer has already set the text (null is shown as an empty string),
+    // but it resets the colors and the border on every call, so override them here
     if (c is JLabel) {
-      c.text = value?.toString() ?: ""
       c.horizontalAlignment = SwingConstants.CENTER
       c.isOpaque = false
       c.background = alphaZero
@@ -187,16 +191,25 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
       row,
       column,
     )?.also {
-      (it as? JComponent)?.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
+      (it as? JComponent)?.border = PADDING
     }
+
+  companion object {
+    private val PADDING: Border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
+  }
 }
 
 private class TranslucentBooleanRenderer :
   JCheckBox(),
   TableCellRenderer {
+  init {
+    horizontalAlignment = CENTER
+  }
+
   override fun updateUI() {
     super.updateUI()
-    horizontalAlignment = CENTER
+    // Note: setting horizontalAlignment here is useless at construction time, because
+    // the JCheckBox constructor sets horizontalAlignment to LEADING after updateUI()
     isBorderPainted = true
     border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
     isOpaque = false
@@ -210,10 +223,9 @@ private class TranslucentBooleanRenderer :
     row: Int,
     column: Int,
   ): Component {
-    horizontalAlignment = CENTER
     if (isSelected) {
       foreground = table.selectionForeground
-      background = SELECTION_BACKGROUND
+      background = SELECTION_BGC
     } else {
       foreground = table.foreground
       background = table.background
@@ -228,10 +240,6 @@ private class TranslucentBooleanRenderer :
       g.fillRect(0, 0, width, height)
     }
     super.paintComponent(g)
-  }
-
-  companion object {
-    private val SELECTION_BACKGROUND = Color(0, 0, 100, 50)
   }
 }
 
