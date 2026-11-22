@@ -8,13 +8,14 @@ fun createUI(): Component {
   val inside = BorderFactory.createEmptyBorder(0, 5, 0, 0)
   val label = JLabel("MANIFEST.MF")
   label.border = BorderFactory.createCompoundBorder(outside, inside)
+  // deriveFont(...) keeps the font family and other attributes of the original font
   val font = label.font
-  label.font = Font(font.fontName, font.style, font.size * 2)
-  val p = JPanel(BorderLayout(2, 2))
-  p.add(label, BorderLayout.NORTH)
-  p.add(makeInfoBox(), BorderLayout.SOUTH)
+  label.font = font.deriveFont(font.size2D * 2f)
+  val panel = JPanel(BorderLayout(2, 2))
+  panel.add(label, BorderLayout.NORTH)
+  panel.add(makeInfoBox(), BorderLayout.SOUTH)
   return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
+    it.add(panel, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
@@ -29,10 +30,9 @@ private fun makeInfoBox(): Box {
   box.add(JLabel("Implementation-Title: Example"))
   box.add(JLabel("Implementation-Version: 1.0.32"))
   box.add(JLabel("Class-Path: ."))
-  val box2 = Box.createHorizontalBox()
-  box2.add(Box.createHorizontalStrut(10))
-  box2.add(box)
-  return box2
+  // indent the lines with an EmptyBorder instead of a horizontal strut
+  box.border = BorderFactory.createEmptyBorder(0, 10, 0, 0)
+  return box
 }
 
 fun main() {
