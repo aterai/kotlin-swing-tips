@@ -81,7 +81,7 @@ private class RowHeaderList<E>(
     listSelection = selectionModel
   }
 
-  inner class RowHeaderRenderer<F>(
+  private inner class RowHeaderRenderer<F>(
     private val header: JTableHeader,
   ) : ListCellRenderer<F> {
     private val renderer = JLabel()
@@ -150,19 +150,18 @@ private class RowHeaderList<E>(
     override fun mouseDragged(e: MouseEvent) {
       if (pressedRowIndex >= 0) {
         val row = locationToIndex(e.point)
-        val start = minOf(row, pressedRowIndex)
-        val end = maxOf(row, pressedRowIndex)
-        tableSelection.clearSelection()
-        listSelection.clearSelection()
-        tableSelection.addSelectionInterval(start, end)
-        listSelection.addSelectionInterval(start, end)
+        // setSelectionInterval(...) replaces the current selection,
+        // and keeps the pressed row as the anchor
+        tableSelection.setSelectionInterval(pressedRowIndex, row)
+        listSelection.setSelectionInterval(pressedRowIndex, row)
         e.component.repaint()
       }
     }
 
     override fun mousePressed(e: MouseEvent) {
       val row = locationToIndex(e.point)
-      if (row == pressedRowIndex) {
+      // locationToIndex(...) returns -1 if the list is empty
+      if (row < 0 || row == pressedRowIndex) {
         return
       }
       listSelection.clearSelection()
@@ -185,8 +184,8 @@ private class RowDataModel(
 ) : DefaultTableModel() {
   private var number = 0
 
-  fun addRowData(t: RowData) {
-    val obj = arrayOf(t.name, t.comment)
+  fun addRowData(rowData: RowData) {
+    val obj = arrayOf(rowData.name, rowData.comment)
     super.addRow(obj)
     rowListModel.addElement("row$number")
     number++
