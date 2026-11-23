@@ -20,7 +20,7 @@ val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
 
 private fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 5, 25))
-  val p1 = createTextField()
+  val p1 = createTextFieldPanel()
   p.add(createTitledPanel("JTextField + HighlightFilter", p1))
   val p2 = createPasswordPanel()
   p.add(createTitledPanel("JPasswordField + HighlightFilter", p2))
@@ -34,7 +34,7 @@ private fun createUI(): Component {
   }
 }
 
-private fun createTextField(): JPanel {
+private fun createTextFieldPanel(): JPanel {
   val txt = "The quick brown fox jumps over the lazy dog."
   val field = object : JTextField(txt) {
     override fun updateUI() {
@@ -141,10 +141,9 @@ private class DigitHighlightPasswordField(
 private class HighlightFilter(
   private val field: JTextComponent,
 ) : DocumentFilter() {
-  private val fgc = UIManager.getColor("PasswordField.foreground")
-  private val defPainter = ForegroundPainter(fgc)
-  private val numPainter = ForegroundPainter(Color.RED)
-  private val pattern = Pattern.compile("\\d")
+  private val defaultPainter =
+    ForegroundPainter(UIManager.getColor("PasswordField.foreground"))
+  private val digitPainter = ForegroundPainter(Color.RED)
 
   @Throws(BadLocationException::class)
   override fun insertString(
@@ -177,20 +176,23 @@ private class HighlightFilter(
 
   private fun update(fb: FilterBypass) {
     val doc = fb.document
-    field.highlighter.removeAllHighlights()
+    val highlighter = field.highlighter
+    highlighter.removeAllHighlights()
     runCatching {
-      val highlighter = field.highlighter
       val text = doc.getText(0, doc.length)
-      val matcher = pattern.matcher(text)
-      var pos = 0
-      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-        pos = matcher.end()
-        highlighter.addHighlight(matcher.start(), pos, numPainter)
+      val matcher = DIGIT_PATTERN.matcher(text)
+      while (matcher.find()) {
+        highlighter.addHighlight(matcher.start(), matcher.end(), digitPainter)
       }
-      highlighter.addHighlight(0, doc.length, defPainter)
+      // Added last so that it is painted first, below the digit highlights
+      highlighter.addHighlight(0, text.length, defaultPainter)
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(field)
     }
+  }
+
+  companion object {
+    private val DIGIT_PATTERN = Pattern.compile("\\d")
   }
 }
 
@@ -221,7 +223,7 @@ private class EyeIcon(
     g2.paint = color
     val iw = iconWidth
     val ih = iconHeight
-    val s = iconWidth / 12.0
+    val s = iw / 12.0
     g2.stroke = BasicStroke(s.toFloat())
     val w = iw - s * 2.0
     val h = ih - s * 2.0
@@ -265,12 +267,20 @@ private class ForegroundPainter(
     val r = getDrawingArea(offs0, offs1, bounds, view)
     if (!r.isEmpty) {
       runCatching {
-        val s = c.document.getText(offs0, offs1 - offs0)
         (g.create() as? Graphics2D)?.also { g2 ->
-          val font = c.getFont()
-          val metrics = g2.getFontMetrics(font)
-          val ascent = metrics.ascent
+          // Use the desktop text antialiasing hints so that the text looks
+          // the same as the text normally painted by the View
+          val hints = Toolkit.getDefaultToolkit().getDesktopProperty(
+            "awt.font.desktophints",
+          )
+          if (hints is Map<*, *>) {
+            g2.addRenderingHints(hints)
+          }
+          val font = c.font
+          g2.font = font
+          val ascent = g2.getFontMetrics(font).ascent
           g2.color = color
+          val s = c.document.getText(offs0, offs1 - offs0)
           g2.drawString(s, r.x.toFloat(), (r.y + ascent).toFloat())
           g2.dispose()
         }
