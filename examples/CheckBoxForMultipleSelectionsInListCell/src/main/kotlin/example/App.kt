@@ -7,18 +7,18 @@ import javax.swing.*
 import javax.swing.border.Border
 
 fun createUI(): Component {
-  val list = JList(makeModel())
+  val list = JList(createModel())
   list.cellRenderer = SimpleListItemCellRenderer()
 
   return JPanel(GridLayout(1, 2)).also {
     it.add(JScrollPane(list))
-    it.add(JScrollPane(MultipleSelectionList(makeModel())))
+    it.add(JScrollPane(MultipleSelectionList(createModel())))
     it.isOpaque = false
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeModel(): DefaultListModel<ListItem> {
+private fun createModel(): DefaultListModel<ListItem> {
   val model = DefaultListModel<ListItem>().also {
     it.addElement(ListItem("red", ColorIcon(Color.RED)))
     it.addElement(ListItem("green", ColorIcon(Color.GREEN)))
@@ -41,8 +41,8 @@ private class MultipleSelectionList(
   model: ListModel<ListItem>,
 ) : JList<ListItem>(model) {
   private var checkListener: ItemCheckBoxesListener? = null
-  private var rollOverIndex = -1
-  private var checkedIndex = -1
+  private var rolloverIndex = -1
+  private var checkIndex = -1 // index of the cell whose check box is pressed
 
   override fun updateUI() {
     selectionForeground = null // Nimbus
@@ -57,16 +57,29 @@ private class MultipleSelectionList(
     addMouseListener(checkListener)
   }
 
+  override fun processMouseEvent(e: MouseEvent) {
+    // The MouseListener of the ListUI is notified before ItemCheckBoxesListener
+    // and calls setSelectionInterval(...), so the index of the pressed check box
+    // must be updated before any MouseListener is notified.
+    if (e.id == MouseEvent.MOUSE_PRESSED) {
+      checkIndex = getCheckBoxIndexAt(e)
+    }
+    super.processMouseEvent(e)
+  }
+
   override fun setSelectionInterval(
     anchor: Int,
     lead: Int,
   ) {
-    if (checkedIndex < 0) {
+    if (checkIndex < 0) {
       super.setSelectionInterval(anchor, lead)
     } else {
+      // Defer the selection change requested by the ListUI so that it is
+      // applied after the check box toggles the selection of the cell
       EventQueue.invokeLater {
-        if (checkedIndex >= 0 && lead == anchor && checkedIndex == anchor) {
-          super.addSelectionInterval(checkedIndex, checkedIndex)
+        val idx = checkIndex
+        if (idx >= 0 && lead == anchor && idx == anchor) {
+          super.addSelectionInterval(idx, idx)
         } else {
           super.setSelectionInterval(anchor, lead)
         }
@@ -78,57 +91,74 @@ private class MultipleSelectionList(
     index0: Int,
     index1: Int,
   ) {
-    if (checkedIndex < 0) {
+    if (checkIndex < 0) {
       super.removeSelectionInterval(index0, index1)
     } else {
       EventQueue.invokeLater { super.removeSelectionInterval(index0, index1) }
     }
   }
 
-  private inner class ItemCheckBoxesListener : MouseAdapter() {
-    private val srcPoint = Point()
+  fun getCellIndexAt(pt: Point): Int {
+    val index = locationToIndex(pt)
+    val r = getCellBounds(index, index)
+    return if (r != null && r.contains(pt)) index else -1
+  }
 
+  fun repaintCell(index: Int) {
+    getCellBounds(index, index)?.also { repaint(it) }
+  }
+
+  private fun getCheckBoxIndexAt(e: MouseEvent): Int {
+    val modifierDown = e.isShiftDown || e.isControlDown || e.isAltDown
+    val pt = e.point
+    val index = getCellIndexAt(pt)
+    val hit = !modifierDown && index >= 0 && isCheckBoxAt(index, pt)
+    return if (hit) index else -1
+  }
+
+  private fun isCheckBoxAt(
+    index: Int,
+    pt: Point,
+  ): Boolean {
+    val value = model.getElementAt(index)
+    val c = cellRenderer.getListCellRendererComponent(this, value, index, false, false)
+    val r = getCellBounds(index, index)
+    c.bounds = r
+    c.validate() // lay out the JCheckBox or Box.Filler swapped by the cell renderer
+    val deepest = SwingUtilities.getDeepestComponentAt(c, pt.x - r.x, pt.y - r.y)
+    // The cell renderer uses a Box.Filler instead of a hidden JCheckBox
+    return deepest is JCheckBox || deepest is Box.Filler
+  }
+
+  private inner class ItemCheckBoxesListener : MouseAdapter() {
     override fun mouseExited(e: MouseEvent) {
-      rollOverIndex = -1
-      e.component.repaint()
+      repaintCell(rolloverIndex)
+      rolloverIndex = -1
     }
 
     override fun mouseMoved(e: MouseEvent) {
-      val pt = e.getPoint()
-      var idx = locationToIndex(pt)
-      if (!getCellBounds(idx, idx).contains(pt)) {
-        idx = -1
+      val index = getCellIndexAt(e.point)
+      if (index != rolloverIndex) {
+        repaintCell(rolloverIndex)
+        rolloverIndex = index
+        repaintCell(index)
       }
-      val rect = Rectangle()
-      if (idx >= 0) {
-        rect.add(getCellBounds(idx, idx))
-        if (rollOverIndex >= 0 && idx != rollOverIndex) {
-          rect.add(getCellBounds(rollOverIndex, rollOverIndex))
-        }
-        rollOverIndex = idx
-      } else {
-        if (rollOverIndex >= 0) {
-          rect.add(getCellBounds(rollOverIndex, rollOverIndex))
-        }
-        rollOverIndex = -1
-      }
-      (e.component as? JComponent)?.repaint(rect)
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val l = e.component as? JList<*> ?: return
-      val index = l.locationToIndex(e.point)
-      if (l.getCellBounds(index, index).contains(e.point)) {
+      val index = getCellIndexAt(e.point)
+      if (index >= 0) {
         cellPressed(e, index)
       } else {
         EventQueue.invokeLater {
-          l.clearSelection()
-          l.selectionModel.anchorSelectionIndex = -1
-          l.selectionModel.leadSelectionIndex = -1
+          selectionModel.anchorSelectionIndex = -1
+          selectionModel.leadSelectionIndex = -1
+          rolloverIndex = -1
+          checkIndex = -1
+          clearSelection()
         }
       }
-      srcPoint.location = e.point
-      l.repaint()
+      repaint()
     }
 
     private fun cellPressed(
@@ -138,47 +168,27 @@ private class MultipleSelectionList(
       if (SwingUtilities.isLeftMouseButton(e) && e.clickCount > 1) {
         val item = model.getElementAt(index)
         JOptionPane.showMessageDialog(rootPane, item.title)
-      } else {
-        checkedIndex = -1
-        getDeepestButtonAt(e, index)?.also {
-          checkedIndex = index
-          if (isSelectedIndex(index)) {
-            setFocusable(false)
-            removeSelectionInterval(index, index)
-          } else {
-            setSelectionInterval(index, index)
-          }
+      } else if (checkIndex == index) {
+        if (isSelectedIndex(index)) {
+          removeSelectionInterval(index, index)
+        } else {
+          setSelectionInterval(index, index)
         }
       }
-    }
-
-    private fun getDeepestButtonAt(
-      e: MouseEvent,
-      index: Int,
-    ): Component? = if (e.isShiftDown || e.isControlDown || e.isAltDown) {
-      null
-    } else {
-      val list = this@MultipleSelectionList
-      val proto = list.prototypeCellValue
-      val cr = list.cellRenderer
-      val c = cr.getListCellRendererComponent(list, proto, index, false, false)
-      val r = list.getCellBounds(index, index)
-      c.bounds = r
-      val pt = e.point
-      pt.translate(-r.x, -r.y)
-      val box = SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y)
-      if (box is Box.Filler || box is JCheckBox) box else null
     }
   }
 
   private inner class ListItemCellRenderer : ListCellRenderer<ListItem> {
     private val renderer = JPanel(BorderLayout(0, 0))
+    private val itemLayout = BorderLayout(2, 2)
     private val check = JCheckBox()
     private val filler = Box.createRigidArea(check.getPreferredSize())
     private val label = JLabel("")
-    private val itemPanel = object : JPanel(BorderLayout(2, 2)) {
+    private val itemPanel = object : JPanel(itemLayout) {
       override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
+        // Paint the translucent selection color once more to make
+        // the selected cell darker than the rollover cell
         if (SELECTED_COLOR == getBackground()) {
           val g2 = g.create() as? Graphics2D ?: return
           g2.paint = SELECTED_COLOR
@@ -194,11 +204,8 @@ private class MultipleSelectionList(
 
     init {
       itemPanel.setBorder(noFocusBorder)
-      label.setForeground(itemPanel.getForeground())
-      label.setBackground(itemPanel.getBackground())
       label.setOpaque(false)
       check.setOpaque(false)
-      check.isVisible = false
       itemPanel.add(filler, BorderLayout.WEST)
       itemPanel.add(label)
       itemPanel.setOpaque(true)
@@ -222,27 +229,28 @@ private class MultipleSelectionList(
     ): Component {
       label.text = value?.title
       label.icon = value?.icon
+      val rollover = index == rolloverIndex
       itemPanel.border = if (cellHasFocus) focusBorder else noFocusBorder
       check.isSelected = isSelected
-      check.model.isRollover = index == rollOverIndex
-      if (isSelected) {
-        label.foreground = list.selectionForeground
-        label.background = SELECTED_COLOR
-        itemPanel.background = SELECTED_COLOR
-        itemPanel.add(check, BorderLayout.WEST)
-        check.isVisible = true
-      } else if (index == rollOverIndex) {
-        itemPanel.background = ROLLOVER_COLOR
-        itemPanel.add(check, BorderLayout.WEST)
-        check.isVisible = true
-      } else {
-        label.foreground = list.foreground
-        label.background = list.background
-        itemPanel.background = list.background
-        itemPanel.add(filler, BorderLayout.WEST)
-        check.isVisible = false
+      check.model.isRollover = rollover
+      // Show the JCheckBox only in the selected or rollover cell, otherwise
+      // use a Box.Filler of the same size to keep the position of the label
+      setLeadingComponent(if (isSelected || rollover) check else filler)
+      label.foreground = if (isSelected) list.selectionForeground else list.foreground
+      itemPanel.background = when {
+        isSelected -> SELECTED_COLOR
+        rollover -> ROLLOVER_COLOR
+        else -> list.background
       }
       return renderer
+    }
+
+    private fun setLeadingComponent(c: Component) {
+      val old = itemLayout.getLayoutComponent(BorderLayout.WEST)
+      if (old != c) {
+        old?.also { itemPanel.remove(it) }
+        itemPanel.add(c, BorderLayout.WEST)
+      }
     }
   }
 
