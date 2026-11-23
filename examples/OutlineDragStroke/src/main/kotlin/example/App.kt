@@ -7,47 +7,7 @@ import javax.swing.plaf.LayerUI
 fun createUI(): Component {
   val rubberBand = Rectangle()
   val desktop = JDesktopPane()
-  desktop.desktopManager = object : DefaultDesktopManager() {
-    override fun beginResizingFrame(
-      f: JComponent,
-      direction: Int,
-    ) {
-      (f as? JInternalFrame)?.desktopPane?.dragMode = JDesktopPane.OUTLINE_DRAG_MODE
-      super.beginResizingFrame(f, direction)
-    }
-
-    override fun resizeFrame(
-      f: JComponent,
-      newX: Int,
-      newY: Int,
-      newWidth: Int,
-      newHeight: Int,
-    ) {
-      val d = (f as? JInternalFrame)?.desktopPane
-      if (d?.dragMode == JDesktopPane.OUTLINE_DRAG_MODE) {
-        super.resizeFrame(f, newX, newY, 0, 0)
-        rubberBand.setBounds(newX, newY, newWidth, newHeight)
-        d.repaint()
-      } else {
-        super.resizeFrame(f, newX, newY, newWidth, newHeight)
-      }
-    }
-
-    override fun endResizingFrame(f: JComponent) {
-      (f as? JInternalFrame)?.desktopPane?.dragMode = JDesktopPane.LIVE_DRAG_MODE
-      if (!rubberBand.isEmpty) {
-        super.resizeFrame(
-          f,
-          rubberBand.x,
-          rubberBand.y,
-          rubberBand.width,
-          rubberBand.height,
-        )
-        rubberBand.setBounds(0, 0, 0, 0)
-      }
-      super.endResizingFrame(f)
-    }
-  }
+  desktop.desktopManager = OutlineResizeDesktopManager(rubberBand)
   val frame1 = createFrame("Frame1")
   desktop.add(frame1)
   frame1.setLocation(30, 10)
@@ -66,15 +26,13 @@ fun createUI(): Component {
       c: JComponent,
     ) {
       super.paint(g, c)
-      if (c is JLayer<*>) {
-        val d = c.view as? JDesktopPane
-        if (d?.dragMode == JDesktopPane.OUTLINE_DRAG_MODE) {
-          val g2 = g.create() as? Graphics2D ?: return
-          g2.paint = Color.GRAY
-          g2.stroke = makeDotStroke()
-          g2.draw(rubberBand)
-          g2.dispose()
-        }
+      if (!rubberBand.isEmpty) {
+        val g2 = g.create() as? Graphics2D ?: return
+        // val paint = UIManager.getColor("InternalFrame.borderColor")
+        g2.paint = Color.GRAY
+        g2.stroke = createDotStroke()
+        g2.draw(rubberBand)
+        g2.dispose()
       }
     }
   }
@@ -90,9 +48,55 @@ private fun createFrame(title: String): JInternalFrame {
   return frame
 }
 
-fun makeDotStroke(): Stroke {
-  val dist = floatArrayOf(1f, 1f)
-  return BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, dist, 0f)
+fun createDotStroke(): Stroke {
+  val dash = floatArrayOf(1f, 1f)
+  return BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, dash, 0f)
+}
+
+private class OutlineResizeDesktopManager(
+  private val rubberBand: Rectangle,
+) : DefaultDesktopManager() {
+  override fun resizeFrame(
+    f: JComponent,
+    newX: Int,
+    newY: Int,
+    newWidth: Int,
+    newHeight: Int,
+  ) {
+    // Do not call super.resizeFrame(...): the frame keeps its bounds while resizing,
+    // and only the rubber band is updated and painted by the LayerUI.
+    repaintRubberBand(f)
+    rubberBand.setBounds(newX, newY, newWidth, newHeight)
+    repaintRubberBand(f)
+  }
+
+  override fun endResizingFrame(f: JComponent) {
+    if (!rubberBand.isEmpty) {
+      repaintRubberBand(f)
+      setBoundsForFrame(
+        f,
+        rubberBand.x,
+        rubberBand.y,
+        rubberBand.width,
+        rubberBand.height,
+      )
+      rubberBand.setBounds(0, 0, 0, 0)
+    }
+    super.endResizingFrame(f)
+  }
+
+  private fun repaintRubberBand(f: JComponent) {
+    val parent = f.parent
+    if (parent != null && !rubberBand.isEmpty) {
+      // Graphics2D#draw(Rectangle) paints one pixel beyond the width and height
+      parent.repaint(
+        rubberBand.x,
+        rubberBand.y,
+        rubberBand.width + 1,
+        rubberBand.height + 1,
+      )
+    }
+  }
 }
 
 fun main() {
