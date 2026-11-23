@@ -17,8 +17,10 @@ fun createUI() = JPanel(BorderLayout()).also {
 private fun makeButton(title: String?, icon: Icon?): JButton {
   val extraButton = object : JButton(title, icon) {
     override fun getPreferredSize(): Dimension {
-      val icon = UIManager.getIcon("InternalFrame.closeIcon")
-      return Dimension(icon.iconWidth, icon.iconHeight)
+      // Use the same size as the title bar buttons of the JRootPane
+      val closeIcon = UIManager.getIcon("InternalFrame.closeIcon")
+      return closeIcon?.let { Dimension(it.iconWidth, it.iconHeight) }
+        ?: super.getPreferredSize()
     }
   }
   extraButton.setFocusPainted(false)
@@ -65,7 +67,7 @@ private class ExtraBarPositionHandler(
   }
 
   override fun windowOpened(e: WindowEvent) {
-    setLocationRelativeTo(e.window)
+    relocateBar(e.window)
     extraBar.isVisible = true
   }
 
@@ -78,20 +80,22 @@ private class ExtraBarPositionHandler(
   }
 
   override fun windowDeiconified(e: WindowEvent) {
-    setLocationRelativeTo(e.window)
+    relocateBar(e.window)
     extraBar.isVisible = true
   }
 
   override fun componentResized(e: ComponentEvent) {
-    EventQueue.invokeLater { setLocationRelativeTo(e.component) }
+    // When the frame is restored from the maximized state, the title bar
+    // buttons may not have been laid out yet, so defer the update once more.
+    EventQueue.invokeLater { relocateBar(e.component) }
   }
 
   override fun componentMoved(e: ComponentEvent) {
-    setLocationRelativeTo(e.component)
+    relocateBar(e.component)
   }
 
   override fun componentShown(e: ComponentEvent) {
-    setLocationRelativeTo(e.component)
+    relocateBar(e.component)
     extraBar.isVisible = true
   }
 
@@ -99,25 +103,27 @@ private class ExtraBarPositionHandler(
     extraBar.isVisible = false
   }
 
-  private fun setLocationRelativeTo(p: Component) {
-    EventQueue.invokeLater { updateExtraBarLocation(p) }
+  private fun relocateBar(p: Component) {
+    // Wait until the title bar of the JRootPane has been laid out
+    EventQueue.invokeLater { updateBarLocation(p) }
   }
 
-  private fun updateExtraBarLocation(p: Component) {
-    val root = SwingUtilities.getRootPane(p)
+  private fun updateBarLocation(p: Component) {
+    val root = SwingUtilities.getRootPane(p) ?: return
+    // The JRootPane border is removed when the frame is maximized
+    val maximized = p is Frame && p.extendedState == Frame.MAXIMIZED_BOTH
+    val top = if (maximized) 0 else root.border?.getBorderInsets(root)?.top ?: 0
     val iconifyIcon = UIManager.getIcon("InternalFrame.iconifyIcon")
-    val zeroIns = Insets(0, 0, 0, 0)
-    var ins = root.border?.getBorderInsets(root) ?: zeroIns
-    if (p is Frame && p.extendedState == Frame.MAXIMIZED_BOTH) {
-      ins = zeroIns
-    }
-    val iconifyIconButton = descendants(root)
+    // The location of the iconify button is relative to the title pane,
+    // so convert it to the JRootPane coordinate system first
+    val pt = descendants(root)
       .filterIsInstance<JButton>()
       .firstOrNull { b -> b.icon == iconifyIcon }
-    val pt = iconifyIconButton?.location ?: Point()
+      ?.let { SwingUtilities.convertPoint(it.parent, it.location, root) }
+      ?: Point()
     SwingUtilities.convertPointToScreen(pt, root)
     val x = pt.x - extraBar.width
-    val y = p.getY() + ins.top + 1
+    val y = p.getY() + top + 1
     extraBar.setLocation(x, y)
   }
 }
@@ -131,7 +137,7 @@ private class ExtraIcon : Icon {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val pressed = (c as? JButton)?.model?.isPressed == true
+    val pressed = (c as? AbstractButton)?.model?.isPressed == true
     g2.color = if (pressed) Color.RED else Color.GREEN
     g2.fillOval(x + 2, y + 2, size - 4, size - 4)
     g2.dispose()
