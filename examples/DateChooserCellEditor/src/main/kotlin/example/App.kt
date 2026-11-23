@@ -1,8 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.text.DateFormat
@@ -18,6 +16,8 @@ import java.util.EnumMap
 import java.util.EventObject
 import java.util.Locale
 import javax.swing.*
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
@@ -54,36 +54,48 @@ private fun createModel(): TableModel {
 
 private class DateEditor :
   AbstractCellEditor(),
-  TableCellEditor,
-  ActionListener {
+  TableCellEditor {
   private val button = JButton()
   private val formatter: DateFormat = DateFormat.getDateInstance()
-  private val dateChooser = CalenderPanel()
-  private var popup: JPopupMenu? = null
+  private val dateChooser = CalendarPanel()
+  private val popup = JPopupMenu()
+
+  // The date returned by getCellEditorValue(), kept separately from the month
+  // displayed in the calendar so that browsing months does not change the value
+  private var selectedDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
   private var table: JTable? = null
 
   init {
-    button.actionCommand = EDIT
-    button.addActionListener(this)
+    button.addActionListener { showPopup() }
     button.setContentAreaFilled(false)
     button.setFocusPainted(false)
     button.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
     button.setHorizontalAlignment(SwingConstants.LEFT)
     button.setHorizontalTextPosition(SwingConstants.RIGHT)
+    popup.add(dateChooser)
+    popup.addPopupMenuListener(object : PopupMenuListener {
+      override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+        // not needed
+      }
+
+      override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
+        // not needed
+      }
+
+      override fun popupMenuCanceled(e: PopupMenuEvent) {
+        // The popup was closed without selecting a date (e.g. by clicking outside)
+        cancelCellEditing()
+      }
+    })
   }
 
-  override fun actionPerformed(e: ActionEvent) {
-    if (EDIT == e.getActionCommand() && table != null) {
-      val row = table?.selectedRow ?: -1
-      val col = table?.selectedColumn ?: -1
-      val rect = table?.getCellRect(row, col, true) ?: Rectangle()
-      val p = Point(rect.x, rect.maxY.toInt())
-      val pop = popup ?: JPopupMenu().also {
-        it.add(dateChooser)
-        it.pack()
-      }
-      pop.show(table, p.x, p.y)
-      popup = pop
+  // The button receives the mouse event that started editing and opens the calendar
+  private fun showPopup() {
+    val t = table ?: return
+    if (t.isEditing) {
+      val rect = t.getCellRect(t.editingRow, t.editingColumn, true)
+      popup.pack()
+      popup.show(t, rect.x, rect.y + rect.height)
       dateChooser.requestFocusInWindow()
     }
   }
@@ -91,10 +103,8 @@ private class DateEditor :
   override fun isCellEditable(e: EventObject?): Boolean =
     e is MouseEvent && e.getClickCount() >= 2
 
-  override fun getCellEditorValue(): Any {
-    val d = dateChooser.localDate
-    return Date.from(d?.atStartOfDay(ZoneId.systemDefault())?.toInstant())
-  }
+  override fun getCellEditorValue(): Any =
+    Date.from(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
 
   override fun getTableCellEditorComponent(
     table: JTable,
@@ -106,29 +116,30 @@ private class DateEditor :
     if (value is Date) {
       button.setText(formatter.format(value))
       button.setOpaque(true)
+      // Copy the color so that it is not a UIResource replaced by the button UI
       val fgc = table.getSelectionForeground()
       button.setForeground(Color(fgc.rgb))
       button.setBackground(table.getSelectionBackground())
       val dateTime = value.toInstant().atZone(ZoneId.systemDefault())
-      dateChooser.localDate = dateTime.toLocalDate()
+      selectedDate = dateTime.toLocalDate()
+      dateChooser.localDate = selectedDate
       this.table = table
     }
     return button
   }
 
-  private inner class CalenderPanel : JPanel(BorderLayout()) {
+  private inner class CalendarPanel : JPanel(BorderLayout()) {
     val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
     var localDate: LocalDate?
       get() = currentLocalDate
       set(date) {
         currentLocalDate = date?.also {
-          val fmt = DateTimeFormatter.ofPattern("yyyy / MM")
-          monthLabel.setText(it.format(fmt.withLocale(Locale.getDefault())))
+          monthLabel.setText(it.format(MONTH_FORMATTER.withLocale(Locale.getDefault())))
           monthTable.setModel(CalendarViewTableModel(it))
         }
       }
     private val monthLabel = JLabel("", SwingConstants.CENTER)
-    private val monthTable = CalendarTable()
+    private val monthTable = MonthTable()
     private var currentLocalDate: LocalDate? = null
 
     init {
@@ -146,12 +157,23 @@ private class DateEditor :
       (hr as? JLabel)?.setHorizontalAlignment(SwingConstants.CENTER)
 
       val mouseHandler = object : MouseAdapter() {
-        override fun mouseClicked(e: MouseEvent?) {
-          val row = monthTable.selectedRow
-          val column = monthTable.selectedColumn
-          currentLocalDate = monthTable.getValueAt(row, column) as? LocalDate
-          popup?.setVisible(false)
-          fireEditingStopped()
+        override fun mouseClicked(e: MouseEvent) {
+          // Use the clicked cell rather than the selected cell, which may be -1
+          val pt = e.point
+          val row = monthTable.rowAtPoint(pt)
+          val column = monthTable.columnAtPoint(pt)
+          val date = if (row >= 0 &&
+            column >= 0
+          ) {
+            monthTable.getValueAt(row, column)
+          } else {
+            null
+          }
+          if (date is LocalDate) {
+            selectedDate = date
+            popup.isVisible = false
+            stopCellEditing()
+          }
         }
       }
       monthTable.addMouseListener(mouseHandler)
@@ -175,15 +197,11 @@ private class DateEditor :
     override fun getPreferredSize() = Dimension(220, 143)
   }
 
-  private class CalendarTable : JTable() {
-    var highlighter: HighlightListener? = null
+  private class MonthTable : JTable() {
+    // Created once and kept across updateUI() so that the renderer can share it
+    val highlighter = HighlightListener()
 
-    override fun updateUI() {
-      removeMouseListener(highlighter)
-      removeMouseMotionListener(highlighter)
-      super.updateUI()
-      setRowSelectionAllowed(false)
-      highlighter = HighlightListener()
+    init {
       addMouseListener(highlighter)
       addMouseMotionListener(highlighter)
     }
@@ -211,11 +229,11 @@ private class DateEditor :
   }
 
   private class CalendarTableRenderer(
-    private val calender: CalenderPanel,
-    private val highlighter: HighlightListener?,
+    private val calendar: CalendarPanel,
+    private val highlighter: HighlightListener,
   ) : DefaultTableCellRenderer() {
     private val holidayColorMap = EnumMap<DayOfWeek, Color>(DayOfWeek::class.java)
-    private val realLocalDate: LocalDate = calender.realLocalDate
+    private val realLocalDate: LocalDate = calendar.realLocalDate
 
     init {
       holidayColorMap[DayOfWeek.SUNDAY] = Color(0xFF_DC_DC)
@@ -241,16 +259,14 @@ private class DateEditor :
       if (c is JLabel && value is LocalDate) {
         c.setHorizontalAlignment(CENTER)
         c.setText(value.dayOfMonth.toString())
-        val m1 = YearMonth.from(value).monthValue
-        val m2 = YearMonth.from(calender.localDate).monthValue
-        val isSameMonth = m1 == m2
+        val isSameMonth = YearMonth.from(value) == YearMonth.from(calendar.localDate)
         c.foreground = if (isSameMonth) table.foreground else Color.GRAY
         if (value.isEqual(realLocalDate)) {
           c.background = Color(0xDC_FF_DC)
         } else {
           c.background = getDayOfWeekColor(table, value.getDayOfWeek())
         }
-        highlighter?.getCellHighlightColor(row, column)?.also { c.setBackground(it) }
+        highlighter.getCellHighlightColor(row, column)?.also { c.setBackground(it) }
       }
       return c
     }
@@ -260,7 +276,7 @@ private class DateEditor :
   }
 
   companion object {
-    private const val EDIT = "edit"
+    private val MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy / MM")
   }
 }
 
