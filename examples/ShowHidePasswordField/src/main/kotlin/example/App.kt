@@ -10,6 +10,9 @@ import java.awt.geom.Line2D
 import javax.swing.*
 
 fun createUI() = JPanel(GridLayout(0, 1, 0, 2)).also {
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+  EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
   val p1 = createCheckBoxPasswordPanel()
   it.add(createTitledPanel("BorderLayout + JCheckBox", p1))
   val p2 = createToggleButtonPasswordPanel()
@@ -37,12 +40,11 @@ private fun createCheckBoxPasswordPanel(): JPanel {
 
 private fun createToggleButtonPasswordPanel(): JPanel {
   val password = createPasswordField()
-  val button = JToggleButton()
+  val button = EyeButtonUtils.createEyeToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     password.echoChar = if (b) 0.toChar() else getUIEchoChar()
   }
-  configureEyeButton(button)
   val p = createOverlayPanel()
   p.add(button)
   p.add(password)
@@ -66,13 +68,12 @@ private fun createCardLayoutPasswordPanel(): JPanel {
   p.add(password, PasswordVisibility.HIDDEN.toString())
   p.add(field, PasswordVisibility.VISIBLE.toString())
 
-  val button = JToggleButton()
+  val button = EyeButtonUtils.createEyeToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     val s = if (b) PasswordVisibility.VISIBLE else PasswordVisibility.HIDDEN
-    visibilityLayout.show(button, s.toString())
+    visibilityLayout.show(p, s.toString())
   }
-  configureEyeButton(button)
 
   val panel = createOverlayPanel()
   panel.add(button)
@@ -82,7 +83,7 @@ private fun createCardLayoutPasswordPanel(): JPanel {
 
 private fun createHoldToShowPasswordPanel(): Container {
   val passwordField = createPasswordField()
-  val button = JButton()
+  val button = EyeButtonUtils.createEyeButton()
   val mouseAdapter = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       passwordField.echoChar = 0.toChar()
@@ -93,7 +94,6 @@ private fun createHoldToShowPasswordPanel(): Container {
     }
   }
   button.addMouseListener(mouseAdapter)
-  configureEyeButton(button)
   val panel = createOverlayPanel()
   panel.add(button)
   panel.add(passwordField)
@@ -102,27 +102,23 @@ private fun createHoldToShowPasswordPanel(): Container {
 
 private fun getUIEchoChar() = UIManager.get("PasswordField.echoChar") as? Char ?: '*'
 
-private fun configureEyeButton(b: AbstractButton) {
-  b.isFocusable = false
-  b.isOpaque = false
-  b.isContentAreaFilled = false
-  b.border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
-  b.alignmentX = Component.RIGHT_ALIGNMENT
-  b.alignmentY = Component.CENTER_ALIGNMENT
-  b.icon = EyeIcon(Color.BLUE)
-  b.rolloverIcon = EyeIcon(Color.DARK_GRAY)
-  b.selectedIcon = EyeIcon(Color.BLUE)
-  b.rolloverSelectedIcon = EyeIcon(Color.BLUE)
-  b.toolTipText = "show/hide passwords"
-}
-
 private fun createOverlayPanel() = object : JPanel() {
   override fun isOptimizedDrawingEnabled() = false
 }.also {
   it.layout = OverlayLayout(it)
 }
 
-private fun createPasswordField() = JPasswordField(24).also {
+private fun createPasswordField() = object : JPasswordField(24) {
+  override fun updateUI() {
+    super.updateUI()
+    // Once JPasswordField#setEchoChar(...) is called, the new LookAndFeel no longer
+    // installs its own echo character, so reapply it while the password is hidden
+    val echoChar = UIManager.get("PasswordField.echoChar")
+    if (echoCharIsSet() && echoChar is Char) {
+      setEchoChar(echoChar)
+    }
+  }
+}.also {
   it.text = "1234567890"
   it.alignmentX = Component.RIGHT_ALIGNMENT
 }
@@ -139,6 +135,48 @@ private fun createTitledPanel(
   c.insets = Insets(5, 5, 5, 5)
   p.add(cmp, c)
   return p
+}
+
+private object EyeButtonUtils {
+  fun createEyeToggleButton(): AbstractButton {
+    val b = object : JToggleButton() {
+      override fun updateUI() {
+        super.updateUI()
+        // WindowsToggleButtonUI replaces even a non-UIResource border with an XP border,
+        // so reapply the empty border every time the LookAndFeel is changed
+        border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
+      }
+    }
+    configureEyeButton(b)
+    return b
+  }
+
+  fun createEyeButton(): AbstractButton {
+    val b = object : JButton() {
+      override fun updateUI() {
+        super.updateUI()
+        // WindowsButtonUI also replaces the border with an XP border
+        border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
+      }
+    }
+    configureEyeButton(b)
+    return b
+  }
+
+  private fun configureEyeButton(b: AbstractButton) {
+    b.isFocusable = false
+    // WindowsButtonUI enlarges an even preferred size to an odd one when the focus is painted
+    b.isFocusPainted = false
+    b.isOpaque = false
+    b.isContentAreaFilled = false
+    b.alignmentX = Component.RIGHT_ALIGNMENT
+    b.alignmentY = Component.CENTER_ALIGNMENT
+    b.icon = EyeIcon(Color.BLUE)
+    b.rolloverIcon = EyeIcon(Color.DARK_GRAY)
+    b.selectedIcon = EyeIcon(Color.BLUE)
+    b.rolloverSelectedIcon = EyeIcon(Color.BLUE)
+    b.toolTipText = "show/hide passwords"
+  }
 }
 
 private enum class PasswordVisibility { VISIBLE, HIDDEN }
@@ -189,6 +227,54 @@ private class EyeIcon(
   override fun getIconWidth() = 16
 
   override fun getIconHeight() = 16
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class,
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
+  }
 }
 
 fun main() {
