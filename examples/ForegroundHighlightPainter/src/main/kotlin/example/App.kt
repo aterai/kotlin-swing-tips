@@ -67,7 +67,14 @@ private fun createPasswordPanel(): JPanel {
   password.setFont(FONT)
   password.setAlignmentX(Component.RIGHT_ALIGNMENT)
   password.text = "!1l2c$%34e5&6#7=8g9O0"
-  val button = JToggleButton()
+  val button = object : JToggleButton() {
+    override fun updateUI() {
+      super.updateUI()
+      // WindowsToggleButtonUI replaces even a non-UIResource border with an XP border,
+      // so reapply the empty border every time the LookAndFeel is changed
+      border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
+    }
+  }
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     password.echoChar = if (b) 0.toChar() else getUIEchoChar()
@@ -83,9 +90,10 @@ private fun getUIEchoChar() = UIManager.get("PasswordField.echoChar") as? Char ?
 
 private fun initEyeButton(b: AbstractButton) {
   b.isFocusable = false
+  // WindowsButtonUI enlarges an even preferred size to an odd one when the focus is painted
+  b.isFocusPainted = false
   b.isOpaque = false
   b.isContentAreaFilled = false
-  b.border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
   b.alignmentX = Component.RIGHT_ALIGNMENT
   b.alignmentY = Component.CENTER_ALIGNMENT
   b.icon = EyeIcon(Color.BLUE)
@@ -105,6 +113,19 @@ private fun createTitledPanel(title: String, c: Component): Component {
 private class DigitHighlightPasswordField(
   columns: Int,
 ) : JPasswordField(columns) {
+  override fun updateUI() {
+    super.updateUI()
+    // Once JPasswordField#setEchoChar(...) is called, the new LookAndFeel no longer
+    // installs its own echo character, so reapply it while the password is hidden
+    val echoChar = UIManager.get("PasswordField.echoChar")
+    if (echoCharIsSet() && echoChar is Char) {
+      super.setEchoChar(echoChar)
+    }
+    (document as? AbstractDocument)?.also {
+      updateHighlightFilter(it)
+    }
+  }
+
   override fun setEchoChar(c: Char) {
     super.setEchoChar(c)
     val hasCaret = caret != null
