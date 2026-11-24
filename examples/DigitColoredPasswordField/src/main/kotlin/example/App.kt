@@ -34,7 +34,10 @@ fun createUI(): Component {
   p.add(createTitledPanel("JPasswordField#setEchoChar(...) + HighlightFilter", p1))
   val p2 = createCardLayoutStrategyPanel()
   p.add(createTitledPanel("CardLayout + (JPasswordField <> JTextPane)", p2))
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(p, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(25, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
@@ -57,7 +60,7 @@ private fun createCardLayoutStrategyPanel(): JPanel {
   p.add(password, PasswordVisibility.HIDDEN.toString())
   p.add(visibleTextPane, PasswordVisibility.VISIBLE.toString())
 
-  val button = JToggleButton()
+  val button = PasswordUiUtils.createVisibilityToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     if (b) {
@@ -68,7 +71,6 @@ private fun createCardLayoutStrategyPanel(): JPanel {
       cardLayout.show(p, PasswordVisibility.HIDDEN.toString())
     }
   }
-  PasswordUiUtils.setupVisibilityToggleButton(button)
 
   val panel = OverlayLayoutPanel()
   panel.add(button)
@@ -82,7 +84,7 @@ private fun createEchoCharStrategyPanel(): JPanel {
   password.setAlignmentX(Component.RIGHT_ALIGNMENT)
   password.setText("!1l2c$%34e5&6#7=8g9O0")
 
-  val button = JToggleButton()
+  val button = PasswordUiUtils.createVisibilityToggleButton()
   button.addActionListener { e ->
     val b = (e.getSource() as? AbstractButton)?.isSelected == true
     val ch = if (b) {
@@ -92,7 +94,6 @@ private fun createEchoCharStrategyPanel(): JPanel {
     }
     password.setEchoChar(ch)
   }
-  PasswordUiUtils.setupVisibilityToggleButton(button)
   val p = OverlayLayoutPanel()
   p.add(button)
   p.add(password)
@@ -111,6 +112,16 @@ private enum class PasswordVisibility { VISIBLE, HIDDEN }
 private class DigitHighlightPasswordField(
   columns: Int,
 ) : JPasswordField(columns) {
+  override fun updateUI() {
+    super.updateUI()
+    // Once JPasswordField#setEchoChar(...) is called, the new LookAndFeel no longer
+    // installs its own echo character, so reapply it while the password is hidden
+    val echoChar = UIManager.get(ECHO_CHAR_KEY)
+    if (echoCharIsSet() && echoChar is Char) {
+      super.setEchoChar(echoChar)
+    }
+  }
+
   override fun setEchoChar(c: Char) {
     super.setEchoChar(c)
     val doc = document
@@ -356,20 +367,30 @@ private object PasswordUiUtils {
     }
   }
 
-  fun setupVisibilityToggleButton(b: AbstractButton) {
-    b.setFocusable(false)
-    b.setOpaque(false)
-    b.setContentAreaFilled(false)
-    b.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4))
-    b.setAlignmentX(Component.RIGHT_ALIGNMENT)
-    b.setAlignmentY(Component.CENTER_ALIGNMENT)
-
-    val fgc = UIManager.getColor("List.selectionBackground")
-
-    b.setIcon(EyeIcon(fgc))
-    b.setRolloverIcon(EyeIcon(Color.DARK_GRAY))
-    b.setSelectedIcon(EyeIcon(fgc))
-    b.setRolloverSelectedIcon(EyeIcon(fgc))
+  fun createVisibilityToggleButton(): AbstractButton {
+    val b = object : JToggleButton() {
+      override fun updateUI() {
+        super.updateUI()
+        // WindowsToggleButtonUI replaces even a non-UIResource border with an XP border,
+        // so reapply the empty border every time the LookAndFeel is changed
+        border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
+        // Recreate the icons with the selection color of the new LookAndFeel
+        // (NimbusLookAndFeel does not define List.selectionBackground)
+        val fgc = UIManager.getColor("List.selectionBackground") ?: Color.BLUE
+        icon = EyeIcon(fgc)
+        rolloverIcon = EyeIcon(Color.DARK_GRAY)
+        selectedIcon = EyeIcon(fgc)
+        rolloverSelectedIcon = EyeIcon(fgc)
+      }
+    }
+    b.isFocusable = false
+    // WindowsButtonUI enlarges an even preferred size to an odd one when the focus is painted
+    b.isFocusPainted = false
+    b.isOpaque = false
+    b.isContentAreaFilled = false
+    b.alignmentX = Component.RIGHT_ALIGNMENT
+    b.alignmentY = Component.CENTER_ALIGNMENT
+    return b
   }
 
   fun createVisiblePasswordEditor(password: JPasswordField): JTextPane {
@@ -388,6 +409,54 @@ private object PasswordUiUtils {
   private fun setupDocument(doc: StyledDocument?) {
     if (doc is AbstractDocument) {
       doc.documentFilter = DigitForegroundFilter()
+    }
+  }
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class,
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
     }
   }
 }
