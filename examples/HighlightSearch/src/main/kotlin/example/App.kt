@@ -9,9 +9,11 @@ import javax.swing.event.DocumentListener
 import javax.swing.plaf.LayerUI
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
+import javax.swing.text.Highlighter
 import javax.swing.text.JTextComponent
+import kotlin.math.roundToInt
 
-private val WARNING_COLOR = Color(0xFF_C8_C8)
+private val WARNING = Color(0xFF_C8_C8)
 private val INIT_TXT = """
   Trail: Creating a GUI with JFC/Swing
   https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
@@ -30,12 +32,12 @@ private val INIT_TXT = """
 """.trimIndent()
 
 private val currentPainter = DefaultHighlightPainter(Color.ORANGE)
-private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
+private val matchPainter = DefaultHighlightPainter(Color.YELLOW)
 private val textArea = JTextArea(INIT_TXT)
 private val field = JTextField("Swing")
 private val checkCase = JCheckBox("Match case")
 private val checkWord = JCheckBox("Match whole word only")
-private val layerUI = PlaceholderLayerUI<JTextComponent>()
+private val layerUI = MatchCountLayerUI<JTextComponent>()
 private var current = 0
 
 fun createUI(): Component {
@@ -54,24 +56,24 @@ fun createUI(): Component {
       it.isFocusable = false
       it.addActionListener(handler)
     }
-  val bp = JPanel(GridLayout(1, 2))
-  bp.add(prevButton)
-  bp.add(nextButton)
+  val buttonPanel = JPanel(GridLayout(1, 2))
+  buttonPanel.add(prevButton)
+  buttonPanel.add(nextButton)
 
-  val cp = JPanel(FlowLayout(FlowLayout.RIGHT))
-  cp.add(checkCase)
-  cp.add(checkWord)
+  val checkPanel = JPanel(FlowLayout(FlowLayout.RIGHT))
+  checkPanel.add(checkCase)
+  checkPanel.add(checkWord)
 
-  val sp = JPanel(BorderLayout(5, 5))
-  sp.border = BorderFactory.createTitledBorder("Search")
-  sp.add(JLayer(field, layerUI))
-  sp.add(bp, BorderLayout.EAST)
-  sp.add(cp, BorderLayout.SOUTH)
+  val searchPanel = JPanel(BorderLayout(5, 5))
+  searchPanel.border = BorderFactory.createTitledBorder("Search")
+  searchPanel.add(JLayer(field, layerUI))
+  searchPanel.add(buttonPanel, BorderLayout.EAST)
+  searchPanel.add(checkPanel, BorderLayout.SOUTH)
 
   EventQueue.invokeLater { changeHighlight() }
 
   return JPanel(BorderLayout()).also {
-    it.add(sp, BorderLayout.NORTH)
+    it.add(searchPanel, BorderLayout.NORTH)
     it.add(JScrollPane(textArea))
     it.preferredSize = Dimension(320, 240)
   }
@@ -106,58 +108,81 @@ private class HighlightHandler :
 }
 
 private fun changeHighlight() {
-  field.background = Color.WHITE
-  val highlighter = textArea.highlighter
-  highlighter.removeAllHighlights()
-  val doc = textArea.document
-  val text = doc.getText(0, doc.length)
-  getRegex()?.also { pattern ->
-    pattern.findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
-      highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
-    }
-  }
-  val label = layerUI.hint
-  val array = highlighter.highlights
-  val hits = array.size
-  if (hits == 0) {
-    current = -1
-    label.isOpaque = true
+  // Restore the background color that may have been changed by an invalid pattern
+  field.background = UIManager.getColor("TextField.background")
+  val regex = getRegex(field.text)
+  current = if (regex == null) {
+    // Clear the stale highlights of the previous search
+    textArea.highlighter.removeAllHighlights()
+    -1
   } else {
-    current = (current + hits) % hits
-    label.isOpaque = false
-    val hh = highlighter.highlights[current]
-    highlighter.removeHighlight(hh)
-    runCatching {
-      highlighter.addHighlight(hh.startOffset, hh.endOffset, currentPainter)
-      scrollToCenter(textArea, hh.startOffset)
-    }.onFailure {
-      it.printStackTrace()
-      UIManager.getLookAndFeel().provideErrorFeedback(field)
-    }
+    highlightCurrentMatch(textArea, regex, current)
   }
-  label.text = "%02d / %02d%n".format(current + 1, hits)
+  val hits = textArea.highlighter.highlights.size
+  val label = layerUI.hint
+  label.isOpaque = hits == 0
+  label.text = "%02d / %02d".format(current + 1, hits)
   field.repaint()
 }
 
-private fun getRegex(): Regex? {
-  val text = field.text
-  if (text == null || text.isEmpty()) {
+private fun getRegex(text: String?): Regex? {
+  if (text.isNullOrEmpty()) {
     return null
   }
-  val cw = if (checkWord.isSelected) "\\b" else ""
-  val pattern = "%s%s%s".format(cw, text, cw)
+  // Wrap the input in a non-capturing group so that the word boundaries
+  // also apply to every alternative of a pattern such as "a|b"
+  val pattern = if (checkWord.isSelected) "\\b(?:$text)\\b" else text
   val op = if (checkCase.isSelected) {
     emptySet<RegexOption>()
   } else {
+    // Regex adds UNICODE_CASE automatically when IGNORE_CASE is specified
     setOf(RegexOption.IGNORE_CASE)
   }
   return runCatching {
     pattern.toRegex(op)
   }.onFailure {
-    field.background = WARNING_COLOR
+    field.background = WARNING
   }.getOrNull()
 }
 
+private fun highlightAllMatches(
+  editor: JTextComponent,
+  regex: Regex,
+): Highlighter {
+  val highlighter = editor.highlighter
+  highlighter.removeAllHighlights()
+  val doc = editor.document
+  val text = doc.getText(0, doc.length)
+  // Skip empty matches (e.g. "a*"), Regex#findAll(...) advances past them by itself
+  regex.findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+    highlighter.addHighlight(it.first, it.last + 1, matchPainter)
+  }
+  return highlighter
+}
+
+private fun highlightCurrentMatch(
+  editor: JTextComponent,
+  regex: Regex,
+  index: Int,
+): Int {
+  val highlighter = highlightAllMatches(editor, regex)
+  val highlights = highlighter.highlights
+  val hits = highlights.size
+  var current = -1
+  if (hits > 0) {
+    // Wrap around in both directions (the previous button decrements the index)
+    current = Math.floorMod(index, hits)
+    val hh = highlights[current]
+    highlighter.removeHighlight(hh)
+    val start = hh.startOffset
+    highlighter.addHighlight(start, hh.endOffset, currentPainter)
+    scrollToCenter(editor, start)
+  }
+  return current
+}
+
+// JTextComponent#modelToView(int) is kept for Java 8 compatibility
+@Suppress("DEPRECATION")
 @Throws(BadLocationException::class)
 private fun scrollToCenter(
   tc: JTextComponent,
@@ -167,14 +192,18 @@ private fun scrollToCenter(
   // Java 9: val rect = tc.modelToView2D(pos).getBounds()
   val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, tc)
   if (rect != null && c is JViewport) {
-    rect.x = rect.x - c.width / 2
-    rect.width = c.width
-    rect.height = c.height / 2
+    // Expand the rectangle to the size of the viewport around its center
+    // so that the target position is scrolled to the center of the viewport
+    val w = c.width
+    val h = c.height
+    rect.x = (rect.x + rect.width / 2f - w / 2f).roundToInt()
+    rect.y = (rect.y + rect.height / 2f - h / 2f).roundToInt()
+    rect.setSize(w, h)
     tc.scrollRectToVisible(rect)
   }
 }
 
-private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
+private class MatchCountLayerUI<V : JTextComponent> : LayerUI<V>() {
   val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
@@ -197,7 +226,6 @@ private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
     val tc = layer?.view
     if (tc is JTextComponent && tc.text.isNotEmpty()) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.paint = hint.foreground
       val d = hint.preferredSize
       val r = SwingUtilities.calculateInnerArea(tc, null)
       val x = r.x + r.width - d.width - 1
