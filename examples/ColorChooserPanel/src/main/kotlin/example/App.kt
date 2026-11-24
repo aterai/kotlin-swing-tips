@@ -57,27 +57,29 @@ fun createUI(): Component {
 }
 
 fun showColorChooserDialog(
-  p: Component,
+  parent: Component,
   title: String,
-  selected: List<String>,
+  names: List<String>,
   initialColor: Color?,
 ): Color? {
-  val cc = JColorChooser()
-  cc.color = initialColor
-  for (pnl in cc.chooserPanels) {
-    if (!selected.contains(pnl.displayName)) {
-      cc.removeChooserPanel(pnl)
-    }
-  }
-  val ok = ColorTracker(cc)
-  val dialog = JColorChooser.createDialog(p, title, true, cc, ok, null)
+  val chooser = JColorChooser(initialColor)
+  // Keep only the selected panels; setChooserPanels(...) replaces all panels at once
+  // instead of removing the unselected panels one by one
+  val panels = chooser.chooserPanels
+    .filter { names.contains(it.displayName) }
+    .toTypedArray()
+  chooser.chooserPanels = panels
+  val okListener = ColorTracker(chooser)
+  val dialog = JColorChooser.createDialog(parent, title, true, chooser, okListener, null)
+  // Unlike JColorChooser.showDialog(...), the dialog created by createDialog(...)
+  // is not disposed automatically when it is closed
   dialog.addComponentListener(object : ComponentAdapter() {
     override fun componentHidden(e: ComponentEvent) {
       (e.component as? Window)?.dispose()
     }
   })
   dialog.isVisible = true // blocks until user brings dialog down...
-  return ok.color
+  return okListener.color // null if the dialog was canceled
 }
 
 private class ColorTracker(
