@@ -23,7 +23,7 @@ fun createUI(): Component {
   UIManager.put("Tree.paintLines", false)
   val model = createModel()
   val cardLayout = CardLayout()
-  val p = JPanel(cardLayout)
+  val cards = JPanel(cardLayout)
 
   // https://ateraimemo.com/Swing/TraverseAllNodes.html
   (model.root as? DefaultMutableTreeNode)?.also { root ->
@@ -32,7 +32,7 @@ fun createUI(): Component {
       .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .map { it.userObject.toString() }
-      .forEach { p.add(JLabel(it), it) }
+      .forEach { cards.add(JLabel(it), it) }
   }
 
   val tree = RowSelectionTree()
@@ -47,15 +47,16 @@ fun createUI(): Component {
     row += 1
   }
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
-  tree.addTreeSelectionListener { e ->
+  tree.addTreeSelectionListener {
     // https://ateraimemo.com/Swing/CardLayoutTabbedPane.html
-    (e.newLeadSelectionPath.lastPathComponent as? DefaultMutableTreeNode)?.also {
-      cardLayout.show(p, it.userObject.toString())
+    // getNewLeadSelectionPath() returns null when the selection is cleared
+    (tree.lastSelectedPathComponent as? DefaultMutableTreeNode)?.also {
+      cardLayout.show(cards, it.userObject.toString())
     }
   }
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
     it.leftComponent = JScrollPane(tree)
-    it.rightComponent = JScrollPane(p)
+    it.rightComponent = JScrollPane(cards)
     it.resizeWeight = .5
   }
   return JPanel(BorderLayout(2, 2)).also {
@@ -96,8 +97,8 @@ private class RowSelectionTree : JTree() {
       ?.forEach { g2.fillRect(0, it.y, width, it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
-      leadSelectionPath.also {
-        val r = getRowBounds(getRowForPath(it))
+      // getPathBounds(...) returns null if the lead path is not visible
+      leadSelectionPath?.let { getPathBounds(it) }?.also { r ->
         g2.paint = SELECTED_COLOR.darker()
         g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
