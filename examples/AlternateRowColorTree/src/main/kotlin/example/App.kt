@@ -1,8 +1,15 @@
 package example
 
 import java.awt.*
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 import javax.swing.*
+import javax.swing.event.TreeSelectionEvent
+import javax.swing.event.TreeSelectionListener
 import javax.swing.tree.DefaultTreeCellRenderer
+import javax.swing.tree.TreePath
 
 fun createUI(): Component {
   val mb = JMenuBar()
@@ -16,39 +23,77 @@ fun createUI(): Component {
 }
 
 private class AlternateRowColorTree : JTree() {
+  private var handler: RepaintHandler? = null
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = ALTERNATE_COLOR
-    for (i in 0..<rowCount) {
-      if (i % 2 == 0) {
-        val r = getRowBounds(i)
-        g2.fillRect(0, r.y, width, r.height)
-      }
-    }
-    val selections = selectionRows
-    if (selections != null) {
+    (0..<rowCount)
+      .filter { it % 2 == 0 }
+      .mapNotNull { getRowBounds(it) }
+      .forEach { g2.fillRect(0, it.y, width, it.height) }
+    selectionRows?.also { rows ->
       g2.paint = SELECTED_COLOR
-      selections
-        .map { getRowBounds(it) }
+      rows
+        .asList()
+        .mapNotNull { getRowBounds(it) }
         .forEach { g2.fillRect(0, it.y, width, it.height) }
-      super.paintComponent(g)
-      if (hasFocus()) {
-        leadSelectionPath?.also {
-          val r = getRowBounds(getRowForPath(it))
-          g2.paint = SELECTED_COLOR.darker()
-          g2.drawRect(0, r.y, width - 1, r.height - 1)
-        }
+    }
+    // Paint the nodes only once, on top of the stripes and the selection rows
+    super.paintComponent(g)
+    if (hasFocus()) {
+      leadSelectionPath?.let { getPathBounds(it) }?.also { r ->
+        g2.paint = SELECTED_COLOR.darker()
+        g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
     }
-    super.paintComponent(g)
     g2.dispose()
   }
 
+  private fun repaintWholeRow(path: TreePath?) {
+    path?.let { getPathBounds(it) }?.also {
+      repaint(0, it.y, width, it.height)
+    }
+  }
+
   override fun updateUI() {
+    removeTreeSelectionListener(handler)
+    removePropertyChangeListener(LEAD_SELECTION_PATH_PROPERTY, handler)
+    removeFocusListener(handler)
     super.updateUI()
-    UIManager.put("Tree.repaintWholeRow", true)
+    // The selection background and the lead row border are painted across
+    // the whole width of the tree, but the TreeUI repaints only the node
+    // bounds, so repaint the whole row of the changed paths instead of using
+    // the global UIManager.put("Tree.repaintWholeRow", true) setting.
+    val h = RepaintHandler()
+    addTreeSelectionListener(h)
+    addPropertyChangeListener(LEAD_SELECTION_PATH_PROPERTY, h)
+    addFocusListener(h)
+    handler = h
     setCellRenderer(TransparentTreeCellRenderer())
     isOpaque = false
+  }
+
+  private inner class RepaintHandler :
+    TreeSelectionListener,
+    PropertyChangeListener,
+    FocusListener {
+    override fun valueChanged(e: TreeSelectionEvent) {
+      e.paths?.forEach { repaintWholeRow(it) }
+    }
+
+    override fun propertyChange(e: PropertyChangeEvent) {
+      repaintWholeRow(e.oldValue as? TreePath)
+      repaintWholeRow(e.newValue as? TreePath)
+    }
+
+    override fun focusGained(e: FocusEvent) {
+      repaintWholeRow(leadSelectionPath)
+    }
+
+    override fun focusLost(e: FocusEvent) {
+      repaintWholeRow(leadSelectionPath)
+    }
   }
 
   companion object {
@@ -80,7 +125,7 @@ private class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
     return c
   }
 
-  override fun getBackgroundNonSelectionColor() = getBackgroundSelectionColor()
+  override fun getBackgroundNonSelectionColor() = ALPHA_OF_ZERO
 
   override fun getBackgroundSelectionColor() = ALPHA_OF_ZERO
 
