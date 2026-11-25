@@ -1,18 +1,25 @@
 package example
 
 import java.awt.*
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
 import java.awt.image.BufferedImage
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
 import javax.swing.*
+import javax.swing.event.TreeSelectionEvent
+import javax.swing.event.TreeSelectionListener
 import javax.swing.tree.DefaultTreeCellRenderer
+import javax.swing.tree.TreePath
 
 fun createUI() = JPanel(GridLayout(1, 2, 2, 2)).also {
-  it.add(makeTranslucentScrollPane(TranslucentTree()))
-  it.add(makeTranslucentScrollPane(TransparentTree()))
+  it.add(createTranslucentScrollPane(TranslucentTree()))
+  it.add(createTranslucentScrollPane(TransparentTree()))
   it.isOpaque = false
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeTranslucentScrollPane(view: Component) = JScrollPane(view).also {
+private fun createTranslucentScrollPane(view: Component) = JScrollPane(view).also {
   it.isOpaque = false
   it.viewport.isOpaque = false
 }
@@ -20,7 +27,6 @@ private fun makeTranslucentScrollPane(view: Component) = JScrollPane(view).also 
 private class TranslucentTree : JTree() {
   override fun updateUI() {
     super.updateUI()
-    UIManager.put("Tree.repaintWholeRow", true)
     setCellRenderer(TranslucentTreeCellRenderer())
     isOpaque = false
     border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -28,16 +34,24 @@ private class TranslucentTree : JTree() {
 }
 
 private class TransparentTree : JTree() {
+  private var handler: RepaintHandler? = null
+
+  private fun repaintWholeRow(path: TreePath?) {
+    path?.let { getPathBounds(it) }?.also {
+      repaint(0, it.y, width, it.height)
+    }
+  }
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = SELECTED_COLOR
     selectionRows
-      ?.map { getRowBounds(it) }
+      ?.asList()
+      ?.mapNotNull { getRowBounds(it) }
       ?.forEach { g2.fillRect(0, it.y, width, it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
-      leadSelectionPath?.also {
-        val r = getRowBounds(getRowForPath(it))
+      leadSelectionPath?.let { getPathBounds(it) }?.also { r ->
         g2.paint = SELECTED_COLOR.darker()
         g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
@@ -46,11 +60,44 @@ private class TransparentTree : JTree() {
   }
 
   override fun updateUI() {
+    removeTreeSelectionListener(handler)
+    removePropertyChangeListener(LEAD_SELECTION_PATH_PROPERTY, handler)
+    removeFocusListener(handler)
     super.updateUI()
-    UIManager.put("Tree.repaintWholeRow", true)
+    // The selection background and the lead row border are painted across
+    // the whole width of the tree, but the TreeUI repaints only the node
+    // bounds, so repaint the whole row of the changed paths instead of using
+    // the global UIManager.put("Tree.repaintWholeRow", true) setting.
+    val h = RepaintHandler()
+    addTreeSelectionListener(h)
+    addPropertyChangeListener(LEAD_SELECTION_PATH_PROPERTY, h)
+    addFocusListener(h)
+    handler = h
     setCellRenderer(TransparentTreeCellRenderer())
     isOpaque = false
     border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  }
+
+  private inner class RepaintHandler :
+    TreeSelectionListener,
+    PropertyChangeListener,
+    FocusListener {
+    override fun valueChanged(e: TreeSelectionEvent) {
+      e.paths?.forEach { repaintWholeRow(it) }
+    }
+
+    override fun propertyChange(e: PropertyChangeEvent) {
+      repaintWholeRow(e.oldValue as? TreePath)
+      repaintWholeRow(e.newValue as? TreePath)
+    }
+
+    override fun focusGained(e: FocusEvent) {
+      repaintWholeRow(leadSelectionPath)
+    }
+
+    override fun focusLost(e: FocusEvent) {
+      repaintWholeRow(leadSelectionPath)
+    }
   }
 
   companion object {
@@ -74,9 +121,9 @@ private class TransparentRootPane : JRootPane() {
   }
 
   companion object {
-    private val TEXTURE = makeCheckerTexture()
+    private val TEXTURE = createCheckerTexture()
 
-    private fun makeCheckerTexture(): TexturePaint {
+    private fun createCheckerTexture(): TexturePaint {
       val cs = 6
       val sz = cs * cs
       val img = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
@@ -112,6 +159,7 @@ private open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
     row: Int,
     hasFocus: Boolean,
   ): Component {
+    // Pass false as hasFocus to hide the focus border of the node
     val c = super.getTreeCellRendererComponent(
       tree,
       value,
@@ -125,7 +173,9 @@ private open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
     return c
   }
 
-  override fun getBackgroundNonSelectionColor() = getBackgroundSelectionColor()
+  // Do not delegate to getBackgroundSelectionColor(), as a subclass may
+  // override it to paint the selected nodes with a translucent color.
+  override fun getBackgroundNonSelectionColor() = ALPHA_OF_ZERO
 
   override fun getBackgroundSelectionColor() = ALPHA_OF_ZERO
 
@@ -135,7 +185,11 @@ private open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
 }
 
 private class TranslucentTreeCellRenderer : TransparentTreeCellRenderer() {
-  override fun getBackgroundSelectionColor() = Color(0x64_64_64_FF, true)
+  override fun getBackgroundSelectionColor() = SELECTION_COLOR
+
+  companion object {
+    private val SELECTION_COLOR = Color(0x64_64_64_FF, true)
+  }
 }
 
 fun main() {
@@ -149,9 +203,10 @@ fun main() {
     val frame = object : JFrame() {
       override fun createRootPane() = TransparentRootPane()
     }
-    (frame.contentPane as? JComponent)?.isOpaque = false
+    val contentPane = frame.contentPane
+    (contentPane as? JComponent)?.isOpaque = false
+    contentPane.add(createUI())
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.contentPane.add(createUI())
     frame.pack()
     frame.setLocationRelativeTo(null)
     frame.isVisible = true
