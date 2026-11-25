@@ -44,7 +44,11 @@ private fun updateCalendar(tabs: JTabbedPane, centerToday: Boolean) {
   tabs.setSelectedIndex(todayIndex)
 }
 
-private fun getStartDay(today: LocalDate, locale: Locale, centerToday: Boolean): LocalDate {
+private fun getStartDay(
+  today: LocalDate,
+  locale: Locale,
+  centerToday: Boolean,
+): LocalDate {
   val firstDay = WeekFields.of(locale).firstDayOfWeek
   return if (centerToday) {
     today.minusDays((DayOfWeek.entries.size / 2).toLong())

@@ -74,7 +74,11 @@ private class WrappedLabelRenderer : TableCellRenderer {
       renderer.background = table.background
     }
     val isNumber = value is Number
-    renderer.horizontalAlignment = if (isNumber) SwingConstants.RIGHT else SwingConstants.LEFT
+    renderer.horizontalAlignment = if (isNumber) {
+      SwingConstants.RIGHT
+    } else {
+      SwingConstants.LEFT
+    }
     renderer.font = table.font
     renderer.text = value?.toString() ?: ""
     return renderer

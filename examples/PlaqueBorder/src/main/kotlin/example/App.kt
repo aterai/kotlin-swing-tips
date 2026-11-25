@@ -118,7 +118,13 @@ private open class PlaqueBorder(
   ): Shape {
     val i = getBorderInsets(c)
     val arc = minOf(i.top, width / 2, height / 2)
-    return getBorderShape(x.toDouble(), y.toDouble(), width - 1.0, height - 1.0, arc.toDouble())
+    return getBorderShape(
+      x.toDouble(),
+      y.toDouble(),
+      width - 1.0,
+      height - 1.0,
+      arc.toDouble(),
+    )
   }
 
   protected open fun getBorderShape(

@@ -92,7 +92,11 @@ private class StringBorder(
     }
     val font = c.font
     g2.font = font
-    g2.paint = if (c is JTextComponent && !c.isEnabled) c.disabledTextColor else c.foreground
+    g2.paint = if (c is JTextComponent && !c.isEnabled) {
+      c.disabledTextColor
+    } else {
+      c.foreground
+    }
     val fm = c.getFontMetrics(font)
     val tx = x + width - fm.stringWidth(text)
     val ty = y + (height - fm.height) / 2 + fm.ascent

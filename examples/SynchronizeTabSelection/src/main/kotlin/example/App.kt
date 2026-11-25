@@ -52,7 +52,10 @@ private fun createEditor(html: String, height: Int): Component {
   }
 }
 
-private fun span(color: String, text: String) = "<span style='color: $color;'>$text</span>"
+private fun span(
+  color: String,
+  text: String,
+) = "<span style='color: $color;'>$text</span>"
 
 private fun createJava1() = listOf(
   "<html><pre><code>",
