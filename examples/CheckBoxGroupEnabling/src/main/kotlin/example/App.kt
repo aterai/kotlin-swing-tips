@@ -195,6 +195,7 @@ private class CheckBoxNodeEditor :
     CheckBoxNode(checkBox.text, checkBox.isSelected, checkBox.isEnabled)
 
   override fun isCellEditable(e: EventObject?) = e is MouseEvent
+
   // override fun isCellEditable(e: EventObject): Boolean {
   //   val me = e as? MouseEvent
   //   val tree = me?.component as? JTree
