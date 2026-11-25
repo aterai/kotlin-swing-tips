@@ -21,7 +21,7 @@ fun createUI(): Component {
   UIManager.put("Tree.leftChildIndent", 10)
   UIManager.put("Tree.rightChildIndent", 0)
   UIManager.put("Tree.paintLines", false)
-  val model = makeModel()
+  val model = createModel()
   val cardLayout = CardLayout()
   val p = JPanel(cardLayout)
 
@@ -64,7 +64,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel(): DefaultTreeModel {
+private fun createModel(): DefaultTreeModel {
   val root = DefaultMutableTreeNode("root")
   val c1 = DefaultMutableTreeNode("1. Introduction")
   root.add(c1)
