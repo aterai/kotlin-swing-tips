@@ -22,6 +22,10 @@ fun createUI(): Component {
   tree.isRootVisible = false
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
   tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+  // Add the listener only once, not in updateUI() that is called on every Look&Feel change
+  tree.addTreeSelectionListener(
+    FolderSelectionListener(FileSystemView.getFileSystemView()),
+  )
 
   val listModel = DefaultListModel<File>()
   tree.addTreeSelectionListener { e ->
@@ -61,27 +65,29 @@ private fun updateListFiles(userObject: Any, model: DefaultListModel<File>) {
 }
 
 private class FileSystemViewTree : JTree() {
-  private var rollOverRowIndex = -1
+  private var rolloverRowIndex = -1
   private var rolloverHandler: MouseAdapter? = null
   private var fileSystemView: FileSystemView? = null
 
   override fun paintComponent(g: Graphics) {
+    // The tree is not opaque, so paint the background, the rollover row and
+    // the selected rows across the full width even when nothing is selected
     g.color = background
     g.fillRect(0, 0, width, height)
     val g2 = g.create() as? Graphics2D ?: return
-    if (rollOverRowIndex >= 0) {
+    // getRowBounds(...) returns null if the row index is invalid
+    getRowBounds(rolloverRowIndex)?.also {
       g2.paint = ROLLOVER_COLOR
-      val rect = getRowBounds(rollOverRowIndex)
-      g2.fillRect(0, rect.y, width, rect.height)
+      g2.fillRect(0, it.y, width, it.height)
     }
     g2.paint = SELECTED_COLOR
     selectionRows
-      ?.map { getRowBounds(it) }
+      ?.asList()
+      ?.mapNotNull { getRowBounds(it) }
       ?.forEach { g2.fillRect(0, it.y, width, it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
-      leadSelectionPath?.also {
-        val r = getRowBounds(getRowForPath(it))
+      leadSelectionPath?.let { getPathBounds(it) }?.also { r ->
         g2.paint = SELECTED_COLOR.darker()
         g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
@@ -93,14 +99,13 @@ private class FileSystemViewTree : JTree() {
     setCellRenderer(null)
     removeMouseListener(rolloverHandler)
     removeMouseMotionListener(rolloverHandler)
+    // Must be set before the TreeUI is installed, since BasicTreeUI reads it in installDefaults()
+    UIManager.put("Tree.repaintWholeRow", true)
     super.updateUI()
     setUI(WholeRowSelectTreeUI())
-    UIManager.put("Tree.repaintWholeRow", true)
     fileSystemView = FileSystemView.getFileSystemView().also {
-      addTreeSelectionListener(FolderSelectionListener(it))
-      EventQueue.invokeLater { model = makeFileTreeModel(it) }
+      EventQueue.invokeLater { model = createFileTreeModel(it) }
     }
-    expandRow(0)
     val renderer = DefaultTreeCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, _ ->
       val c = renderer.getTreeCellRendererComponent(
@@ -112,7 +117,7 @@ private class FileSystemViewTree : JTree() {
         row,
         false,
       )
-      val rollover = row == rollOverRowIndex
+      val rollover = row == rolloverRowIndex
       updateForeground(c, renderer.textSelectionColor, rollover)
       updateBackground(c, tree.background, selected, rollover)
       updateIcon(c, value, selected)
@@ -165,6 +170,8 @@ private class FileSystemViewTree : JTree() {
   }
 
   fun updateRolloverIndex() {
+    // Wait until the JPopupMenu is actually hidden, then update the rollover row
+    // from the current mouse position (null if the cursor is outside the tree)
     EventQueue.invokeLater {
       val pt = mousePosition
       if (pt == null) {
@@ -178,14 +185,14 @@ private class FileSystemViewTree : JTree() {
   fun updateRolloverIndex(pt: Point) {
     val row = getRowForLocation(pt.x, pt.y)
     val isPopupVisible = componentPopupMenu.isVisible
-    if (rollOverRowIndex != row && !isPopupVisible) {
-      rollOverRowIndex = row
+    if (rolloverRowIndex != row && !isPopupVisible) {
+      rolloverRowIndex = row
       repaint()
     }
   }
 
   private fun clearRollover() {
-    rollOverRowIndex = -1
+    rolloverRowIndex = -1
     repaint()
   }
 
@@ -199,6 +206,7 @@ private class FileSystemViewTree : JTree() {
     }
 
     override fun mouseExited(e: MouseEvent) {
+      // Opening the JPopupMenu fires mouseExited, so keep the rollover row while it is visible
       val isPopupVisible = componentPopupMenu.isVisible
       if (!isPopupVisible) {
         clearRollover()
@@ -206,7 +214,7 @@ private class FileSystemViewTree : JTree() {
     }
   }
 
-  private fun makeFileTreeModel(fileSystemView: FileSystemView): DefaultTreeModel {
+  private fun createFileTreeModel(fileSystemView: FileSystemView): DefaultTreeModel {
     val root = DefaultMutableTreeNode()
     val treeModel = DefaultTreeModel(root)
     fileSystemView.roots
@@ -259,7 +267,7 @@ private class TreePopupMenuListener(
   }
 
   override fun popupMenuCanceled(e: PopupMenuEvent) {
-    tree.updateRolloverIndex()
+    // not needed: popupMenuWillBecomeInvisible is also fired when canceled
   }
 }
 
@@ -268,7 +276,8 @@ private class FolderSelectionListener(
 ) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
     val tree = e.source as? JTree
-    val node = e.path.lastPathComponent as? DefaultMutableTreeNode
+    // e.getPath() may return a deselected path, so use the new lead selection path
+    val node = e.newLeadSelectionPath?.lastPathComponent as? DefaultMutableTreeNode
     val model = tree?.model as? DefaultTreeModel ?: return
     val parent = node?.userObject as? File
     if (parent != null && node.isLeaf && parent.isDirectory) {
