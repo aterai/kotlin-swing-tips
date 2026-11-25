@@ -168,7 +168,10 @@ private class EditorPanel(
 
   // Applies the change to the model item being edited and reselects it
   private fun updateEditingItem(updater: (ComboItem) -> Unit) {
-    val combo = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this) as? JComboBox<*>
+    val combo = SwingUtilities.getAncestorOfClass(
+      JComboBox::class.java,
+      this,
+    ) as? JComboBox<*>
     // getItemAt(...) returns null if the editing index is out of range
     (combo?.getItemAt(editingIndex) as? ComboItem)?.also {
       updater(it)
