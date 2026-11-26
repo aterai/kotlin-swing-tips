@@ -24,9 +24,9 @@ fun createUI(): Component {
   label.setOpaque(true)
   label.setBackground(Color.WHITE)
 
-  val switchPanel = RecentSwatchPanel()
-  switchPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK))
-  switchPanel.colors?.also {
+  val recentPanel = RecentSwatchPanel()
+  recentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK))
+  recentPanel.colors?.also {
     it[0] = Color.RED
     it[1] = Color.GREEN
     it[2] = Color.BLUE
@@ -35,23 +35,7 @@ fun createUI(): Component {
   val button = JButton("open JColorChooser")
   button.addActionListener {
     val cc = JColorChooser()
-    val panels = cc.chooserPanels
-    val choosers = panels.toMutableList()
-    choosers.removeAt(0)
-    val swatch = MySwatchChooserPanel()
-    swatch.addPropertyChangeListener("ancestor") { event ->
-      swatch.recentSwatchPanel?.colors?.also { colors ->
-        switchPanel.colors?.also { spc ->
-          if (event.newValue == null) {
-            System.arraycopy(colors, 0, spc, 0, colors.size)
-          } else {
-            System.arraycopy(spc, 0, colors, 0, colors.size)
-          }
-        }
-      }
-    }
-    choosers.add(0, swatch)
-    cc.setChooserPanels(choosers.toTypedArray<AbstractColorChooserPanel>())
+    cc.setChooserPanels(createChooserPanels(cc, recentPanel))
     val ok = ColorTracker(cc)
     val parent = button.rootPane
     val title = "JColorChooser"
@@ -62,7 +46,7 @@ fun createUI(): Component {
       }
     })
     dialog.isVisible = true // blocks until user brings dialog down...
-    switchPanel.repaint()
+    recentPanel.repaint()
     val color = ok.color
     if (color != null) {
       label.setBackground(color)
@@ -70,12 +54,38 @@ fun createUI(): Component {
   }
 
   return JPanel().also {
-    it.add(switchPanel)
+    it.add(recentPanel)
     it.add(label)
     it.add(button)
     it.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun createChooserPanels(
+  cc: JColorChooser,
+  recentPanel: RecentSwatchPanel,
+): Array<AbstractColorChooserPanel> {
+  // https://stackoverflow.com/questions/10793916/jcolorchooser-save-restore-recent-colors-in-swatches-panel
+  val swatch = MySwatchChooserPanel()
+  swatch.addPropertyChangeListener("ancestor") { event ->
+    swatch.recentSwatchPanel?.colors?.also { colors ->
+      recentPanel.colors?.also { rpc ->
+        if (event.newValue == null) {
+          // removed from the parent: save the recent colors
+          System.arraycopy(colors, 0, rpc, 0, colors.size)
+        } else {
+          // added to the parent: restore the recent colors
+          System.arraycopy(rpc, 0, colors, 0, colors.size)
+        }
+      }
+    }
+  }
+  // getChooserPanels() returns a copy, so the default Swatches panel
+  // (the first element) can be replaced directly
+  val panels = cc.chooserPanels
+  panels[0] = swatch
+  return panels
 }
 
 private class ColorTracker(
@@ -150,12 +160,12 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     superHolder.add(mainHolder, gbc)
     gbc.insets = oldInsets
 
-    val label = JLabel(recentStr)
-    label.setLabelFor(recentSwatchPanel)
+    val recentLabel = JLabel(recentStr)
+    recentLabel.setLabelFor(recentSwatchPanel)
     gbc.gridwidth = GridBagConstraints.REMAINDER
     gbc.gridheight = 1
     gbc.weighty = 1.0
-    superHolder.add(label, gbc)
+    superHolder.add(recentLabel, gbc)
     gbc.weighty = 0.0
     gbc.gridheight = GridBagConstraints.REMAINDER
     gbc.insets = Insets(0, 0, 0, 2)
@@ -183,9 +193,11 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     // empty
   }
 
-  fun setSelectedColor2(color: Color?) {
+  private fun updateModelColor(color: Color?) {
     val model = colorSelectionModel
-    if (model != null) {
+    // An empty cell of the recent swatch has no color (null),
+    // so ignore it to avoid setting null to the selection model
+    if (model != null && color != null) {
       model.selectedColor = color
     }
   }
@@ -194,7 +206,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     override fun keyPressed(e: KeyEvent) {
       if (KeyEvent.VK_SPACE == e.keyCode) {
         val color = recentSwatchPanel?.selectedColor
-        setSelectedColor2(color)
+        updateModelColor(color)
       }
     }
   }
@@ -203,7 +215,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     override fun keyPressed(e: KeyEvent) {
       if (KeyEvent.VK_SPACE == e.keyCode) {
         val color = swatchPanel?.selectedColor
-        setSelectedColor2(color)
+        updateModelColor(color)
         recentSwatchPanel?.setMostRecentColor(color)
       }
     }
@@ -214,7 +226,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
       if (isEnabled) {
         val color = recentSwatchPanel?.getColorForLocation(e.x, e.y)
         recentSwatchPanel?.setSelectedColorFromLocation(e.x, e.y)
-        setSelectedColor2(color)
+        updateModelColor(color)
         recentSwatchPanel?.requestFocusInWindow()
       }
     }
@@ -224,7 +236,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     override fun mousePressed(e: MouseEvent) {
       if (isEnabled) {
         val color = swatchPanel?.getColorForLocation(e.x, e.y)
-        setSelectedColor2(color)
+        updateModelColor(color)
         swatchPanel?.setSelectedColorFromLocation(e.x, e.y)
         recentSwatchPanel?.setMostRecentColor(color)
         swatchPanel?.requestFocusInWindow()
@@ -238,8 +250,8 @@ open class SwatchPanel : JPanel() {
   val swatchSize = Dimension()
   val numSwatches = Dimension()
   var gap = Dimension()
-  private var selRow = 0
-  private var selCol = 0
+  private var selectedRow = 0
+  private var selectedColumn = 0
 
   init {
     initValues()
@@ -264,48 +276,48 @@ open class SwatchPanel : JPanel() {
         val leftToRight = componentOrientation.isLeftToRight
         when (e.keyCode) {
           KeyEvent.VK_UP -> {
-            if (selRow > 0) {
-              selRow--
+            if (selectedRow > 0) {
+              selectedRow--
               repaint()
             }
           }
 
           KeyEvent.VK_DOWN -> {
-            if (selRow < numSwatches.height - 1) {
-              selRow++
+            if (selectedRow < numSwatches.height - 1) {
+              selectedRow++
               repaint()
             }
           }
 
           KeyEvent.VK_LEFT -> {
-            if (selCol > 0 && leftToRight) {
-              selCol--
+            if (selectedColumn > 0 && leftToRight) {
+              selectedColumn--
               repaint()
-            } else if (selCol < numSwatches.width - 1 && !leftToRight) {
-              selCol++
+            } else if (selectedColumn < numSwatches.width - 1 && !leftToRight) {
+              selectedColumn++
               repaint()
             }
           }
 
           KeyEvent.VK_RIGHT -> {
-            if (selCol < numSwatches.width - 1 && leftToRight) {
-              selCol++
+            if (selectedColumn < numSwatches.width - 1 && leftToRight) {
+              selectedColumn++
               repaint()
-            } else if (selCol > 0 && !leftToRight) {
-              selCol--
+            } else if (selectedColumn > 0 && !leftToRight) {
+              selectedColumn--
               repaint()
             }
           }
 
           KeyEvent.VK_HOME -> {
-            selCol = 0
-            selRow = 0
+            selectedColumn = 0
+            selectedRow = 0
             repaint()
           }
 
           KeyEvent.VK_END -> {
-            selCol = numSwatches.width - 1
-            selRow = numSwatches.height - 1
+            selectedColumn = numSwatches.width - 1
+            selectedRow = numSwatches.height - 1
             repaint()
           }
 
@@ -318,7 +330,7 @@ open class SwatchPanel : JPanel() {
   }
 
   open val selectedColor: Color?
-    get() = getColorForCell(selCol, selRow)
+    get() = getColorForCell(selectedColumn, selectedRow)
 
   open fun initValues() {
     // empty
@@ -346,7 +358,7 @@ open class SwatchPanel : JPanel() {
         g.color = Color.BLACK
         g.drawLine(x + sw - 1, y, x + sw - 1, y + sh - 1)
         g.drawLine(x, y + sh - 1, x + sw - 1, y + sh - 1)
-        if (selRow == row && selCol == column && this.isFocusOwner) {
+        if (selectedRow == row && selectedColumn == column && this.isFocusOwner) {
           val c2 = getFocusColor(c)
           g.color = c2
           g.drawLine(x, y, x + sw - 1, y)
@@ -378,29 +390,42 @@ open class SwatchPanel : JPanel() {
     x: Int,
     y: Int,
   ) {
-    selCol = if (componentOrientation.isLeftToRight) {
-      x / (swatchSize.width + gap.width)
-    } else {
-      numSwatches.width - x / (swatchSize.width + gap.width) - 1
+    val column = getColumnForLocation(x)
+    val row = getRowForLocation(y)
+    if (isValidCell(column, row)) {
+      selectedColumn = column
+      selectedRow = row
+      repaint()
     }
-    selRow = y / (swatchSize.height + gap.height)
-    repaint()
   }
 
   fun getColorForLocation(
     x: Int,
     y: Int,
-  ): Color? {
-    val column = if (componentOrientation.isLeftToRight) {
-      x / (swatchSize.width + gap.width)
+  ) = getColorForCell(getColumnForLocation(x), getRowForLocation(y))
+
+  private fun getColumnForLocation(x: Int): Int {
+    val column = x / (swatchSize.width + gap.width)
+    return if (componentOrientation.isLeftToRight) {
+      column
     } else {
-      numSwatches.width - x / (swatchSize.width + gap.width) - 1
+      numSwatches.width - column - 1
     }
-    val row = y / (swatchSize.height + gap.height)
-    return getColorForCell(column, row)
   }
 
-  private fun getColorForCell(column: Int, row: Int) = colors?.let {
+  private fun getRowForLocation(y: Int) = y / (swatchSize.height + gap.height)
+
+  private fun isValidCell(
+    column: Int,
+    row: Int,
+  ) = column in 0..<numSwatches.width && row in 0..<numSwatches.height
+
+  // The panel can be larger than its preferred size, so the location
+  // may be outside of the swatch grid
+  private fun getColorForCell(
+    column: Int,
+    row: Int,
+  ) = colors?.takeIf { isValidCell(column, row) }?.let {
     it[row * numSwatches.width + column]
   }
 
@@ -423,19 +448,20 @@ private class RecentSwatchPanel : SwatchPanel() {
   }
 
   override fun initColors() {
-    // val key = "ColorChooser.swatchesDefaultRecentColor"
-    // val defaultRecent = null // UIManager.getColor(key)
-    val numColors = numSwatches.width * numSwatches.height
-    // colors = Array(numColors) { defaultRecent }
-    colors = arrayOfNulls(numColors)
+    // Keep the recent colors when updateUI() is called again (e.g. Look and Feel change).
+    // Empty cells are left null and painted with "ColorChooser.swatchesDefaultRecentColor".
+    if (colors == null) {
+      colors = arrayOfNulls(numSwatches.width * numSwatches.height)
+    }
   }
 
   fun setMostRecentColor(c: Color?) {
-    colors?.also {
-      System.arraycopy(it, 0, it, 1, it.size - 1)
-      it[0] = c
+    val a = colors
+    if (c != null && a != null) {
+      System.arraycopy(a, 0, a, 1, a.size - 1)
+      a[0] = c
+      repaint()
     }
-    repaint()
   }
 }
 
@@ -448,16 +474,12 @@ private class MainSwatchPanel : SwatchPanel() {
   }
 
   override fun initColors() {
-    val rawValues = initRawValues()
-    val numColors = rawValues.size / 3
-    colors = Array<Color?>(numColors) { _ -> Color.RED }.also {
-      for (i in 0..<numColors) {
-        it[i] = Color(rawValues[i * 3], rawValues[i * 3 + 1], rawValues[i * 3 + 2])
-      }
+    val numColors = RAW_COLOR_VALUES.size / 3
+    colors = Array<Color?>(numColors) { i ->
+      val v = i * 3
+      Color(RAW_COLOR_VALUES[v], RAW_COLOR_VALUES[v + 1], RAW_COLOR_VALUES[v + 2])
     }
   }
-
-  private fun initRawValues() = RAW_COLOR_VALUES.clone()
 
   companion object {
     @Suppress("LongMethod", "ktlint:standard:argument-list-wrapping")
