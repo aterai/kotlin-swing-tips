@@ -9,44 +9,38 @@ import java.awt.event.InputEvent
 import javax.swing.*
 
 fun createUI(): Component {
-  val list = makeList(makeModel())
-
-  val check1 = JCheckBox("canExportAsDrag")
-  check1.addActionListener {
-    val b = check1.isSelected
-    list.putClientProperty(check1.text, b)
-  }
-
-  val check2 = JCheckBox("canExportToClipboard")
-  check2.addActionListener {
-    val b = check2.isSelected
-    list.putClientProperty(check2.text, b)
-  }
-
-  val check3 = JCheckBox("canImportFromClipboard")
-  check3.addActionListener {
-    val b = check3.isSelected
-    list.putClientProperty(check3.text, b)
-  }
-
-  val box1 = Box.createHorizontalBox()
-  box1.add(check1)
-  val box2 = Box.createHorizontalBox()
-  box2.add(check2)
-  box2.add(check3)
-  val p = JPanel(BorderLayout())
-  p.add(box1, BorderLayout.NORTH)
-  p.add(box2, BorderLayout.SOUTH)
-
+  val list = createList(createModel())
   return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
+    it.add(createControlBox(list), BorderLayout.NORTH)
     it.add(JScrollPane(list))
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeModel() = DefaultListModel<Color>().also {
+private fun createControlBox(list: JList<Color>): JPanel {
+  val box1 = Box.createHorizontalBox()
+  box1.add(createCheckBox(list, ListItemTransferHandler.DRAG_EXPORT))
+  val box2 = Box.createHorizontalBox()
+  box2.add(createCheckBox(list, ListItemTransferHandler.CLIPBOARD_EXPORT))
+  box2.add(createCheckBox(list, ListItemTransferHandler.CLIPBOARD_IMPORT))
+  val p = JPanel(BorderLayout())
+  p.add(box1, BorderLayout.NORTH)
+  p.add(box2, BorderLayout.SOUTH)
+  return p
+}
+
+// The check box text is also used as the client property key of the JList
+private fun createCheckBox(
+  c: JComponent,
+  key: String,
+): JCheckBox {
+  val check = JCheckBox(key)
+  check.addActionListener { c.putClientProperty(key, check.isSelected) }
+  return check
+}
+
+private fun createModel() = DefaultListModel<Color>().also {
   it.addElement(Color.RED)
   it.addElement(Color.BLUE)
   it.addElement(Color.GREEN)
@@ -56,7 +50,7 @@ private fun makeModel() = DefaultListModel<Color>().also {
   it.addElement(Color.MAGENTA)
 }
 
-private fun makeList(model: ListModel<Color>) = object : JList<Color>(model) {
+private fun createList(model: ListModel<Color>) = object : JList<Color>(model) {
   override fun updateUI() {
     selectionBackground = null // Nimbus
     cellRenderer = null
@@ -100,7 +94,11 @@ private class ListPopupMenu(
       handler.exportToClipboard(list, clipboard, TransferHandler.COPY)
     }
     add("paste").addActionListener {
-      handler.importData(list, clipboard.getContents(null))
+      // Clipboard#getContents(...) may return null if the clipboard is empty,
+      // and TransferSupport throws a NullPointerException for a null Transferable
+      clipboard.getContents(null)?.also { contents ->
+        handler.importData(list, contents)
+      }
     }
     addSeparator()
     add("clearSelection").addActionListener { list.clearSelection() }
@@ -126,6 +124,7 @@ private class ListItemTransferHandler : TransferHandler() {
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
+    selectedIndices.clear() // discard any leftovers from an export that was not completed
     val source = (c as? JList<*>)?.also { s ->
       s.selectedIndices.forEach { selectedIndices.add(it) }
     }
@@ -153,9 +152,9 @@ private class ListItemTransferHandler : TransferHandler() {
   override fun importData(info: TransferSupport): Boolean {
     // println("importData(TransferSupport)")
     val target = info.component as? JList<*>
-    val v = target?.getClientProperty("canImportFromClipboard")
-    val b = !info.isDrop && (v == null || v == false)
-    if (target == null || b) {
+    // Drops are always accepted, pastes only if the client property is set
+    val canImport = info.isDrop || isEnabled(target, CLIPBOARD_IMPORT)
+    if (target == null || !canImport) {
       return false
     }
 
@@ -189,7 +188,7 @@ private class ListItemTransferHandler : TransferHandler() {
     action: Int,
   ) {
     // println("exportAsDrag")
-    if (comp.getClientProperty("canExportAsDrag") == true) {
+    if (isEnabled(comp, DRAG_EXPORT)) {
       super.exportAsDrag(comp, e, action)
     }
   }
@@ -200,7 +199,7 @@ private class ListItemTransferHandler : TransferHandler() {
     action: Int,
   ) {
     // println("exportToClipboard")
-    if (comp.getClientProperty("canExportToClipboard") == true) {
+    if (isEnabled(comp, CLIPBOARD_EXPORT)) {
       super.exportToClipboard(comp, clip, action)
     }
   }
@@ -253,7 +252,15 @@ private class ListItemTransferHandler : TransferHandler() {
   }
 
   companion object {
+    const val DRAG_EXPORT = "canExportAsDrag"
+    const val CLIPBOARD_EXPORT = "canExportToClipboard"
+    const val CLIPBOARD_IMPORT = "canImportFromClipboard"
     private val FLAVOR = DataFlavor(List::class.java, "List of items")
+
+    private fun isEnabled(
+      c: JComponent?,
+      key: String,
+    ) = c?.getClientProperty(key) == true
   }
 }
 
