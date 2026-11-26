@@ -6,20 +6,20 @@ import javax.swing.*
 
 fun createUI(): Component {
   val model1 = SpinnerNumberModel(100, 10, 300, 10)
-  val scroll1 = makeScrollPane(JTree(), model1)
+  val scroll1 = createScrollPane(JTree(), model1)
   val model2 = SpinnerNumberModel(150, 10, 300, 10)
   val textArea = JTextArea()
-  val scroll2 = makeScrollPane(textArea, model2)
+  val scroll2 = createScrollPane(textArea, model2)
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll1, scroll2)
   split.isOneTouchExpandable = true
   split.isContinuousLayout = true
   val menu1 = JMenu("JSplitPane")
-  menu1.add(makeSpinner("L: ", model1))
-  menu1.add(makeSpinner("R: ", model2))
+  menu1.add(createSpinner("L: ", model1))
+  menu1.add(createSpinner("R: ", model2))
   menu1.addSeparator()
   menu1.add("resetToPreferredSizes").addActionListener {
     split.resetToPreferredSizes()
-    info(split, textArea)
+    appendDividerInfo(split, textArea)
   }
   menu1.addSeparator()
   menu1.add("setDividerLocation(.5)").addActionListener {
@@ -31,26 +31,9 @@ fun createUI(): Component {
   menu1.add("selectMax").addActionListener {
     selectMinMax(split, "selectMax")
   }
-  val menu2 = JMenu("ResizeWeight")
-  val r0 = JRadioButtonMenuItem("0.0", true)
-  menu2.add(r0).addActionListener {
-    split.resizeWeight = 0.0
-  }
-  val r1 = JRadioButtonMenuItem("0.5")
-  menu2.add(r1).addActionListener {
-    split.resizeWeight = .5
-  }
-  val r2 = JRadioButtonMenuItem("1.0")
-  menu2.add(r2).addActionListener {
-    split.resizeWeight = 1.0
-  }
-  val group = ButtonGroup()
-  for (r in listOf(r0, r1, r2)) {
-    group.add(r)
-  }
   val menuBar = JMenuBar()
   menuBar.add(menu1)
-  menuBar.add(menu2)
+  menuBar.add(createResizeWeightMenu(split))
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
     it.add(split)
@@ -59,7 +42,25 @@ fun createUI(): Component {
   }
 }
 
-private fun info(split: JSplitPane, textArea: JTextArea) {
+private fun createResizeWeightMenu(split: JSplitPane): JMenu {
+  val menu = JMenu("ResizeWeight")
+  val group = ButtonGroup()
+  for (weight in doubleArrayOf(0.0, .5, 1.0)) {
+    // Select the item that matches the current resize weight (default: 0.0)
+    val selected = weight.compareTo(split.resizeWeight) == 0
+    val item = JRadioButtonMenuItem(weight.toString(), selected)
+    item.addActionListener { split.resizeWeight = weight }
+    group.add(item)
+    menu.add(item)
+  }
+  return menu
+}
+
+private fun appendDividerInfo(
+  split: JSplitPane,
+  textArea: JTextArea,
+) {
+  // resetToPreferredSizes() only revalidates the JSplitPane, so wait for the layout
   EventQueue.invokeLater {
     val w1 = split.leftComponent.preferredSize.width
     val w2 = split.rightComponent.preferredSize.width
@@ -73,20 +74,23 @@ private fun selectMinMax(
   splitPane: JSplitPane,
   cmd: String,
 ) {
+  // The "selectMin"/"selectMax" actions of BasicSplitPaneUI assume that
+  // the JSplitPane has the focus, so request it first and invoke the action
+  // after the focus change has been processed
   splitPane.requestFocusInWindow()
   object : SwingWorker<Unit?, Unit?>() {
     override fun doInBackground() = null
 
     override fun done() {
-      super.done()
-      val a = splitPane.actionMap[cmd]
-      a.actionPerformed(ActionEvent(splitPane, ActionEvent.ACTION_PERFORMED, cmd))
+      splitPane.actionMap[cmd]?.actionPerformed(
+        ActionEvent(splitPane, ActionEvent.ACTION_PERFORMED, cmd),
+      )
       KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner()
     }
   }.execute()
 }
 
-private fun makeScrollPane(c: Component, m: SpinnerNumberModel): JScrollPane {
+private fun createScrollPane(c: Component, m: SpinnerNumberModel): JScrollPane {
   return object : JScrollPane(c) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
@@ -96,7 +100,7 @@ private fun makeScrollPane(c: Component, m: SpinnerNumberModel): JScrollPane {
   }
 }
 
-private fun makeSpinner(title: String, model: SpinnerModel): Component {
+private fun createSpinner(title: String, model: SpinnerModel): Component {
   val box = Box.createHorizontalBox()
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   box.add(JLabel(title))
