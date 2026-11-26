@@ -162,6 +162,12 @@ private class DropdownTableComboBox(
   override fun updateUI() {
     super.updateUI()
     EventQueue.invokeLater {
+      // The JTable is not in the component hierarchy while the dropdown list is hidden,
+      // so SwingUtilities#updateComponentTreeUI(...) does not reach it.
+      // JTable#updateUI() does not update the JTableHeader either,
+      // because the header still has a parent (the JScrollPane of the previous popup)
+      SwingUtilities.updateComponentTreeUI(table)
+      SwingUtilities.updateComponentTreeUI(table.tableHeader)
       setUI(object : MetalComboBoxUI() {
         override fun createPopup() = ComboTablePopup(comboBox, table)
       })
@@ -207,6 +213,9 @@ private class ComboTablePopup(
   // (keyboard: Alt+Down, F4, ...) and #togglePopup() (mouse click)
   override fun setVisible(visible: Boolean) {
     if (visible) {
+      // The ItemListener is not notified of the item selected before this popup was created
+      // (such as the initial item set in the JComboBox constructor)
+      setRowSelection(comboBox.selectedIndex)
       val ins = scroll.getInsets()
       val tableHeight = table.getPreferredSize().height
       val headerHeight = table.getTableHeader().getPreferredSize().height
@@ -224,6 +233,8 @@ private class ComboTablePopup(
     if (index >= 0) {
       table.setRowSelectionInterval(index, index)
       table.scrollRectToVisible(table.getCellRect(index, 0, true))
+    } else {
+      table.clearSelection()
     }
   }
 
