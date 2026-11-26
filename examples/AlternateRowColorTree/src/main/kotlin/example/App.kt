@@ -28,10 +28,9 @@ private class AlternateRowColorTree : JTree() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = ALTERNATE_COLOR
-    (0..<rowCount)
-      .filter { it % 2 == 0 }
-      .mapNotNull { getRowBounds(it) }
-      .forEach { g2.fillRect(0, it.y, width, it.height) }
+    for (i in 0..<rowCount step 2) {
+      getRowBounds(i)?.also { g2.fillRect(0, it.y, width, it.height) }
+    }
     selectionRows?.also { rows ->
       g2.paint = SELECTED_COLOR
       rows
