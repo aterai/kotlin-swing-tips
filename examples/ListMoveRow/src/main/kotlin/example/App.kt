@@ -33,12 +33,14 @@ private fun <E> makeUpButton(
       val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
       val index0 = if (isShiftDown) 0 else maxOf(0, pos[0] - 1)
       var idx = index0
+      // Move from the top: each removed item is re-inserted above itself,
+      // so the indices of the remaining (lower) selected items are unchanged
       for (i in pos) {
         m.add(idx, m.remove(i))
         list.addSelectionInterval(idx, idx)
         idx++
       }
-      val r = list.getCellBounds(index0, index0 + pos.size)
+      val r = list.getCellBounds(index0, index0 + pos.size - 1)
       list.scrollRectToVisible(r)
     }
   }
@@ -55,21 +57,17 @@ private fun <E> makeDownButton(
     val pos = list.selectedIndices
     if (pos.isNotEmpty()) {
       val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
-      val max = m.size
-      var index = if (isShiftDown) max else minOf(max, pos[pos.size - 1] + 1)
-      val index0 = index
-      // copy
-      for (i in pos) {
-        val idx = minOf(m.size, ++index)
-        m.add(idx, m[i])
+      val last = m.size - 1
+      val index0 = if (isShiftDown) last else minOf(last, pos[pos.size - 1] + 1)
+      var idx = index0
+      // Move from the bottom: each removed item is re-inserted below itself,
+      // so the indices of the remaining (upper) selected items are unchanged
+      for (i in pos.reversed()) {
+        m.add(idx, m.remove(i))
         list.addSelectionInterval(idx, idx)
+        idx--
       }
-      // clean
-      pos.reversed().forEach { m.remove(it) }
-      // for (i in pos.reversed()) {
-      //   m.remove(i)
-      // }
-      val r = list.getCellBounds(index0 - pos.size, index0)
+      val r = list.getCellBounds(index0 - pos.size + 1, index0)
       list.scrollRectToVisible(r)
     }
   }
