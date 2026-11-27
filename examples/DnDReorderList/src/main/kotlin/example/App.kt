@@ -8,7 +8,7 @@ import javax.swing.*
 
 fun createUI(): Component {
   val p = JPanel(BorderLayout())
-  p.add(JScrollPane(makeList()))
+  p.add(JScrollPane(createList()))
   p.border = BorderFactory.createTitledBorder("Drag & Drop JList")
   return JPanel(BorderLayout()).also {
     it.add(p)
@@ -17,7 +17,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeList(): JList<Color> {
+private fun createList(): JList<Color> {
   val listModel = DefaultListModel<Color>().also {
     it.addElement(Color.RED)
     it.addElement(Color.BLUE)
@@ -59,6 +59,7 @@ private class ListItemTransferHandler : TransferHandler() {
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
+    selectedIndices.clear()
     val source = (c as? JList<*>)?.also { s ->
       s.selectedIndices.forEach { selectedIndices.add(it) }
     }
@@ -79,16 +80,16 @@ private class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferSupport) = info.isDataFlavorSupported(FLAVOR)
+  override fun canImport(support: TransferSupport) = support.isDataFlavorSupported(FLAVOR)
 
   override fun getSourceActions(c: JComponent) = COPY_OR_MOVE
 
-  override fun importData(info: TransferSupport): Boolean {
-    val target = info.component as? JList<*> ?: return false
-    var index = getIndex(info)
+  override fun importData(support: TransferSupport): Boolean {
+    val target = support.component as? JList<*> ?: return false
+    var index = getInsertionIndex(support)
     addIndex = index
     val values = runCatching {
-      info.transferable.getTransferData(FLAVOR) as? List<*>
+      support.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
 
     @Suppress("UNCHECKED_CAST")
@@ -96,18 +97,14 @@ private class ListItemTransferHandler : TransferHandler() {
       for (o in values) {
         it.add(index, o)
         target.addSelectionInterval(index, index)
-        index += 1
+        index++
       }
     }
-    addCount = if (info.isDrop) values.size else 0
-    // target.requestFocusInWindow()
+    // Only a drop within the same list shifts the indices of the items to be removed in
+    // exportDone(...); a cut has already removed them before the paste.
+    addCount = if (support.isDrop) values.size else 0
     return values.isNotEmpty()
   }
-
-  override fun importData(
-    comp: JComponent,
-    t: Transferable,
-  ) = importData(TransferSupport(comp, t))
 
   override fun exportDone(
     c: JComponent,
@@ -124,15 +121,14 @@ private class ListItemTransferHandler : TransferHandler() {
     if (remove && selectedIndices.isNotEmpty()) {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
-      // after the insertion point have moved.
-      val selectedList = if (addCount > 0) {
-        selectedIndices.map { if (it >= addIndex) it + addCount else it }
-      } else {
-        selectedIndices.toList()
+      // at or after the insertion point have moved.
+      if (addCount > 0) {
+        selectedIndices.replaceAll { if (it >= addIndex) it + addCount else it }
       }
       ((c as? JList<*>)?.model as? DefaultListModel<*>)?.also { model ->
-        for (i in selectedList.indices.reversed()) {
-          model.remove(selectedList[i])
+        // Remove from the end so that the remaining indices stay valid
+        for (i in selectedIndices.indices.reversed()) {
+          model.remove(selectedIndices[i])
         }
       }
     }
@@ -141,22 +137,17 @@ private class ListItemTransferHandler : TransferHandler() {
     addIndex = -1
   }
 
-  private fun getIndex(info: TransferSupport): Int {
-    val target = info.component as? JList<*> ?: return -1
-    var index = if (info.isDrop) { // Mouse Drag & Drop
-      val tdl = info.dropLocation
-      if (tdl is JList.DropLocation) {
-        tdl.index
-      } else {
-        target.selectedIndex
-      }
+  private fun getInsertionIndex(support: TransferSupport): Int {
+    val target = support.component as? JList<*> ?: return -1
+    val location = if (support.isDrop) support.dropLocation else null
+    val index = if (location is JList.DropLocation) { // Mouse Drag & Drop
+      location.index
     } else { // Keyboard Copy & Paste
       target.selectedIndex
     }
-    val max = (target.model as? DefaultListModel<*>)?.size ?: -1
-    index = if (index < 0) max else index
-    index = index.coerceAtMost(max)
-    return index
+    val max = target.model.size
+    // If it is out of range, it is appended to the end
+    return if (index < 0) max else index.coerceAtMost(max)
   }
 
   companion object {
