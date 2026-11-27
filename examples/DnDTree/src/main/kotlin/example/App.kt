@@ -23,10 +23,11 @@ import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreeNode
+import javax.swing.tree.TreePath
 
 fun createUI(): Component {
   val tree = DnDTree()
-  tree.model = makeModel()
+  tree.model = createModel()
   for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
@@ -36,7 +37,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel(): DefaultTreeModel {
+private fun createModel(): DefaultTreeModel {
   val set1 = DefaultMutableTreeNode("Set 001")
   set1.add(DefaultMutableTreeNode("111111111"))
   set1.add(DefaultMutableTreeNode("22222222222"))
@@ -56,107 +57,140 @@ private fun makeModel(): DefaultTreeModel {
 }
 
 private class DnDTree : JTree() {
-  private var treeDropTarget: DropTarget? = null
+  private var draggedPath: TreePath? = null
   private var dropTargetNode: TreeNode? = null
-  private var draggedNode: TreeNode? = null
 
-  override fun updateUI() {
-    setCellRenderer(null)
-    super.updateUI()
-    setCellRenderer(DnDTreeCellRenderer())
+  init {
+    // Register the gesture recognizer and the DropTarget only once here, not in updateUI()
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
       DnDConstants.ACTION_MOVE,
       NodeDragGestureListener(),
     )
-    if (treeDropTarget == null) {
-      treeDropTarget = DropTarget(this, NodeDropTargetListener())
+    // This DropTarget replaces the one installed by the TransferHandler.
+    // It is not a UIResource, so it is kept even if updateUI() is called.
+    dropTarget = DropTarget(this, NodeDropTargetListener())
+  }
+
+  override fun updateUI() {
+    setCellRenderer(null)
+    super.updateUI()
+    setCellRenderer(DnDTreeCellRenderer())
+  }
+
+  private fun updateDropTargetNode(node: TreeNode?) {
+    // Repaint only when the drop target node changes, not on every dragOver
+    if (dropTargetNode != node) {
+      dropTargetNode = node
+      repaint()
+    }
+  }
+
+  private fun canDrop(path: TreePath?): Boolean {
+    // TreePath#isDescendant(...) is also true for the same path,
+    // so this prevents dropping a node onto itself or onto one of its descendants
+    val dragged = draggedPath
+    return dragged != null &&
+      path?.lastPathComponent is MutableTreeNode &&
+      !dragged.isDescendant(path)
+  }
+
+  private fun moveNode(
+    node: MutableTreeNode,
+    target: MutableTreeNode,
+  ) {
+    val model = model as? DefaultTreeModel ?: return
+    model.removeNodeFromParent(node)
+    val parent = target.parent
+    if (parent is MutableTreeNode && target.isLeaf) {
+      // Insert the node before the leaf target node
+      model.insertNodeInto(node, parent, parent.getIndex(target))
+    } else {
+      // Append the node as the last child of the target node
+      model.insertNodeInto(node, target, target.childCount)
     }
   }
 
   private inner class NodeDragGestureListener : DragGestureListener {
-    private val handler = NodeDragSourceListener()
-
-    override fun dragGestureRecognized(dge: DragGestureEvent) {
-      val pt = dge.dragOrigin
+    override fun dragGestureRecognized(e: DragGestureEvent) {
+      val pt = e.dragOrigin
       val path = getPathForLocation(pt.x, pt.y)
-      if (path == null || path.parentPath == null) {
-        return
-      }
-      draggedNode = (path.lastPathComponent as? TreeNode)?.also {
-        val trans = TreeNodeTransferable(it)
-        val cursor = Cursor.getDefaultCursor()
-        DragSource.getDefaultDragSource().startDrag(dge, cursor, trans, handler)
+      // The root node cannot be dragged
+      val isNotRoot = path?.parentPath != null
+      if (isNotRoot && path.lastPathComponent is MutableTreeNode) {
+        draggedPath = path
+        val t = TreeNodeTransferable(path.lastPathComponent)
+        e.startDrag(Cursor.getDefaultCursor(), t, NodeDragSourceListener())
       }
     }
   }
 
   private inner class NodeDropTargetListener : DropTargetListener {
-    override fun dropActionChanged(dtde: DropTargetDragEvent) {
+    override fun dropActionChanged(e: DropTargetDragEvent) {
       // not needed
     }
 
-    override fun dragEnter(dtde: DropTargetDragEvent) {
+    override fun dragEnter(e: DropTargetDragEvent) {
       // not needed
     }
 
-    override fun dragExit(dte: DropTargetEvent) {
-      // not needed
+    override fun dragExit(e: DropTargetEvent) {
+      // Erase the drop location indicator when the cursor leaves the JTree
+      updateDropTargetNode(null)
     }
 
     override fun dragOver(e: DropTargetDragEvent) {
-      val f = e.currentDataFlavors
-      val isSupported = f[0].humanPresentableName == TreeNodeTransferable.NAME
       val pt = e.location
       val path = getPathForLocation(pt.x, pt.y)
-      if (!isSupported || path == null) {
-        rejectDrag(e)
-        return
-      }
-      val draggingNode = selectionPath?.lastPathComponent // as? TreeNode
-      val targetNode = path.lastPathComponent as? TreeNode
-      val parent = targetNode?.parent
-      if (parent is DefaultMutableTreeNode && parent.path.contains(draggingNode)) {
-        rejectDrag(e)
-      } else {
-        dropTargetNode = targetNode
+      // Reject unsupported DataFlavors (e.g. files from the desktop),
+      // non-node locations (e.g. margin area of JTree),
+      // and dropping a parent node onto its child node
+      if (e.isDataFlavorSupported(TreeNodeTransferable.FLAVOR) && canDrop(path)) {
+        updateDropTargetNode(path?.lastPathComponent as? TreeNode)
         e.acceptDrag(e.dropAction)
-        repaint()
+      } else {
+        e.rejectDrag()
+        updateDropTargetNode(null)
       }
     }
 
     override fun drop(e: DropTargetDropEvent) {
-      val draggingNode = selectionPath?.lastPathComponent
       val pt = e.location
       val path = getPathForLocation(pt.x, pt.y)
-      if (path == null || draggingNode !is MutableTreeNode) {
-        e.dropComplete(false)
-        return
-      }
-      val model = model as? DefaultTreeModel
-      val targetNode = path.lastPathComponent as? MutableTreeNode
-      if (model == null || targetNode == null || targetNode == draggingNode) {
-        e.dropComplete(false)
-      } else {
+      val node = draggedPath?.lastPathComponent as? MutableTreeNode
+      val target = path?.lastPathComponent as? MutableTreeNode
+      val supported = e.isDataFlavorSupported(TreeNodeTransferable.FLAVOR)
+      if (supported && canDrop(path) && node != null && target != null) {
         e.acceptDrop(DnDConstants.ACTION_MOVE)
-        model.removeNodeFromParent(draggingNode)
-        val parent = targetNode.parent
-        if (parent is MutableTreeNode && targetNode.isLeaf) {
-          model.insertNodeInto(draggingNode, parent, parent.getIndex(targetNode))
-        } else {
-          model.insertNodeInto(draggingNode, targetNode, targetNode.childCount)
-        }
+        moveNode(node, target)
         e.dropComplete(true)
-        dropTargetNode = null
-        draggedNode = null
-        repaint()
+      } else {
+        e.rejectDrop()
       }
+      updateDropTargetNode(null)
+    }
+  }
+
+  private inner class NodeDragSourceListener : DragSourceListener {
+    override fun dragDropEnd(e: DragSourceDropEvent) {
+      draggedPath = null
+      updateDropTargetNode(null)
     }
 
-    private fun rejectDrag(e: DropTargetDragEvent) {
-      e.rejectDrag()
-      dropTargetNode = null
-      repaint()
+    override fun dragEnter(e: DragSourceDragEvent) {
+      e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
+    }
+
+    override fun dragExit(e: DragSourceEvent) {
+      e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
+    }
+
+    override fun dragOver(e: DragSourceDragEvent) {
+      // not needed
+    }
+
+    override fun dropActionChanged(e: DragSourceDragEvent) {
+      // not needed
     }
   }
 
@@ -173,10 +207,8 @@ private class DnDTree : JTree() {
       row: Int,
       hasFocus: Boolean,
     ): Component {
-      if (value is TreeNode) {
-        isTargetNode = value == dropTargetNode
-        isTargetNodeLeaf = isTargetNode && value.isLeaf
-      }
+      isTargetNode = value != null && value == dropTargetNode
+      isTargetNodeLeaf = isTargetNode && leaf
       return super.getTreeCellRendererComponent(
         tree,
         value,
@@ -193,9 +225,11 @@ private class DnDTree : JTree() {
       if (isTargetNode) {
         g.color = Color.BLACK
         if (isTargetNodeLeaf) {
-          g.drawLine(0, 0, size.width, 0)
+          // The dragged node will be inserted before this leaf node
+          g.drawLine(0, 0, width, 0)
         } else {
-          g.drawRect(0, 0, size.width - 1, size.height - 1)
+          // The dragged node will be appended as a child of this node
+          g.drawRect(0, 0, width - 1, height - 1)
         }
       }
     }
@@ -212,37 +246,13 @@ private class TreeNodeTransferable(
     throw UnsupportedFlavorException(df)
   }
 
-  override fun isDataFlavorSupported(df: DataFlavor) = df.humanPresentableName == NAME
+  override fun isDataFlavorSupported(df: DataFlavor) = FLAVOR == df
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
   companion object {
-    const val NAME = "TREE-TEST"
-    private val FLAVOR = DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME)
-  }
-}
-
-private class NodeDragSourceListener : DragSourceListener {
-  override fun dragDropEnd(dsde: DragSourceDropEvent) {
-    // dropTargetNode = null
-    // draggedNode = null
-    // repaint()
-  }
-
-  override fun dragEnter(e: DragSourceDragEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
-  }
-
-  override fun dragExit(e: DragSourceEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
-  }
-
-  override fun dragOver(e: DragSourceDragEvent) {
-    // not needed
-  }
-
-  override fun dropActionChanged(e: DragSourceDragEvent) {
-    // not needed
+    private const val NAME = "TREE-TEST"
+    val FLAVOR = DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME)
   }
 }
 
