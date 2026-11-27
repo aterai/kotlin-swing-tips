@@ -2,14 +2,15 @@ package example
 
 import java.awt.*
 import java.awt.event.HierarchyEvent
+import java.util.logging.Logger
 import javax.sound.midi.MidiSystem
 import javax.sound.midi.Sequencer
 import javax.swing.*
 
-private const val END_OF_TRACK: Byte = 0x2F
-private val start = makeButton("start")
-private val pause = makeButton("pause")
-private val reset = makeButton("reset")
+private const val END_OF_TRACK = 0x2F
+private val start = createButton("start")
+private val pause = createButton("pause")
+private val reset = createButton("reset")
 private var tickPos = 0L
 
 fun createUI(): Component {
@@ -25,19 +26,19 @@ fun createUI(): Component {
           sequencer.open()
           sequencer.sequence = MidiSystem.getSequence(url)
           sequencer.addMetaEventListener { e ->
-            if (e.type == END_OF_TRACK.toInt()) {
+            if (e.type == END_OF_TRACK) {
               publish(0L)
             }
           }
           addListener(sequencer)
+          // Keep the sequencer open until this worker is cancelled
+          // (Thread#sleep throws InterruptedException on cancel(true)).
           while (sequencer.isOpen) {
-            if (sequencer.isRunning) {
-              publish(sequencer.tickPosition)
-            }
             Thread.sleep(1000)
           }
         }
       }.onFailure {
+        Logger.getGlobal().severe { it.message }
         publish(0L)
       }
       return null
@@ -48,23 +49,32 @@ fun createUI(): Component {
         start.addActionListener {
           sequencer.tickPosition = tickPos
           sequencer.start()
-          initButtons(false)
+          updateButtons(false)
         }
         pause.addActionListener {
-          publish(sequencer.tickPosition)
           sequencer.stop()
-          initButtons(true)
+          // Save the position directly on the EDT instead of via publish(...),
+          // so that a later start always resumes from the paused position.
+          tickPos = sequencer.tickPosition
+          updateButtons(true)
         }
         reset.addActionListener {
           sequencer.stop()
           tickPos = 0
-          initButtons(true)
+          updateButtons(true)
         }
       }
     }
 
+    // Only called when the end of the track is reached (or loading failed)
     override fun process(chunks: List<Long>) {
-      updateButtons(chunks)
+      tickPos = 0L
+      updateButtons(true)
+    }
+
+    override fun done() {
+      tickPos = 0L
+      updateButtons(true)
     }
   }
   worker.execute()
@@ -79,7 +89,7 @@ fun createUI(): Component {
 
   return JPanel(BorderLayout(5, 5)).also {
     addHierarchyListener(it, worker)
-    it.add(makeTitle(it.background))
+    it.add(createTitle(it.background))
     it.add(box, BorderLayout.SOUTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
@@ -98,21 +108,12 @@ private fun addHierarchyListener(
   }
 }
 
-private fun updateButtons(chunks: List<Long>) {
-  chunks.forEach {
-    tickPos = it
-    if (it == 0L) {
-      initButtons(true)
-    }
-  }
+private fun updateButtons(stopped: Boolean) {
+  start.isEnabled = stopped
+  pause.isEnabled = !stopped
 }
 
-private fun initButtons(flg: Boolean) {
-  start.isEnabled = flg
-  pause.isEnabled = !flg
-}
-
-private fun makeTitle(bgc: Color): Component {
+private fun createTitle(bgc: Color): Component {
   val txt = """
     Wolfgang Amadeus Mozart
     Piano Sonata No. 11 in A major, K 331
@@ -125,7 +126,7 @@ private fun makeTitle(bgc: Color): Component {
   return label
 }
 
-private fun makeButton(title: String) = JButton(title).also {
+private fun createButton(title: String) = JButton(title).also {
   it.isFocusable = false
 }
 
