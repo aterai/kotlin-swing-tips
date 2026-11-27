@@ -21,13 +21,14 @@ private fun executeWorker(
     }
 
     override fun done() {
+      // Always close the monitor, even if this panel is no longer displayable
+      monitor.close()
       if (area.isDisplayable) {
         button.isEnabled = true
-        monitor.close()
         if (isCancelled) {
           area.append("Cancelled\n")
         } else {
-          val msg = runCatching { get() }.onFailure { "Error: ${it.message}" }
+          val msg = runCatching { get() }.getOrElse { "Error: ${it.message}" }
           area.append("$msg\n")
         }
         area.caretPosition = area.document.length
@@ -41,14 +42,16 @@ private fun executeWorker(
 fun createUI(): Component {
   val area = JTextArea()
   area.isEditable = false
-  val dmy = ProgressMonitor(null, "message", "note", 0, 100)
-  val millisToDecide = SpinnerNumberModel(dmy.millisToDecideToPopup, 0, 5 * 1000, 100)
-  val millisToPopup = SpinnerNumberModel(dmy.millisToPopup, 0, 5 * 1000, 100)
+  // The default values are only available from a ProgressMonitor instance,
+  // so create a temporary one that is never shown.
+  val defaults = ProgressMonitor(null, "message", "note", 0, 100)
+  val decideModel = SpinnerNumberModel(defaults.millisToDecideToPopup, 0, 5 * 1000, 100)
+  val popupModel = SpinnerNumberModel(defaults.millisToPopup, 0, 5 * 1000, 100)
   val runButton = JButton("run")
   runButton.addActionListener {
     val w = SwingUtilities.getWindowAncestor(runButton)
-    val toDecideToPopup = millisToDecide.number.toInt()
-    val toPopup = millisToPopup.number.toInt()
+    val toDecideToPopup = decideModel.number.toInt()
+    val toPopup = popupModel.number.toInt()
     val monitor = ProgressMonitor(w, "message", "note", 0, 100)
     monitor.millisToDecideToPopup = toDecideToPopup
     monitor.millisToPopup = toPopup
@@ -69,8 +72,8 @@ fun createUI(): Component {
   c.gridx = 1
   c.weightx = 1.0
   c.fill = GridBagConstraints.HORIZONTAL
-  p.add(JSpinner(millisToDecide), c)
-  p.add(JSpinner(millisToPopup), c)
+  p.add(JSpinner(decideModel), c)
+  p.add(JSpinner(popupModel), c)
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
   box.add(runButton)
@@ -93,9 +96,9 @@ private open class BackgroundTask(
       if (current % 10 == 0) {
         Thread.sleep(5)
       }
-      val v = 100 * current / lengthOfTask
-      progress = v
-      publish("$v%")
+      val percent = 100 * current / lengthOfTask
+      progress = percent
+      publish("$percent%")
       current++
     }
     return "Done"
